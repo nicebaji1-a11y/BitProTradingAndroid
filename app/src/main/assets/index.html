@@ -3,431 +3,536 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BitPro | Crypto Trading</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BitPro - Crypto Platform</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#0b0e11;color:#eaecef;font-family:Arial,sans-serif}
-header{background:#181a20;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #30343b;gap:10px}
-.logo{font-size:29px;font-weight:800;color:#f0b90b}
-button{border:0;border-radius:8px;padding:13px 17px;font-weight:bold;font-size:15px;cursor:pointer}
-button:active{transform:scale(.98)}
+header{background:#181a20;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border-bottom:1px solid #30343b}
+.logo{font-size:25px;font-weight:bold;color:#f0b90b}
+button{border:0;border-radius:7px;padding:11px 14px;font-weight:bold;cursor:pointer}
 .primary{background:#f0b90b;color:#111}
-.secondary{background:#30343b;color:white}
-.sell{background:#f6465d;color:white}
-.container{width:100%;max-width:1050px;margin:auto;padding:20px}
-.card{background:#181a20;border:1px solid #30343b;border-radius:14px;padding:22px;margin-bottom:18px}
-h2{font-size:23px;margin:0 0 18px}
-p{line-height:1.5}
-label{display:block;margin:14px 0 7px;color:#b7bdc6}
-input{display:block;width:100%;padding:15px;background:#0b0e11;color:white;border:1px solid #474d57;border-radius:8px;font-size:16px;outline:none}
-input:focus{border-color:#f0b90b}
-a{color:#f0b90b}
-.muted{color:#848e9c;font-size:14px}
+.secondary{background:#30343b;color:#fff}
+.redbtn{background:#f6465d;color:white}
+.greenbtn{background:#0ecb81;color:#111}
 .hidden{display:none!important}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.balance{font-size:34px;color:#f0b90b;font-weight:bold;margin:12px 0}
+.container{max-width:1100px;margin:auto;padding:15px}
+.card{background:#181a20;border:1px solid #30343b;border-radius:12px;padding:18px;margin-bottom:15px}
+h2{font-size:21px;margin:0 0 16px}
+label{display:block;margin:12px 0 6px;color:#b7bdc6}
+input,select,textarea{width:100%;padding:13px;background:#0b0e11;color:#fff;border:1px solid #474d57;border-radius:7px;font-size:15px}
+textarea{resize:vertical}
+.muted{color:#848e9c;font-size:13px;line-height:1.5}
+.balance{font-size:31px;font-weight:bold;color:#f0b90b;margin:10px 0}
 .price{font-size:27px;color:#f0b90b;font-weight:bold}
-.full{width:100%;margin-top:12px}
-.tabs{display:flex;gap:10px;margin-bottom:15px}
-.tabs button{flex:1}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.nav{display:flex;gap:8px;overflow-x:auto;padding:12px 0}
+.nav button{white-space:nowrap;flex-shrink:0}
+.nav .active{background:#f0b90b;color:#111}
+button:disabled{opacity:.5;cursor:not-allowed}
 .message{margin-top:12px;font-size:14px;overflow-wrap:anywhere}
-.good{color:#0ecb81}
-.bad{color:#f6465d}
-.table-wrap{overflow-x:auto}
-table{border-collapse:collapse;width:100%;min-width:360px}
-th,td{padding:12px 8px;border-bottom:1px solid #30343b;text-align:left;font-size:13px}
+.good{color:#0ecb81}.bad{color:#f6465d}
+.tabs{display:flex;gap:8px;margin:12px 0}
+.tabs button{flex:1}
+.full{width:100%;margin-top:12px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:470px}
+th,td{text-align:left;padding:11px 8px;border-bottom:1px solid #30343b;font-size:13px}
+.chatbox{height:280px;overflow-y:auto;background:#0b0e11;padding:12px;border-radius:8px;margin-bottom:12px}
+.chatmsg{padding:9px;margin-bottom:8px;background:#181a20;border-radius:7px;overflow-wrap:anywhere}
 footer{text-align:center;padding:25px;color:#848e9c}
 @media(max-width:600px){
- header{padding:13px 12px}
- .logo{font-size:24px}
- header button{padding:11px 12px;font-size:14px}
- .container{padding:12px}
- .card{padding:17px}
- h2{font-size:21px}
  .grid{grid-template-columns:1fr}
- .balance{font-size:30px}
+ header{padding:12px}
+ .logo{font-size:22px}
+ .container{padding:10px}
+ .card{padding:15px}
+ .balance{font-size:28px}
 }
 </style>
 </head>
-
 <body>
+
 <header>
   <div class="logo">₿ BitPro</div>
-  <div id="authButtons">
-    <button class="secondary" id="loginTop">Login</button>
-    <button class="primary" id="registerTop">Register</button>
+  <div id="guestButtons">
+    <button class="secondary" onclick="showAuth('login')">Login</button>
+    <button class="primary" onclick="showAuth('register')">Register</button>
   </div>
-  <button id="logoutBtn" class="secondary hidden">Logout</button>
+  <div id="userButtons" class="hidden">
+    <button class="secondary" onclick="openPage('profile')">Profile</button>
+    <button class="secondary" onclick="logout()">Logout</button>
+  </div>
 </header>
 
-<main class="container">
+<div class="container">
 
-  <section id="authSection" class="card">
-    <h2 id="authTitle">Create Account</h2>
-    <p class="muted" id="authDescription">Register to receive your $10 welcome bonus.</p>
+<section id="authSection" class="card">
+  <h2 id="authTitle">Create Account</h2>
+  <p class="muted" id="authDescription">Register to receive your $10 welcome bonus.</p>
+  <form id="authForm">
+    <div id="nameGroup">
+      <label>Name</label>
+      <input id="name" placeholder="Enter your name" required>
+    </div>
+    <label>Email</label>
+    <input id="email" type="email" placeholder="Enter email" required>
+    <label>Password</label>
+    <input id="password" type="password" minlength="6" placeholder="Minimum 6 characters" required>
+    <button class="primary" id="authSubmit" type="submit">Register &amp; Get $10</button>
+    <p id="switchText" class="muted">Already registered? <a href="#" onclick="showAuth('login');return false">Login</a></p>
+    <div id="authMessage" class="message"></div>
+  </form>
+</section>
 
-    <form id="authForm">
-      <div id="nameGroup">
-        <label for="name">Your Name</label>
-        <input id="name" type="text" placeholder="Enter your name" autocomplete="name">
-      </div>
+<section id="app" class="hidden">
 
-      <label for="email">Email Address</label>
-      <input id="email" type="email" placeholder="Enter email" autocomplete="email" required>
+  <nav class="nav">
+    <button class="active" data-page="home" onclick="openPage('home')">Dashboard</button>
+    <button data-page="chat" onclick="openPage('chat')">Live Trade Chat</button>
+    <button data-page="deposit" onclick="openPage('deposit')">Deposit</button>
+    <button data-page="withdraw" onclick="openPage('withdraw')">Withdraw</button>
+    <button data-page="history" onclick="openPage('history')">History</button>
+    <button data-page="profile" onclick="openPage('profile')">Profile</button>
+  </nav>
 
-      <label for="password">Password</label>
-      <input id="password" type="password" placeholder="Minimum 6 characters" minlength="6" autocomplete="current-password" required>
-
-      <button type="submit" id="authSubmit" class="primary">Register &amp; Get $10</button>
-      <p id="switchText" class="muted">Already registered? <a href="#" id="switchAuth">Login</a></p>
-      <div id="authMessage" class="message" role="status"></div>
-    </form>
-  </section>
-
-  <section id="dashboard" class="hidden">
-
+  <section id="page-home" class="page">
     <div class="card">
-      <p class="muted">Welcome, <strong id="userName"></strong></p>
-      <h2>My Wallet</h2>
+      <p class="muted">Welcome, <span id="welcomeName"></span></p>
+      <h2>Wallet Overview</h2>
       <p class="muted">Available Balance (USDT)</p>
       <div class="balance">$<span id="balance">10.00</span></div>
       <p class="muted">Welcome Bonus: $10.00</p>
+      <div class="grid">
+        <button class="primary" onclick="openPage('deposit')">+ Deposit</button>
+        <button class="secondary" onclick="openPage('withdraw')">Withdraw</button>
+      </div>
     </div>
 
     <div class="grid">
       <div class="card">
-        <h2>BTC Market</h2>
-        <p class="muted">Bitcoin / USDT</p>
-        <div id="btcPrice" class="price">Loading...</div>
-        <p id="btcChange" class="muted">Market price</p>
-        <button type="button" class="secondary" id="refreshPrice">Refresh Price</button>
+        <h2>BTC / USDT</h2>
+        <div class="price" id="btcPrice">Loading...</div>
+        <p class="muted" id="btcChange">Loading market data...</p>
+        <button class="secondary" onclick="loadPrice()">Refresh Price</button>
       </div>
-
       <div class="card">
-        <h2>Trade BTC</h2>
-        <div class="tabs">
-          <button type="button" id="buyTab" class="primary">Buy BTC</button>
-          <button type="button" id="sellTab" class="secondary">Sell BTC</button>
-        </div>
-
-        <label for="amount">Amount (USDT)</label>
-        <input id="amount" type="number" min="1" step="0.01" placeholder="Enter amount">
-        <p class="muted">Estimated BTC: <strong id="estimated">0.00000000</strong></p>
-        <p class="muted">Trading fee: 0.1%</p>
-        <button type="button" id="tradeBtn" class="primary full">Buy BTC</button>
-        <div id="tradeMessage" class="message" role="status"></div>
+        <h2>My Assets</h2>
+        <p class="muted">USDT Balance</p>
+        <strong id="homeUSDT">$10.00</strong>
+        <p class="muted">BTC Balance</p>
+        <strong id="homeBTC">0 BTC</strong>
       </div>
     </div>
 
     <div class="card">
-      <h2>My Assets</h2>
-      <div class="grid">
-        <div>
-          <p class="muted">USDT Balance</p>
-          <strong id="usdtAsset">$10.00</strong>
-        </div>
-        <div>
-          <p class="muted">BTC Balance</p>
-          <strong id="btcAsset">0 BTC</strong>
-        </div>
+      <h2>BTC Trade</h2>
+      <div class="tabs">
+        <button id="buyTab" class="primary" onclick="setSide('buy')">Buy BTC</button>
+        <button id="sellTab" class="secondary" onclick="setSide('sell')">Sell BTC</button>
       </div>
+      <label>Amount (USDT)</label>
+      <input id="tradeAmount" type="number" min="1" step="0.01" placeholder="Enter amount">
+      <p class="muted">Estimated BTC: <span id="estimate">0.00000000</span></p>
+      <button id="tradeButton" class="primary full" onclick="trade()">Buy BTC</button>
+      <div id="tradeMessage" class="message"></div>
     </div>
+  </section>
 
+  <section id="page-chat" class="page hidden">
     <div class="card">
-      <h2>Trade History</h2>
-      <div class="table-wrap">
+      <h2>BTC Live Trade Chat</h2>
+      <div class="price" id="chatPrice">Loading...</div>
+      <p class="muted">BTC / USDT live market price</p>
+      <div class="chatbox" id="chatMessages">
+        <div class="chatmsg">BitPro: Welcome to the BTC trading chat.</div>
+        <div class="chatmsg">BitPro: Be careful with cryptocurrency price movements.</div>
+      </div>
+      <form id="chatForm">
+        <label>Message</label>
+        <input id="chatInput" maxlength="300" placeholder="Write a message..." required>
+        <button class="primary full" type="submit">Send Message</button>
+      </form>
+      <p class="muted">This version stores chat messages only in this browser. A shared live chat for all users requires a server.</p>
+    </div>
+  </section>
+
+  <section id="page-deposit" class="page hidden">
+    <div class="card">
+      <h2>Deposit</h2>
+      <p class="muted">Submit a deposit request for review.</p>
+      <form id="depositForm">
+        <label>Deposit Method</label>
+        <select id="depositMethod" required>
+          <option value="">Select method</option>
+          <option value="Bank Transfer">Bank Transfer</option>
+          <option value="Mobile Banking">Mobile Banking</option>
+          <option value="USDT TRC20">USDT TRC20</option>
+        </select>
+        <label>Amount (USD)</label>
+        <input id="depositAmount" type="number" min="1" step="0.01" placeholder="Enter amount" required>
+        <label>Transaction Reference (optional)</label>
+        <input id="depositRef" maxlength="120" placeholder="Transaction ID">
+        <button class="primary full" type="submit">Submit Deposit Request</button>
+      </form>
+      <div id="depositMessage" class="message"></div>
+      <p class="muted">A submitted request is pending and does not automatically add money to your balance.</p>
+    </div>
+  </section>
+
+  <section id="page-withdraw" class="page hidden">
+    <div class="card">
+      <h2>Withdraw</h2>
+      <p class="muted">Available balance: $<span id="withdrawBalance">10.00</span></p>
+      <form id="withdrawForm">
+        <label>Withdrawal Method</label>
+        <select id="withdrawMethod" required>
+          <option value="">Select method</option>
+          <option value="Bank Transfer">Bank Transfer</option>
+          <option value="Mobile Banking">Mobile Banking</option>
+          <option value="USDT TRC20">USDT TRC20</option>
+        </select>
+        <label>Amount (USD)</label>
+        <input id="withdrawAmount" type="number" min="1" step="0.01" placeholder="Enter amount" required>
+        <label>Account / Wallet Address</label>
+        <input id="withdrawAddress" maxlength="200" placeholder="Enter payout details" required>
+        <button class="primary full" type="submit">Submit Withdrawal Request</button>
+      </form>
+      <div id="withdrawMessage" class="message"></div>
+      <p class="muted">Requests are recorded as pending. Real payouts require a verified payment backend.</p>
+    </div>
+  </section>
+
+  <section id="page-history" class="page hidden">
+    <div class="card">
+      <h2>Transaction History</h2>
+      <div class="tablewrap">
         <table>
-          <thead><tr><th>Time</th><th>Type</th><th>Amount</th><th>Price</th></tr></thead>
-          <tbody id="history"></tbody>
+          <thead>
+            <tr><th>Date</th><th>Type</th><th>Amount</th><th>Method / Details</th><th>Status</th></tr>
+          </thead>
+          <tbody id="historyRows"></tbody>
         </table>
       </div>
     </div>
   </section>
-</main>
+
+  <section id="page-profile" class="page hidden">
+    <div class="card">
+      <h2>My Profile</h2>
+      <p class="muted">Account Name</p>
+      <h3 id="profileName">-</h3>
+      <p class="muted">Email Address</p>
+      <p id="profileEmail">-</p>
+      <hr style="border-color:#30343b">
+      <p class="muted">Total Account Balance</p>
+      <div class="balance">$<span id="profileBalance">10.00</span></div>
+      <p class="muted">BTC Holdings</p>
+      <h3 id="profileBTC">0 BTC</h3>
+      <p class="muted">Account Registration Bonus</p>
+      <h3>$10.00</h3>
+      <button class="secondary" onclick="openPage('history')">View History</button>
+    </div>
+  </section>
+
+</section>
+</div>
 
 <footer>BitPro © 2026</footer>
 
 <script>
-(function(){
 "use strict";
 
 const $ = id => document.getElementById(id);
-const USERS_KEY = "bitpro_users_v2";
-const SESSION_KEY = "bitpro_session_v2";
+const USER_KEY = "bitpro_users_v3";
+const SESSION_KEY = "bitpro_session_v3";
 let currentEmail = null;
 let side = "buy";
 let btcPrice = 0;
 
-function readUsers(){
-  try{
-    return JSON.parse(localStorage.getItem(USERS_KEY) || "{}");
-  }catch(e){
-    return {};
-  }
+function users(){
+  try{return JSON.parse(localStorage.getItem(USER_KEY)||"{}");}
+  catch(e){return {};}
 }
-
-function saveUsers(users){
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+function saveUsers(data){
+  localStorage.setItem(USER_KEY,JSON.stringify(data));
 }
-
-function showMessage(id, text, success){
-  $(id).textContent = text;
-  $(id).className = "message " + (success ? "good" : "bad");
+function account(){
+  return currentEmail ? users()[currentEmail] : null;
+}
+function updateAccount(u){
+  const all=users();
+  all[currentEmail]=u;
+  saveUsers(all);
+}
+function message(id,text,ok=false){
+  $(id).textContent=text;
+  $(id).className="message "+(ok?"good":"bad");
 }
 
 function showAuth(mode){
   $("authSection").classList.remove("hidden");
-  $("dashboard").classList.add("hidden");
+  $("app").classList.add("hidden");
+  $("guestButtons").classList.remove("hidden");
+  $("userButtons").classList.add("hidden");
   $("authForm").reset();
-  $("authForm").dataset.mode = mode;
-  $("authMessage").textContent = "";
-
-  const registering = mode === "register";
-  $("authTitle").textContent = registering ? "Create Account" : "Login";
-  $("authDescription").textContent = registering
-    ? "Register to receive your $10 welcome bonus."
-    : "Login to your BitPro account.";
-  $("nameGroup").classList.toggle("hidden", !registering);
-  $("name").required = registering;
-  $("authSubmit").textContent = registering ? "Register & Get $10" : "Login";
-  $("switchText").innerHTML = registering
-    ? 'Already registered? <a href="#" id="switchAuth">Login</a>'
-    : 'New user? <a href="#" id="switchAuth">Register</a>';
-  $("authButtons").classList.remove("hidden");
-  $("logoutBtn").classList.add("hidden");
+  $("authForm").dataset.mode=mode;
+  $("authMessage").textContent="";
+  const reg=mode==="register";
+  $("authTitle").textContent=reg?"Create Account":"Login";
+  $("authDescription").textContent=reg?"Register to receive your $10 welcome bonus.":"Login to your BitPro account.";
+  $("nameGroup").classList.toggle("hidden",!reg);
+  $("name").required=reg;
+  $("authSubmit").textContent=reg?"Register & Get $10":"Login";
+  $("switchText").innerHTML=reg
+    ? 'Already registered? <a href="#" onclick="showAuth(\'login\');return false">Login</a>'
+    : 'New user? <a href="#" onclick="showAuth(\'register\');return false">Register</a>';
 }
 
-function showDashboard(email){
-  const users = readUsers();
-  if(!users[email]){
-    localStorage.removeItem(SESSION_KEY);
-    showAuth("login");
+$("authForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const mode=$("authForm").dataset.mode||"register";
+  const email=$("email").value.trim().toLowerCase();
+  const password=$("password").value;
+  const all=users();
+
+  if(password.length<6){
+    message("authMessage","Password must contain at least 6 characters.");
     return;
   }
-  currentEmail = email;
-  localStorage.setItem(SESSION_KEY, email);
+
+  if(mode==="register"){
+    const name=$("name").value.trim();
+    if(!name){message("authMessage","Enter your name.");return;}
+    if(all[email]){
+      message("authMessage","Email already registered. Please login.");
+      return;
+    }
+    all[email]={
+      name,email,password,balance:10,btc:0,
+      bonusGranted:true,history:[]
+    };
+    try{
+      saveUsers(all);
+      loginUser(email);
+    }catch(err){
+      message("authMessage","Could not save account in this browser.");
+    }
+  }else{
+    if(!all[email]||all[email].password!==password){
+      message("authMessage","Incorrect email or password.");
+      return;
+    }
+    loginUser(email);
+  }
+});
+
+function loginUser(email){
+  currentEmail=email;
+  localStorage.setItem(SESSION_KEY,email);
   $("authSection").classList.add("hidden");
-  $("dashboard").classList.remove("hidden");
-  $("authButtons").classList.add("hidden");
-  $("logoutBtn").classList.remove("hidden");
+  $("app").classList.remove("hidden");
+  $("guestButtons").classList.add("hidden");
+  $("userButtons").classList.remove("hidden");
+  openPage("home");
   render();
   loadPrice();
 }
 
-$("loginTop").addEventListener("click", () => showAuth("login"));
-$("registerTop").addEventListener("click", () => showAuth("register"));
-
-$("switchText").addEventListener("click", function(e){
-  if(e.target.id === "switchAuth"){
-    e.preventDefault();
-    showAuth(($("authForm").dataset.mode || "register") === "register" ? "login" : "register");
-  }
-});
-
-$("authForm").addEventListener("submit", function(e){
-  e.preventDefault();
-
-  const mode = this.dataset.mode || "register";
-  const email = $("email").value.trim().toLowerCase();
-  const password = $("password").value;
-  const users = readUsers();
-
-  if(!email || password.length < 6){
-    showMessage("authMessage", "Enter a valid email and password of at least 6 characters.", false);
-    return;
-  }
-
-  if(mode === "register"){
-    const name = $("name").value.trim();
-    if(!name){
-      showMessage("authMessage", "Please enter your name.", false);
-      return;
-    }
-    if(users[email]){
-      showMessage("authMessage", "This email is already registered. Please login.", false);
-      return;
-    }
-
-    users[email] = {
-      name: name,
-      password: password,
-      balance: 10,
-      btc: 0,
-      bonusGranted: true,
-      history: []
-    };
-
-    try{
-      saveUsers(users);
-      showDashboard(email);
-    }catch(err){
-      showMessage("authMessage", "Could not save account in this browser.", false);
-    }
-  }else{
-    if(!users[email] || users[email].password !== password){
-      showMessage("authMessage", "Incorrect email or password.", false);
-      return;
-    }
-    showDashboard(email);
-  }
-});
-
-function getAccount(){
-  if(!currentEmail) return null;
-  return readUsers()[currentEmail] || null;
+function logout(){
+  currentEmail=null;
+  localStorage.removeItem(SESSION_KEY);
+  showAuth("login");
 }
 
-function updateAccount(account){
-  const users = readUsers();
-  users[currentEmail] = account;
-  saveUsers(users);
+function openPage(page){
+  document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+  $("page-"+page).classList.remove("hidden");
+  document.querySelectorAll(".nav button").forEach(b=>{
+    b.classList.toggle("active",b.dataset.page===page);
+  });
+  if(page==="profile"||page==="history"||page==="withdraw")render();
+}
+
+function addHistory(u,type,amount,details,status){
+  u.history.push({
+    date:new Date().toLocaleString(),
+    type,amount,details,status
+  });
 }
 
 function render(){
-  const account = getAccount();
-  if(!account) return;
+  const u=account();
+  if(!u)return;
+  $("welcomeName").textContent=u.name;
+  $("balance").textContent=Number(u.balance).toFixed(2);
+  $("homeUSDT").textContent="$"+Number(u.balance).toFixed(2);
+  $("homeBTC").textContent=Number(u.btc).toFixed(8)+" BTC";
+  $("withdrawBalance").textContent=Number(u.balance).toFixed(2);
+  $("profileName").textContent=u.name;
+  $("profileEmail").textContent=u.email;
+  $("profileBalance").textContent=Number(u.balance).toFixed(2);
+  $("profileBTC").textContent=Number(u.btc).toFixed(8)+" BTC";
 
-  $("userName").textContent = account.name;
-  $("balance").textContent = Number(account.balance).toFixed(2);
-  $("usdtAsset").textContent = "$" + Number(account.balance).toFixed(2);
-  $("btcAsset").textContent = Number(account.btc).toFixed(8) + " BTC";
-
-  const tbody = $("history");
-  tbody.replaceChildren();
-
-  if(!account.history.length){
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-    td.colSpan = 4;
-    td.textContent = "No transactions yet";
-    td.className = "muted";
+  const body=$("historyRows");
+  body.replaceChildren();
+  const rows=u.history.slice().reverse();
+  if(!rows.length){
+    const tr=document.createElement("tr");
+    const td=document.createElement("td");
+    td.colSpan=5;
+    td.textContent="No transactions yet";
     tr.appendChild(td);
-    tbody.appendChild(tr);
+    body.appendChild(tr);
   }else{
-    account.history.slice().reverse().forEach(item => {
-      const tr = document.createElement("tr");
-      [item.time, item.type, item.amount, "$" + Number(item.price).toLocaleString()].forEach(value => {
-        const td = document.createElement("td");
-        td.textContent = value;
+    rows.forEach(item=>{
+      const tr=document.createElement("tr");
+      [item.date,item.type,item.amount,item.details,item.status].forEach(v=>{
+        const td=document.createElement("td");
+        td.textContent=v;
         tr.appendChild(td);
       });
-      tbody.appendChild(tr);
+      body.appendChild(tr);
     });
   }
   updateEstimate();
 }
 
 async function loadPrice(){
-  $("btcPrice").textContent = "Loading...";
   try{
-    const response = await fetch("https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT");
-    if(!response.ok) throw new Error("Price unavailable");
-    const data = await response.json();
-    btcPrice = Number(data.lastPrice);
-    $("btcPrice").textContent = "$" + btcPrice.toLocaleString("en-US",{maximumFractionDigits:2});
-
-    const change = Number(data.priceChangePercent);
-    $("btcChange").textContent = "24h: " + change.toFixed(2) + "%";
-    $("btcChange").className = change >= 0 ? "good" : "bad";
+    const r=await fetch("https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT");
+    if(!r.ok)throw new Error();
+    const d=await r.json();
+    btcPrice=Number(d.lastPrice);
+    $("btcPrice").textContent="$"+btcPrice.toLocaleString("en-US",{maximumFractionDigits:2});
+    $("chatPrice").textContent="$"+btcPrice.toLocaleString("en-US",{maximumFractionDigits:2});
+    const change=Number(d.priceChangePercent);
+    $("btcChange").textContent="24h: "+change.toFixed(2)+"%";
+    $("btcChange").className=change>=0?"good":"bad";
     updateEstimate();
-  }catch(error){
-    $("btcPrice").textContent = "Unavailable";
-    $("btcChange").textContent = "Check internet and refresh.";
+  }catch(e){
+    $("btcPrice").textContent="Unavailable";
+    $("chatPrice").textContent="Unavailable";
+    $("btcChange").textContent="Check internet and refresh.";
   }
 }
-
-$("refreshPrice").addEventListener("click", loadPrice);
-$("buyTab").addEventListener("click", () => setSide("buy"));
-$("sellTab").addEventListener("click", () => setSide("sell"));
-$("amount").addEventListener("input", updateEstimate);
-$("tradeBtn").addEventListener("click", trade);
+setInterval(()=>{if(currentEmail)loadPrice();},30000);
 
 function setSide(value){
-  side = value;
-  $("buyTab").className = value === "buy" ? "primary" : "secondary";
-  $("sellTab").className = value === "sell" ? "sell" : "secondary";
-  $("tradeBtn").className = value === "buy" ? "primary full" : "sell full";
-  $("tradeBtn").textContent = value === "buy" ? "Buy BTC" : "Sell BTC";
-  $("tradeMessage").textContent = "";
+  side=value;
+  $("buyTab").className=value==="buy"?"primary":"secondary";
+  $("sellTab").className=value==="sell"?"redbtn":"secondary";
+  $("tradeButton").className=value==="buy"?"primary full":"redbtn full";
+  $("tradeButton").textContent=value==="buy"?"Buy BTC":"Sell BTC";
   updateEstimate();
 }
+$("tradeAmount").addEventListener("input",updateEstimate);
 
 function updateEstimate(){
-  const amount = Number($("amount").value);
-  const quantity = btcPrice > 0 && amount > 0 ? amount * 0.999 / btcPrice : 0;
-  $("estimated").textContent = quantity.toFixed(8);
+  const amount=Number($("tradeAmount").value);
+  $("estimate").textContent=(btcPrice>0&&amount>0?amount*.999/btcPrice:0).toFixed(8);
 }
 
 function trade(){
-  const account = getAccount();
-  const amount = Number($("amount").value);
-
-  if(!account){
-    showMessage("tradeMessage", "Please login first.", false);
+  const u=account();
+  const amount=Number($("tradeAmount").value);
+  if(!u||!Number.isFinite(amount)||amount<=0||btcPrice<=0){
+    message("tradeMessage","Enter a valid amount and load the BTC price.");
     return;
   }
-  if(!Number.isFinite(amount) || amount <= 0 || btcPrice <= 0){
-    showMessage("tradeMessage", "Enter a valid amount and ensure BTC price is available.", false);
-    return;
-  }
-
-  if(side === "buy"){
-    if(amount > account.balance){
-      showMessage("tradeMessage", "Insufficient USDT balance.", false);
-      return;
-    }
-    const quantity = amount * 0.999 / btcPrice;
-    account.balance -= amount;
-    account.btc += quantity;
-    account.history.push({
-      time: new Date().toLocaleString(),
-      type: "BUY",
-      amount: quantity.toFixed(8) + " BTC",
-      price: btcPrice
-    });
+  if(side==="buy"){
+    if(amount>u.balance){message("tradeMessage","Insufficient USDT balance.");return;}
+    const qty=amount*.999/btcPrice;
+    u.balance-=amount;
+    u.btc+=qty;
+    addHistory(u,"BUY",qty.toFixed(8)+" BTC","BTC / USDT","Completed (local)");
   }else{
-    const quantity = amount * 0.999 / btcPrice;
-    if(quantity > account.btc){
-      showMessage("tradeMessage", "Insufficient BTC balance.", false);
-      return;
-    }
-    account.btc -= quantity;
-    account.balance += amount * 0.999;
-    account.history.push({
-      time: new Date().toLocaleString(),
-      type: "SELL",
-      amount: amount.toFixed(2) + " USDT",
-      price: btcPrice
-    });
+    const qty=amount*.999/btcPrice;
+    if(qty>u.btc){message("tradeMessage","Insufficient BTC balance.");return;}
+    u.btc-=qty;
+    u.balance+=amount*.999;
+    addHistory(u,"SELL",amount.toFixed(2)+" USDT","BTC / USDT","Completed (local)");
   }
-
   try{
-    updateAccount(account);
+    updateAccount(u);
     render();
-    $("amount").value = "";
+    $("tradeAmount").value="";
     updateEstimate();
-    showMessage("tradeMessage", "Order updated in this browser.", true);
-  }catch(error){
-    showMessage("tradeMessage", "Could not save this order.", false);
+    message("tradeMessage","Trade recorded in this browser.",true);
+  }catch(e){
+    message("tradeMessage","Unable to save trade.");
   }
 }
 
-$("logoutBtn").addEventListener("click", function(){
-  currentEmail = null;
-  localStorage.removeItem(SESSION_KEY);
-  showAuth("login");
+$("depositForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const u=account();
+  const amount=Number($("depositAmount").value);
+  const method=$("depositMethod").value;
+  if(!u||!method||!Number.isFinite(amount)||amount<=0){
+    message("depositMessage","Enter valid deposit details.");
+    return;
+  }
+  addHistory(u,"DEPOSIT REQUEST","$"+amount.toFixed(2),
+    method+( $("depositRef").value.trim() ? " / Ref: "+$("depositRef").value.trim() : ""),
+    "Pending review");
+  try{
+    updateAccount(u);
+    render();
+    $("depositForm").reset();
+    message("depositMessage","Deposit request recorded as pending.",true);
+  }catch(err){
+    message("depositMessage","Could not save request.");
+  }
 });
 
-const session = localStorage.getItem(SESSION_KEY);
-if(session && readUsers()[session]){
-  showDashboard(session);
-}else{
-  showAuth("register");
-}
+$("withdrawForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const u=account();
+  const amount=Number($("withdrawAmount").value);
+  const method=$("withdrawMethod").value;
+  const address=$("withdrawAddress").value.trim();
+  if(!u||!method||!address||!Number.isFinite(amount)||amount<=0){
+    message("withdrawMessage","Enter valid withdrawal details.");
+    return;
+  }
+  if(amount>u.balance){
+    message("withdrawMessage","Insufficient available balance.");
+    return;
+  }
+  addHistory(u,"WITHDRAW REQUEST","$"+amount.toFixed(2),
+    method+" / "+address,"Pending review");
+  try{
+    updateAccount(u);
+    render();
+    $("withdrawForm").reset();
+    message("withdrawMessage","Withdrawal request recorded as pending.",true);
+  }catch(err){
+    message("withdrawMessage","Could not save request.");
+  }
+});
 
-})();
+$("chatForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const text=$("chatInput").value.trim();
+  if(!text)return;
+  const u=account();
+  if(!u)return;
+  const box=$("chatMessages");
+  const div=document.createElement("div");
+  div.className="chatmsg";
+  const strong=document.createElement("strong");
+  strong.textContent=u.name+": ";
+  div.appendChild(strong);
+  div.appendChild(document.createTextNode(text));
+  box.appendChild(div);
+  box.scrollTop=box.scrollHeight;
+  $("chatInput").value="";
+});
+
+const saved=localStorage.getItem(SESSION_KEY);
+if(saved&&users()[saved])loginUser(saved);
+else showAuth("register");
 </script>
 </body>
 </html>
