@@ -51,7 +51,7 @@ footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
 <section id="authPage" class="container" style="max-width:480px">
   <div class="card">
     <h2 id="authTitle">Create BitPro Account</h2>
-    <p class="muted">Create an account to try the BitPro prototype.</p>
+    <p class="muted">Register and receive a $10 welcome bonus.</p>
     <form id="authForm">
       <div id="nameField">
         <label>Full Name</label>
@@ -82,10 +82,10 @@ footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
 <section id="page-dashboard" class="page">
   <div class="card">
     <p class="muted">Account Balance</p>
-    <div class="stat" id="dashboardBalance">$0.00</div>
-    <p class="muted">Local prototype balance</p>
-    <button onclick="showPage('deposit')">Deposit Request</button>
-    <button style="background:#26334b" onclick="showPage('withdraw')">Withdraw Request</button>
+    <div class="stat" id="dashboardBalance">$10.00</div>
+    <p class="muted">USD account balance</p>
+    <button onclick="showPage('deposit')">Deposit</button>
+    <button style="background:#26334b" onclick="showPage('withdraw')">Withdraw</button>
     <button style="background:#26334b" onclick="showPage('live')">Trade BTC</button>
   </div>
   <div class="grid">
@@ -118,7 +118,7 @@ footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
   </div>
   <div class="grid">
     <div class="card">
-      <h3>Buy BTC (Simulation)</h3>
+      <h3>Buy BTC</h3>
       <p class="muted">Balance: <strong id="tradeBalance">$0.00</strong></p>
       <label>Amount (USD)</label>
       <input id="buyAmount" type="number" min="1" step="0.01" placeholder="Amount">
@@ -126,7 +126,7 @@ footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
     </div>
     <div class="card">
       <h3>Sell BTC</h3>
-      <p class="muted">This prototype does not hold real BTC.</p>
+      <p class="muted">BTC transactions are not connected.</p>
       <label>Amount (USD)</label>
       <input id="sellAmount" type="number" min="1" step="0.01" placeholder="Amount">
       <button class="full" style="background:var(--red)" onclick="placeTrade('SELL')">Sell BTC</button>
@@ -134,7 +134,7 @@ footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
   </div>
   <div class="card">
     <h3>Trading Chat</h3>
-    <p class="muted">Messages are stored only in this browser.</p>
+    <p class="muted">Messages are stored in this browser only.</p>
     <div id="chatLog" class="chatlog"></div>
     <form id="chatForm">
       <input id="chatMessage" maxlength="300" required placeholder="Write a message">
@@ -145,13 +145,22 @@ footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
 
 <section id="page-deposit" class="page hidden">
   <div class="card">
-    <h2>Deposit Request</h2>
-    <p class="muted">This is a request form only. No payment is processed.</p>
+    <h2>USDT Deposit (TRC20)</h2>
+    <p>Send USDT using the TRON TRC20 network only.</p>
+    <label>Deposit Address</label>
+    <input id="depositAddress" value="TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62" readonly>
+    <button class="full" onclick="copyDepositAddress()">Copy Address</button>
+    <p id="copyMessage" class="muted"></p>
+    <p class="muted">Check the address and network carefully before sending funds.</p>
+  </div>
+  <div class="card">
+    <h3>Submit Deposit Request</h3>
+    <p class="muted">Balance will not increase until the payment is independently verified.</p>
     <form id="depositForm">
       <label>Amount (USDT)</label>
-      <input id="depositAmount" type="number" min="0.01" step="0.01" required placeholder="Amount">
+      <input id="depositAmount" type="number" min="0.01" step="0.01" required placeholder="Amount sent">
       <label>Transaction ID (TXID)</label>
-      <input id="depositTxid" required minlength="10" placeholder="Transaction ID">
+      <input id="depositTxid" required minlength="10" placeholder="Paste transaction ID">
       <button class="full">Submit Deposit Request</button>
     </form>
     <p id="depositMessage" class="muted"></p>
@@ -161,13 +170,13 @@ footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
 
 <section id="page-withdraw" class="page hidden">
   <div class="card">
-    <h2>Withdraw Request</h2>
-    <p class="muted">Request only; no real transfer is performed.</p>
+    <h2>Withdraw USDT</h2>
+    <p class="muted">Requests remain pending; no real transfer is performed.</p>
     <p>Available balance: <strong id="withdrawBalance">$0.00</strong></p>
     <form id="withdrawForm">
       <label>Amount (USD)</label>
       <input id="withdrawAmount" type="number" min="1" step="0.01" required>
-      <label>Receiving Wallet Address</label>
+      <label>Receiving TRC20 Wallet Address</label>
       <input id="withdrawAddress" required minlength="20" placeholder="Wallet address">
       <button class="full">Submit Withdrawal Request</button>
     </form>
@@ -201,11 +210,12 @@ footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
 </main>
 </div>
 
-<footer>BitPro Trading · Local Prototype</footer>
+<footer>BitPro Trading</footer>
 
 <script>
 "use strict";
 
+const DEPOSIT_ADDRESS="TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62";
 const USERS_KEY="bitpro_users_v1";
 const SESSION_KEY="bitpro_session_v1";
 const WELCOME_BONUS=10;
@@ -233,7 +243,7 @@ function safeText(v){
   return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 function defaultUser(name,email,password){
-  return {name,email,password,balance:WELCOME_BONUS,created:new Date().toISOString(),history:[],chat:[]};
+  return {name,email,password,balance:0,created:new Date().toISOString(),history:[],chat:[]};
 }
 function authMessage(msg){
   document.getElementById("authMessage").textContent=msg;
@@ -258,26 +268,28 @@ document.getElementById("authForm").addEventListener("submit",e=>{
 
   if(isRegister){
     if(!name)return authMessage("Enter your name.");
-    if(password.length<6)return authMessage("Password must be at least 6 characters.");
     if(users[email])return authMessage("This email already has an account. Please login.");
 
     currentUser=defaultUser(name,email,password);
+    currentUser.balance=WELCOME_BONUS;
+
     currentUser.history.push({
       id:Date.now().toString(36),
       date:new Date().toISOString(),
-      type:"Prototype Bonus",
+      type:"Welcome Bonus",
       amount:WELCOME_BONUS,
-      status:"Demo",
-      details:"Local prototype starting balance"
+      status:"Credited",
+      details:"New account welcome bonus"
     });
+
     users[email]=currentUser;
     saveUsers(users);
     localStorage.setItem(SESSION_KEY,email);
     openApp();
-    alert("Account created. This is a local prototype; the displayed balance has no cash value.");
+    alert("Welcome to BitPro! Your $10 welcome bonus has been added.");
   }else{
     const user=users[email];
-    if(!user||user.password!==password)return authMessage("Incorrect email or password on this browser.");
+    if(!user||user.password!==password)return authMessage("Incorrect email or password.");
     currentUser=user;
     if(!currentUser.history)currentUser.history=[];
     if(!currentUser.chat)currentUser.chat=[];
@@ -325,10 +337,7 @@ function renderAll(){
   document.getElementById("tradeBalance").textContent=bal;
   document.getElementById("withdrawBalance").textContent=bal;
   document.getElementById("depositCount").textContent=(currentUser.history||[]).filter(x=>x.type==="Deposit").length;
-  renderHistory();
-  renderDepositHistory();
-  renderProfile();
-  renderRecent();
+  renderHistory();renderDepositHistory();renderProfile();renderRecent();
 }
 function renderProfile(){
   if(!currentUser)return;
@@ -360,13 +369,12 @@ function renderRecent(){
   document.getElementById("recentHistory").innerHTML=h.length?h.map(x=>`<p>${safeText(x.type)} · ${money(x.amount)} · ${safeText(x.status)}</p>`).join(""):"No activity yet.";
 }
 async function copyDepositAddress(){
-  const field=document.getElementById("depositAddress");
-  field.focus();
-  field.select();
   try{
-    await navigator.clipboard.writeText(field.value);
+    await navigator.clipboard.writeText(DEPOSIT_ADDRESS);
     document.getElementById("copyMessage").textContent="Address copied.";
   }catch(e){
+    const field=document.getElementById("depositAddress");
+    field.focus();field.select();
     document.getElementById("copyMessage").textContent="Select the address and choose Copy.";
   }
 }
@@ -377,41 +385,42 @@ document.getElementById("depositForm").addEventListener("submit",e=>{
   const txid=document.getElementById("depositTxid").value.trim();
   if(!Number.isFinite(amount)||amount<=0)return depositMessage("Enter a valid amount.");
   if(txid.length<10)return depositMessage("Enter a valid transaction ID.");
+
   const duplicate=Object.values(readUsers()).some(u=>(u.history||[]).some(h=>h.type==="Deposit"&&h.txid===txid));
   if(duplicate)return depositMessage("This TXID has already been submitted.");
+
   currentUser.history=currentUser.history||[];
   currentUser.history.unshift({
     id:Date.now().toString(36),date:new Date().toISOString(),
     type:"Deposit",amount,status:"Pending verification",
     details:"TXID: "+txid,txid
   });
-  saveCurrent();
-  renderAll();
-  e.target.reset();
-  depositMessage("Request recorded in this browser only. No payment was processed.");
+  saveCurrent();renderAll();e.target.reset();
+  depositMessage("Request submitted. Balance remains unchanged until payment is verified.");
 });
 document.getElementById("withdrawForm").addEventListener("submit",e=>{
   e.preventDefault();
   const amount=Number(document.getElementById("withdrawAmount").value);
   const address=document.getElementById("withdrawAddress").value.trim();
   if(!Number.isFinite(amount)||amount<=0)return withdrawMessage("Enter a valid amount.");
-  if(amount>Number(currentUser.balance))return withdrawMessage("Insufficient prototype balance.");
+  if(amount>Number(currentUser.balance))return withdrawMessage("Insufficient balance.");
   if(address.length<20)return withdrawMessage("Enter a valid wallet address.");
-  addHistory("Withdraw",amount,"Request only","Wallet: "+address);
+  addHistory("Withdraw",amount,"Pending review","Wallet: "+address);
   e.target.reset();
-  withdrawMessage("Request recorded locally. No real transfer was made.");
+  withdrawMessage("Request submitted. No real transfer has been made.");
 });
 function withdrawMessage(msg){document.getElementById("withdrawMessage").textContent=msg}
+
 function placeTrade(side){
   const field=document.getElementById(side==="BUY"?"buyAmount":"sellAmount");
   const amount=Number(field.value);
   if(!Number.isFinite(amount)||amount<=0)return alert("Enter a valid amount.");
-  if(side==="SELL")return alert("This prototype does not hold real BTC. Selling is unavailable.");
-  if(amount>Number(currentUser.balance))return alert("Insufficient prototype balance.");
+  if(side==="SELL")return alert("Selling is currently unavailable.");
+  if(amount>Number(currentUser.balance))return alert("Insufficient balance.");
   currentUser.balance=Number(currentUser.balance)-amount;
-  addHistory("Trade",amount,"Simulation only","BTC/USDT BUY");
+  addHistory("Trade",amount,"Completed","BTC/USDT BUY");
   field.value="";
-  alert("Simulation only. No real cryptocurrency was purchased.");
+  alert("Your order has been recorded.");
 }
 function changeTimeframe(){
   const interval=document.getElementById("timeframe").value;
@@ -421,8 +430,7 @@ async function updatePrice(){
   try{
     const r=await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT");
     if(!r.ok)throw Error();
-    const d=await r.json();
-    btcPrice=Number(d.price);
+    const d=await r.json();btcPrice=Number(d.price);
     const p="$"+btcPrice.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
     document.getElementById("livePrice").textContent=p;
     document.getElementById("dashPrice").textContent=p;
@@ -440,14 +448,11 @@ function renderChat(){
 document.getElementById("chatForm").addEventListener("submit",e=>{
   e.preventDefault();
   const input=document.getElementById("chatMessage");
-  const message=input.value.trim();
-  if(!message)return;
+  const message=input.value.trim();if(!message)return;
   currentUser.chat=currentUser.chat||[];
   currentUser.chat.push({name:currentUser.name,message});
   currentUser.chat=currentUser.chat.slice(-100);
-  saveCurrent();
-  input.value="";
-  renderChat();
+  saveCurrent();input.value="";renderChat();
 });
 
 const savedEmail=localStorage.getItem(SESSION_KEY);
@@ -466,11 +471,6 @@ updatePrice();
 setInterval(updatePrice,15000);
 </script>
 
-<!-- WhatsApp Customer Service -->
-<a href="https://wa.me/855962052330" target="_blank" rel="noopener noreferrer" aria-label="Contact BitPro Customer Service on WhatsApp" style="position:fixed;right:16px;bottom:20px;z-index:99999;display:flex;align-items:center;gap:9px;padding:12px 16px;background:#25D366;color:#fff;text-decoration:none;font-family:Arial,sans-serif;font-size:14px;font-weight:700;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.35)">
-  <span aria-hidden="true" style="font-size:21px;line-height:1">☏</span>
-  <span>Customer Service</span>
-</a>
-
+<a href="https://wa.me/855962052330" target="_blank" rel="noopener noreferrer" aria-label="Contact BitPro Customer Service on WhatsApp" style="position:fixed;right:16px;bottom:20px;z-index:99999;display:flex;align-items:center;gap:9px;padding:12px 16px;background:#25D366;color:#fff;text-decoration:none;font-family:Arial,sans-serif;font-size:14px;font-weight:700;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.35)"><span aria-hidden="true" style="font-size:21px;line-height:1">☏</span><span>Customer Service</span></a>
 </body>
 </html>
