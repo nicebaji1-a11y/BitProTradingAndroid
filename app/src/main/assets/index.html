@@ -3,51 +3,101 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BitPro Trading</title>
+
 <style>
-:root{--bg:#08111f;--panel:#111e30;--panel2:#17263b;--text:#edf4ff;--muted:#9baac2;--green:#24d6a0;--red:#ff6179;--border:#293a53;--blue:#3979ff}
+:root {
+  --bg:#07111f;
+  --panel:#111e30;
+  --panel2:#1b2a40;
+  --green:#27d6a5;
+  --text:#f1f5ff;
+  --muted:#9eacc3;
+  --border:#2b3c55;
+  --red:#ff637a;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
-header{padding:20px;background:#0d192a;border-bottom:1px solid var(--border)}
-.logo{font-size:28px;font-weight:bold;color:var(--green)}
-.container{max-width:700px;margin:auto;padding:16px}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Arial,sans-serif;
+}
+header{
+  padding:22px 18px;background:#0d192a;
+  border-bottom:1px solid var(--border);
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand svg{width:64px;height:64px;flex-shrink:0}
+.brand-name{font-size:clamp(24px,6vw,35px);font-weight:800}
+.brand-name span{color:var(--green)}
+.tagline{font-size:13px;color:var(--muted);margin-top:5px}
+.container{max-width:720px;margin:auto;padding:16px}
+.card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:18px;padding:20px;margin-bottom:16px;
+}
 h2,h3{margin-top:0}
 .muted{color:var(--muted);font-size:14px;line-height:1.6}
-label{display:block;margin:14px 0 7px}
-input{width:100%;padding:14px;border:1px solid var(--border);border-radius:9px;background:#091525;color:white;font-size:16px}
-button{border:0;padding:13px 15px;border-radius:10px;font-weight:bold;cursor:pointer;background:var(--blue);color:white;font-size:14px}
-.primary{background:var(--green);color:#061a16}
-.secondary{background:var(--panel2);border:1px solid var(--border)}
+label{display:block;margin:14px 0 7px;font-size:14px}
+input{
+  width:100%;padding:14px;border-radius:10px;
+  border:1px solid var(--border);background:#091525;
+  color:white;font-size:16px;
+}
+button{
+  padding:13px 15px;border:0;border-radius:10px;
+  font-weight:bold;font-size:14px;cursor:pointer;
+  background:#263750;color:white;
+}
+.primary{background:var(--green);color:#061a15}
 .full{width:100%;margin-top:14px}
 .hidden{display:none!important}
-nav{display:flex;gap:8px;overflow-x:auto;padding:4px 0 16px}
-nav button{flex-shrink:0}
-nav button.active{background:var(--green);color:#061a16}
+nav{
+  display:flex;gap:8px;overflow-x:auto;
+  padding:4px 0 16px;
+}
+nav button{flex-shrink:0;white-space:nowrap}
+nav button.active{background:var(--green);color:#061a15}
 .balance{font-size:32px;color:var(--green);font-weight:bold}
 .price{font-size:34px;font-weight:bold;margin:15px 0}
-.address{overflow-wrap:anywhere;background:#091525;border:1px solid var(--border);padding:13px;border-radius:9px;margin:10px 0}
-.row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.address{
+  background:#091525;border:1px solid var(--border);
+  border-radius:10px;padding:13px;overflow-wrap:anywhere;
+}
 .status{color:#ffcc66;font-size:13px}
 .small{font-size:12px;color:var(--muted)}
-a{color:var(--green)}
 #btcChart{display:block;width:100%;height:220px}
+a{color:var(--green)}
 </style>
 </head>
-<body>
 
+<body>
 <header>
-  <div class="logo">₿ BitPro Trading</div>
-  <button id="logoutBtn" class="secondary" onclick="logout()" hidden>Logout</button>
+  <div class="brand">
+    <!-- BitPro Trading logo: embedded SVG -->
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="BitPro logo">
+      <circle cx="50" cy="50" r="46" fill="none" stroke="#27d6a5" stroke-width="4"/>
+      <path d="M39 18h7v8h9v-8h7v9c10 3 13 17 4 23 13 5 10 24-4 28v9h-7v-8h-9v8h-7v-8h-9V28h9z"
+            fill="#27d6a5"/>
+      <path d="M39 35h16c12 0 12 13 0 13H39zm0 24h18c13 0 13 14 0 14H39z"
+            fill="#0d192a"/>
+      <path d="M58 70l22-23m-10 1 10-1-1 10" fill="none"
+            stroke="#27d6a5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div>
+      <div class="brand-name"><span>BitPro</span> Trading</div>
+      <div class="tagline">Trade Smarter • Grow Faster</div>
+    </div>
+  </div>
 </header>
 
 <div class="container">
 
-  <!-- REGISTER PAGE -->
+  <!-- REGISTER -->
   <section id="registerPage" class="card">
     <h2>Create Account</h2>
-    <p class="muted">BitPro Trading-এ নতুন অ্যাকাউন্ট তৈরি করুন।</p>
+    <p class="muted">BitPro Trading-এ স্বাগতম।</p>
     <form id="registerForm">
       <label>Full Name</label>
       <input id="regName" required placeholder="আপনার নাম">
@@ -57,33 +107,32 @@ a{color:var(--green)}
       <input id="regPassword" type="password" minlength="6" required placeholder="কমপক্ষে ৬ অক্ষর">
       <label>Confirm Password</label>
       <input id="regConfirm" type="password" required placeholder="পাসওয়ার্ড আবার লিখুন">
-      <button class="primary full" type="submit">Register</button>
+      <button class="primary full" type="submit">Create Account</button>
     </form>
-    <p class="muted">আগে অ্যাকাউন্ট আছে?
-      <a href="#" onclick="showAuth('login');return false">Login করুন</a>
+    <p class="muted">অ্যাকাউন্ট আছে?
+      <a href="#" onclick="showAuth('login');return false">Login</a>
     </p>
     <p id="registerMessage" class="muted"></p>
   </section>
 
-  <!-- LOGIN PAGE -->
+  <!-- LOGIN -->
   <section id="loginPage" class="card hidden">
-    <h2>Login</h2>
+    <h2>Welcome Back</h2>
     <form id="loginForm">
       <label>Email</label>
-      <input id="loginEmail" type="email" required placeholder="আপনার ইমেইল">
+      <input id="loginEmail" type="email" required>
       <label>Password</label>
-      <input id="loginPassword" type="password" required placeholder="পাসওয়ার্ড">
+      <input id="loginPassword" type="password" required>
       <button class="primary full" type="submit">Login</button>
     </form>
     <p class="muted">অ্যাকাউন্ট নেই?
-      <a href="#" onclick="showAuth('register');return false">Register করুন</a>
+      <a href="#" onclick="showAuth('register');return false">Register</a>
     </p>
     <p id="loginMessage" class="muted"></p>
   </section>
 
-  <!-- MAIN DASHBOARD -->
+  <!-- DASHBOARD -->
   <section id="dashboard" class="hidden">
-
     <nav>
       <button class="active" onclick="showTab('home',this)">Home</button>
       <button onclick="showTab('btc',this)">₿ BTC Live</button>
@@ -95,22 +144,22 @@ a{color:var(--green)}
     <!-- HOME -->
     <div id="home" class="tab">
       <div class="card">
-        <p class="muted">Welcome</p>
-        <h2 id="welcomeName">Welcome, Trader</h2>
+        <p class="muted">Welcome to BitPro</p>
+        <h2 id="welcomeName">Trader</h2>
         <p class="muted">Verified Balance</p>
         <div class="balance"><span id="balance">0.00</span> USDT</div>
-        <p class="muted">যাচাই করা হয়নি এমন Deposit ব্যালেন্সে যোগ হয় না।</p>
+        <p class="muted">যাচাই না হওয়া Deposit ব্যালেন্সে যোগ হয় না।</p>
       </div>
 
       <div class="card">
         <div class="row">
           <div>
             <h3>₿ BTC / USDT</h3>
-            <p class="muted">Live Bitcoin Market</p>
+            <p class="muted">Bitcoin Market</p>
           </div>
           <div style="text-align:right">
             <b id="homeBTCPrice">Loading...</b>
-            <p id="homeBTCChange" class="muted">লোড হচ্ছে...</p>
+            <p id="homeBTCChange" class="muted">Loading...</p>
           </div>
         </div>
         <button class="primary full" onclick="openTab('btc')">Open BTC Live</button>
@@ -121,158 +170,145 @@ a{color:var(--green)}
         <p class="muted">Network: TRON (TRC20)</p>
         <div class="address" id="walletAddress">TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62</div>
         <button class="primary full" onclick="copyWallet()">Copy Address</button>
-        <p class="muted">টাকা পাঠানোর আগে নেটওয়ার্ক ও ঠিকানা যাচাই করুন।</p>
       </div>
     </div>
 
-    <!-- BTC LIVE PAGE -->
+    <!-- BTC LIVE -->
     <div id="btc" class="tab hidden">
       <div class="card">
         <h2>₿ BTC / USDT</h2>
-        <p class="muted">Bitcoin Live Market Price</p>
-        <div id="btcPrice" class="price">Loading...</div>
-        <p id="btcChange" class="muted">মার্কেট ডেটা লোড হচ্ছে...</p>
+        <p class="muted">Live Bitcoin Market Price</p>
+        <div class="price" id="btcPrice">Loading...</div>
+        <p id="btcChange" class="muted">Market data loading...</p>
         <p id="btcUpdated" class="small"></p>
-        <button class="secondary full" onclick="loadBTC()">Refresh Price</button>
+        <button class="full" onclick="loadBTC()">Refresh Price</button>
       </div>
 
       <div class="card">
         <h3>BTC Price Chart</h3>
         <canvas id="btcChart" width="600" height="240"></canvas>
-        <p class="muted">সাম্প্রতিক ৫ মিনিটের মার্কেট ক্যান্ডেলের Close Price।</p>
+        <p class="muted">সাম্প্রতিক ৫ মিনিটের মার্কেট ডেটা।</p>
       </div>
 
       <div class="card">
-        <h3>BTC Buy Calculator</h3>
-        <p class="muted">USDT Amount লিখলে আনুমানিক BTC পরিমাণ দেখাবে।</p>
+        <h3>BTC Calculator</h3>
         <label>Amount (USDT)</label>
         <input id="btcAmount" type="number" min="0.01" step="any" placeholder="যেমন 100">
         <label>Estimated BTC</label>
         <div id="btcEstimate" class="address">0 BTC</div>
         <button class="primary full" onclick="previewBTC()">Calculate BTC</button>
         <p id="btcMessage" class="muted"></p>
-        <p class="muted">এটি ক্যালকুলেটর মাত্র। বাস্তব Buy/Sell অর্ডার দেওয়া হয় না।</p>
+        <p class="muted">এটি শুধু আনুমানিক হিসাব; বাস্তব ট্রেড হয় না।</p>
       </div>
     </div>
 
-    <!-- DEPOSIT PAGE -->
+    <!-- DEPOSIT -->
     <div id="deposit" class="tab hidden">
       <div class="card">
         <h2>Deposit USDT</h2>
         <p class="muted">Network: TRON (TRC20)</p>
-        <label>Deposit Wallet Address</label>
         <div class="address">TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62</div>
         <button class="secondary full" onclick="copyWallet()">Copy Address</button>
-
         <label>Amount (USDT)</label>
-        <input id="depositAmount" type="number" min="0.01" step="any" placeholder="Deposit Amount">
-
-        <label>Transaction ID (TXID)</label>
-        <input id="depositTxid" placeholder="Transaction ID লিখুন">
-
+        <input id="depositAmount" type="number" min="0.01" step="any">
+        <label>Transaction ID</label>
+        <input id="depositTxid" placeholder="TRON TXID">
         <button class="primary full" onclick="submitDeposit()">Submit Deposit Request</button>
         <p id="depositMessage" class="muted"></p>
-        <p class="muted">Blockchain যাচাই ছাড়া Deposit সফল হিসেবে গণ্য হবে না।</p>
+        <p class="muted">ব্লকচেইন যাচাই ছাড়া Deposit সফল হিসেবে গণ্য হবে না।</p>
       </div>
     </div>
 
-    <!-- WITHDRAW PAGE -->
+    <!-- WITHDRAW -->
     <div id="withdraw" class="tab hidden">
       <div class="card">
         <h2>Withdraw USDT</h2>
-        <p class="muted">Network: TRON (TRC20)</p>
         <label>Amount (USDT)</label>
-        <input id="withdrawAmount" type="number" min="0.01" step="any" placeholder="Withdraw Amount">
-
+        <input id="withdrawAmount" type="number" min="0.01" step="any">
         <label>Your TRC20 Wallet Address</label>
-        <input id="withdrawAddress" placeholder="আপনার Wallet Address">
-
+        <input id="withdrawAddress" placeholder="Wallet Address">
         <button class="primary full" onclick="submitWithdraw()">Submit Withdraw Request</button>
         <p id="withdrawMessage" class="muted"></p>
-        <p class="muted">এই পেজ অনুরোধ রেকর্ড করে; বাস্তব পেমেন্ট পাঠায় না।</p>
+        <p class="muted">এই প্রোটোটাইপ বাস্তব পেমেন্ট পাঠায় না।</p>
       </div>
     </div>
 
-    <!-- HISTORY PAGE -->
+    <!-- HISTORY -->
     <div id="history" class="tab hidden">
       <div class="card">
         <h2>Transaction History</h2>
         <div id="historyList"><p class="muted">এখনো কোনো রেকর্ড নেই।</p></div>
       </div>
     </div>
+
+    <button class="secondary full" onclick="logout()">Logout</button>
   </section>
 </div>
 
 <script>
-const WALLET = "TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62";
-let liveBTCPrice = 0;
-let btcCandles = [];
-let historyItems = [];
+const WALLET="TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62";
+let liveBTCPrice=0;
+let btcCandles=[];
+let historyItems=[];
 
-function showAuth(page) {
+function showAuth(page){
   document.getElementById("registerPage").classList.toggle("hidden",page!=="register");
   document.getElementById("loginPage").classList.toggle("hidden",page!=="login");
 }
 
-function showTab(id,button) {
+function showTab(id,button){
   document.querySelectorAll(".tab").forEach(el=>el.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
   document.querySelectorAll("nav button").forEach(el=>el.classList.remove("active"));
-  if(button) button.classList.add("active");
-  if(id==="btc") loadBTC();
+  if(button)button.classList.add("active");
+  if(id==="btc")loadBTC();
 }
 
-function openTab(id) {
-  const buttons=[...document.querySelectorAll("nav button")];
-  const button=buttons.find(b=>b.getAttribute("onclick")?.includes("'" + id + "'"));
-  showTab(id,button);
+function openTab(id){
+  const btn=[...document.querySelectorAll("nav button")]
+    .find(b=>b.getAttribute("onclick")?.includes("'"+id+"'"));
+  showTab(id,btn);
 }
 
-function enterDashboard(name) {
+function enterDashboard(name){
   document.getElementById("registerPage").classList.add("hidden");
   document.getElementById("loginPage").classList.add("hidden");
   document.getElementById("dashboard").classList.remove("hidden");
-  document.getElementById("logoutBtn").hidden=false;
   document.getElementById("welcomeName").textContent="Welcome, "+name;
   openTab("home");
 }
 
-document.getElementById("registerForm").addEventListener("submit",function(e){
+document.getElementById("registerForm").addEventListener("submit",e=>{
   e.preventDefault();
   const name=document.getElementById("regName").value.trim();
   const email=document.getElementById("regEmail").value.trim().toLowerCase();
   const password=document.getElementById("regPassword").value;
-  const confirm=document.getElementById("regConfirm").value;
-
-  if(password!==confirm){
+  if(password!==document.getElementById("regConfirm").value){
     document.getElementById("registerMessage").textContent="পাসওয়ার্ড মিলছে না।";
     return;
   }
-
   sessionStorage.setItem("bitproUser",JSON.stringify({name,email,password}));
-  document.getElementById("registerMessage").textContent="অ্যাকাউন্ট তৈরি হয়েছে।";
   enterDashboard(name);
 });
 
-document.getElementById("loginForm").addEventListener("submit",function(e){
+document.getElementById("loginForm").addEventListener("submit",e=>{
   e.preventDefault();
   const saved=sessionStorage.getItem("bitproUser");
   if(!saved){
     document.getElementById("loginMessage").textContent="এই সেশনে অ্যাকাউন্ট নেই। Register করুন।";
     return;
   }
-
-  const user=JSON.parse(saved);
-  const email=document.getElementById("loginEmail").value.trim().toLowerCase();
-  const password=document.getElementById("loginPassword").value;
-
-  if(email===user.email&&password===user.password) enterDashboard(user.name);
-  else document.getElementById("loginMessage").textContent="ইমেইল বা পাসওয়ার্ড ভুল।";
+  const u=JSON.parse(saved);
+  if(document.getElementById("loginEmail").value.trim().toLowerCase()===u.email &&
+     document.getElementById("loginPassword").value===u.password){
+    enterDashboard(u.name);
+  }else{
+    document.getElementById("loginMessage").textContent="ইমেইল বা পাসওয়ার্ড ভুল।";
+  }
 });
 
 function logout(){
   document.getElementById("dashboard").classList.add("hidden");
-  document.getElementById("logoutBtn").hidden=true;
   showAuth("login");
 }
 
@@ -286,42 +322,12 @@ async function copyWallet(){
 }
 
 function addHistory(type,amount,reference,status){
-  historyItems.unshift({
-    type,amount,reference,status,time:new Date().toLocaleString()
-  });
+  historyItems.unshift({type,amount,reference,status,time:new Date().toLocaleString()});
   renderHistory();
 }
 
-function submitDeposit(){
-  const amount=Number(document.getElementById("depositAmount").value);
-  const txid=document.getElementById("depositTxid").value.trim();
-
-  if(!Number.isFinite(amount)||amount<=0||!txid){
-    document.getElementById("depositMessage").textContent="সঠিক Amount ও TXID দিন।";
-    return;
-  }
-
-  addHistory("Deposit",amount,txid,"Pending verification");
-  document.getElementById("depositMessage").textContent=
-    "অনুরোধ রেকর্ড হয়েছে। যাচাই না হওয়া পর্যন্ত ব্যালেন্স বাড়বে না।";
-}
-
-function submitWithdraw(){
-  const amount=Number(document.getElementById("withdrawAmount").value);
-  const address=document.getElementById("withdrawAddress").value.trim();
-
-  if(!Number.isFinite(amount)||amount<=0||!address){
-    document.getElementById("withdrawMessage").textContent="সঠিক Amount ও Wallet Address দিন।";
-    return;
-  }
-
-  addHistory("Withdraw",amount,address,"Pending request");
-  document.getElementById("withdrawMessage").textContent=
-    "অনুরোধ রেকর্ড হয়েছে; বাস্তব পেমেন্ট পাঠানো হয়নি।";
-}
-
-function escapeHTML(value){
-  return String(value).replace(/[&<>"']/g,c=>({
+function esc(v){
+  return String(v).replace(/[&<>"']/g,c=>({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   }[c]));
 }
@@ -332,117 +338,112 @@ function renderHistory(){
     list.innerHTML='<p class="muted">এখনো কোনো রেকর্ড নেই।</p>';
     return;
   }
-
-  list.innerHTML=historyItems.map(item=>`
+  list.innerHTML=historyItems.map(x=>`
     <div class="card">
-      <div class="row">
-        <b>${escapeHTML(item.type)} · ${item.amount} USDT</b>
-        <span class="status">${escapeHTML(item.status)}</span>
-      </div>
-      <p class="muted">Reference: ${escapeHTML(item.reference)}</p>
-      <p class="small">${escapeHTML(item.time)}</p>
-    </div>
-  `).join("");
+      <div class="row"><b>${esc(x.type)} · ${x.amount} USDT</b>
+      <span class="status">${esc(x.status)}</span></div>
+      <p class="muted">Reference: ${esc(x.reference)}</p>
+      <p class="small">${esc(x.time)}</p>
+    </div>`).join("");
+}
+
+function submitDeposit(){
+  const amount=Number(document.getElementById("depositAmount").value);
+  const txid=document.getElementById("depositTxid").value.trim();
+  if(!Number.isFinite(amount)||amount<=0||!txid){
+    document.getElementById("depositMessage").textContent="সঠিক Amount ও TXID দিন।";
+    return;
+  }
+  addHistory("Deposit",amount,txid,"Pending verification");
+  document.getElementById("depositMessage").textContent=
+    "অনুরোধ রেকর্ড হয়েছে। যাচাই ছাড়া ব্যালেন্স বাড়বে না।";
+}
+
+function submitWithdraw(){
+  const amount=Number(document.getElementById("withdrawAmount").value);
+  const address=document.getElementById("withdrawAddress").value.trim();
+  if(!Number.isFinite(amount)||amount<=0||!address){
+    document.getElementById("withdrawMessage").textContent="সঠিক Amount ও Wallet Address দিন।";
+    return;
+  }
+  addHistory("Withdraw",amount,address,"Pending request");
+  document.getElementById("withdrawMessage").textContent=
+    "অনুরোধ রেকর্ড হয়েছে; বাস্তব পেমেন্ট পাঠানো হয়নি।";
 }
 
 async function loadBTC(){
   const priceEl=document.getElementById("btcPrice");
   const changeEl=document.getElementById("btcChange");
-  const updatedEl=document.getElementById("btcUpdated");
-
   priceEl.textContent="Loading...";
   try{
-    const response=await fetch(
-      "https://data-api.binance.vision/api/v3/ticker/24hr?symbol=BTCUSDT"
-    );
-    if(!response.ok) throw new Error("Price API error");
-    const data=await response.json();
-
-    liveBTCPrice=Number(data.lastPrice);
-    const formatted="$"+liveBTCPrice.toLocaleString("en-US",{maximumFractionDigits:2});
-    priceEl.textContent=formatted;
-
-    const change=Number(data.priceChangePercent);
-    const changeText="24h: "+(change>=0?"+":"")+change.toFixed(2)+"%";
-    changeEl.textContent=changeText;
-    changeEl.style.color=change>=0?"#24d6a0":"#ff6179";
-    updatedEl.textContent="Updated: "+new Date().toLocaleTimeString();
-
-    document.getElementById("homeBTCPrice").textContent=formatted;
-    document.getElementById("homeBTCChange").textContent=changeText;
-    document.getElementById("homeBTCChange").style.color=change>=0?"#24d6a0":"#ff6179";
-
+    const r=await fetch("https://data-api.binance.vision/api/v3/ticker/24hr?symbol=BTCUSDT");
+    if(!r.ok)throw Error("API error");
+    const d=await r.json();
+    liveBTCPrice=Number(d.lastPrice);
+    const price="$"+liveBTCPrice.toLocaleString("en-US",{maximumFractionDigits:2});
+    priceEl.textContent=price;
+    const ch=Number(d.priceChangePercent);
+    const change="24h: "+(ch>=0?"+":"")+ch.toFixed(2)+"%";
+    changeEl.textContent=change;
+    changeEl.style.color=ch>=0?"#27d6a5":"#ff637a";
+    document.getElementById("btcUpdated").textContent="Updated: "+new Date().toLocaleTimeString();
+    document.getElementById("homeBTCPrice").textContent=price;
+    document.getElementById("homeBTCChange").textContent=change;
+    document.getElementById("homeBTCChange").style.color=ch>=0?"#27d6a5":"#ff637a";
     await loadBTCChart();
-  }catch(error){
+  }catch(e){
     priceEl.textContent="Price unavailable";
-    changeEl.textContent="ইন্টারনেট/API সংযোগ পরীক্ষা করে Refresh চাপুন।";
-    updatedEl.textContent="";
+    changeEl.textContent="ইন্টারনেট/API সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।";
   }
 }
 
 async function loadBTCChart(){
   try{
-    const response=await fetch(
-      "https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=5m&limit=40"
-    );
-    if(!response.ok) throw new Error("Chart API error");
-    const rows=await response.json();
+    const r=await fetch("https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=5m&limit=40");
+    if(!r.ok)throw Error("Chart API error");
+    const rows=await r.json();
     btcCandles=rows.map(row=>Number(row[4]));
     drawBTCChart();
-  }catch(error){
-    const canvas=document.getElementById("btcChart");
-    const ctx=canvas.getContext("2d");
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle="#9baac2";
-    ctx.fillText("Chart unavailable",15,30);
+  }catch(e){
+    const c=document.getElementById("btcChart");
+    const x=c.getContext("2d");
+    x.clearRect(0,0,c.width,c.height);
+    x.fillStyle="#9eacc3";
+    x.fillText("Chart unavailable",15,30);
   }
 }
 
 function drawBTCChart(){
-  const canvas=document.getElementById("btcChart");
-  const ctx=canvas.getContext("2d");
-  const w=canvas.width,h=canvas.height;
-  ctx.clearRect(0,0,w,h);
-  if(btcCandles.length<2) return;
-
-  const min=Math.min(...btcCandles);
-  const max=Math.max(...btcCandles);
+  const c=document.getElementById("btcChart");
+  const x=c.getContext("2d");
+  const w=c.width,h=c.height;
+  x.clearRect(0,0,w,h);
+  if(btcCandles.length<2)return;
+  const min=Math.min(...btcCandles),max=Math.max(...btcCandles);
   const range=max-min||1;
-
-  ctx.strokeStyle="#293a53";
-  ctx.lineWidth=1;
+  x.strokeStyle="#293c55";
   for(let i=1;i<5;i++){
-    ctx.beginPath();
-    ctx.moveTo(0,i*h/5);
-    ctx.lineTo(w,i*h/5);
-    ctx.stroke();
+    x.beginPath();x.moveTo(0,i*h/5);x.lineTo(w,i*h/5);x.stroke();
   }
-
-  ctx.beginPath();
-  btcCandles.forEach((price,i)=>{
-    const x=i*w/(btcCandles.length-1);
-    const y=h-((price-min)/range)*(h-20)-10;
-    if(i===0) ctx.moveTo(x,y);
-    else ctx.lineTo(x,y);
+  x.beginPath();
+  btcCandles.forEach((p,i)=>{
+    const px=i*w/(btcCandles.length-1);
+    const py=h-((p-min)/range)*(h-20)-10;
+    if(i===0)x.moveTo(px,py);else x.lineTo(px,py);
   });
-  ctx.strokeStyle=btcCandles[btcCandles.length-1]>=btcCandles[0]?"#24d6a0":"#ff6179";
-  ctx.lineWidth=3;
-  ctx.stroke();
+  x.strokeStyle=btcCandles.at(-1)>=btcCandles[0]?"#27d6a5":"#ff637a";
+  x.lineWidth=3;x.stroke();
 }
 
 function previewBTC(){
   const amount=Number(document.getElementById("btcAmount").value);
-  const estimate=document.getElementById("btcEstimate");
-  const message=document.getElementById("btcMessage");
-
   if(!liveBTCPrice||!Number.isFinite(amount)||amount<=0){
-    message.textContent="লাইভ দাম আসার পর সঠিক Amount লিখুন।";
-    estimate.textContent="0 BTC";
+    document.getElementById("btcEstimate").textContent="0 BTC";
+    document.getElementById("btcMessage").textContent="লাইভ দাম আসার পর Amount লিখুন।";
     return;
   }
-
-  estimate.textContent=(amount/liveBTCPrice).toFixed(8)+" BTC";
-  message.textContent="এটি আনুমানিক হিসাব; বাস্তব ট্রেড হয়নি।";
+  document.getElementById("btcEstimate").textContent=(amount/liveBTCPrice).toFixed(8)+" BTC";
+  document.getElementById("btcMessage").textContent="আনুমানিক হিসাব; বাস্তব Buy অর্ডার নয়।";
 }
 
 loadBTC();
