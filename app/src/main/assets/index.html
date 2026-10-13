@@ -12,8 +12,7 @@ body{margin:0;background:var(--bg);color:var(--text);font:15px Arial,sans-serif}
 header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:#11192a;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
 .logo{font-size:23px;font-weight:bold;color:var(--green)}
 button{border:0;border-radius:8px;padding:11px 14px;background:var(--blue);color:white;font-weight:bold;cursor:pointer}
-button:disabled{opacity:.5}
-input,select,textarea{width:100%;padding:12px;margin:7px 0 14px;background:#0d1424;border:1px solid var(--line);border-radius:8px;color:white}
+input,select{width:100%;padding:12px;margin:7px 0 14px;background:#0d1424;border:1px solid var(--line);border-radius:8px;color:white}
 label{color:#c6d0e1;font-size:13px}
 .container{max-width:1150px;margin:auto;padding:18px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:17px;margin-bottom:16px}
@@ -26,7 +25,6 @@ h2,h3{margin-top:0}
 .nav button.active{background:var(--green);color:#071b13}
 .hidden{display:none!important}
 .row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.green{color:var(--green)}.red{color:var(--red)}
 .smallbtn{padding:8px 10px;font-size:12px}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th,td{text-align:left;padding:10px 7px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
@@ -53,11 +51,11 @@ footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
 <section id="authPage" class="container" style="max-width:480px">
   <div class="card">
     <h2 id="authTitle">Create BitPro Account</h2>
-    <p class="muted">Register or sign in to your account.</p>
+    <p class="muted">Register and receive a $10 welcome bonus.</p>
     <form id="authForm">
       <div id="nameField">
         <label>Full Name</label>
-        <input id="fullName" placeholder="Your name" autocomplete="name">
+        <input id="fullName" required placeholder="Your name" autocomplete="name">
       </div>
       <label>Email</label>
       <input id="email" type="email" required placeholder="you@example.com" autocomplete="email">
@@ -68,158 +66,149 @@ footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
     <p id="authMessage" class="muted"></p>
     <button id="switchAuth" class="full" style="background:#26334b">Already have an account? Login</button>
   </div>
-  <p class="muted">Important: this front-end prototype stores account information on this device. Do not use real passwords or real funds with it.</p>
 </section>
 
 <div id="app" class="hidden">
-  <nav class="nav">
-    <button class="active" data-page="dashboard" onclick="showPage('dashboard')">Dashboard</button>
-    <button data-page="live" onclick="showPage('live')">Live Trading</button>
-    <button data-page="deposit" onclick="showPage('deposit')">Deposit</button>
-    <button data-page="withdraw" onclick="showPage('withdraw')">Withdraw</button>
-    <button data-page="history" onclick="showPage('history')">History</button>
-    <button data-page="profile" onclick="showPage('profile')">Profile</button>
-  </nav>
+<nav class="nav">
+  <button class="active" data-page="dashboard" onclick="showPage('dashboard')">Dashboard</button>
+  <button data-page="live" onclick="showPage('live')">Live Trading</button>
+  <button data-page="deposit" onclick="showPage('deposit')">Deposit</button>
+  <button data-page="withdraw" onclick="showPage('withdraw')">Withdraw</button>
+  <button data-page="history" onclick="showPage('history')">History</button>
+  <button data-page="profile" onclick="showPage('profile')">Profile</button>
+</nav>
 
-  <main class="container">
-    <section id="page-dashboard" class="page">
-      <div class="card">
-        <p class="muted">Account Balance</p>
-        <div class="stat" id="dashboardBalance">$0.00</div>
-        <p class="muted">Account currency: USD</p>
-        <div class="row">
-          <button onclick="showPage('deposit')">Deposit</button>
-          <button onclick="showPage('withdraw')" style="background:#26334b">Withdraw</button>
-          <button onclick="showPage('live')" style="background:#26334b">Trade BTC</button>
-        </div>
-      </div>
-      <div class="grid">
-        <div class="card"><div class="muted">BTC/USDT Live Price</div><div id="dashPrice" class="stat">Loading...</div></div>
-        <div class="card"><div class="muted">Deposit Requests</div><div id="depositCount" class="stat">0</div></div>
-      </div>
-      <div class="card">
-        <h3>Recent Activity</h3>
-        <div id="recentHistory" class="muted">No activity yet.</div>
-      </div>
-    </section>
+<main class="container">
 
-    <section id="page-live" class="page hidden">
-      <div class="card">
-        <div class="row">
-          <div><h2>BTC/USDT</h2><span class="muted">Bitcoin / Tether</span></div>
-          <div id="livePrice" class="stat">Loading...</div>
-        </div>
-        <div class="row" style="margin:12px 0">
-          <span class="muted">Market chart</span>
-          <select id="timeframe" onchange="changeTimeframe()" style="width:120px;margin:0">
-            <option value="1">1 minute</option>
-            <option value="5">5 minutes</option>
-            <option value="15">15 minutes</option>
-            <option value="60">1 hour</option>
-            <option value="240">4 hours</option>
-            <option value="D">1 day</option>
-          </select>
-        </div>
-        <iframe id="chart" title="BTC USDT chart" loading="lazy"
-          src="https://s.tradingview.com/widgetembed/?frameElementId=tvchart&symbol=BINANCE%3ABTCUSDT&interval=15&hidesidetoolbar=0&symboledit=0&saveimage=0&toolbarbg=%23141c2f&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&studies=[]&locale=en">
-        </iframe>
-      </div>
+<section id="page-dashboard" class="page">
+  <div class="card">
+    <p class="muted">Account Balance</p>
+    <div class="stat" id="dashboardBalance">$10.00</div>
+    <p class="muted">USD account balance</p>
+    <button onclick="showPage('deposit')">Deposit</button>
+    <button style="background:#26334b" onclick="showPage('withdraw')">Withdraw</button>
+    <button style="background:#26334b" onclick="showPage('live')">Trade BTC</button>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="muted">BTC/USDT Live Price</div><div id="dashPrice" class="stat">Loading...</div></div>
+    <div class="card"><div class="muted">Deposit Requests</div><div id="depositCount" class="stat">0</div></div>
+  </div>
+  <div class="card"><h3>Recent Activity</h3><div id="recentHistory" class="muted">No activity yet.</div></div>
+</section>
 
-      <div class="grid">
-        <div class="card">
-          <h3>Buy BTC (Simulation)</h3>
-          <p class="muted">Available balance: <strong id="tradeBalance">$0.00</strong></p>
-          <label>Amount (USD)</label>
-          <input id="buyAmount" type="number" min="1" step="0.01" placeholder="e.g. 10">
-          <button class="full" onclick="placeTrade('BUY')">Buy BTC</button>
-        </div>
-        <div class="card">
-          <h3>Sell BTC (Simulation)</h3>
-          <p class="muted">This prototype does not hold real BTC.</p>
-          <label>Amount (USD)</label>
-          <input id="sellAmount" type="number" min="1" step="0.01" placeholder="e.g. 10">
-          <button class="full" style="background:var(--red)" onclick="placeTrade('SELL')">Sell BTC</button>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Trading Chat</h3>
-        <p class="muted">Messages are saved only in this browser, not shared with other users.</p>
-        <div id="chatLog" class="chatlog"></div>
-        <form id="chatForm">
-          <input id="chatMessage" maxlength="300" required placeholder="Write a message...">
-          <button class="full">Send Message</button>
-        </form>
-      </div>
-    </section>
+<section id="page-live" class="page hidden">
+  <div class="card">
+    <div class="row">
+      <div><h2>BTC/USDT</h2><span class="muted">Bitcoin / Tether</span></div>
+      <div id="livePrice" class="stat">Loading...</div>
+    </div>
+    <div class="row" style="margin:12px 0">
+      <span class="muted">Market chart</span>
+      <select id="timeframe" onchange="changeTimeframe()" style="width:130px;margin:0">
+        <option value="1">1 minute</option>
+        <option value="5">5 minutes</option>
+        <option value="15" selected>15 minutes</option>
+        <option value="60">1 hour</option>
+        <option value="240">4 hours</option>
+        <option value="D">1 day</option>
+      </select>
+    </div>
+    <iframe id="chart" title="BTC USDT chart" loading="lazy"
+      src="https://s.tradingview.com/widgetembed/?frameElementId=tvchart&symbol=BINANCE%3ABTCUSDT&interval=15&hidesidetoolbar=0&symboledit=0&saveimage=0&toolbarbg=%23141c2f&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=en">
+    </iframe>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>Buy BTC (Simulation)</h3>
+      <p class="muted">Balance: <strong id="tradeBalance">$0.00</strong></p>
+      <label>Amount (USD)</label>
+      <input id="buyAmount" type="number" min="1" step="0.01" placeholder="Amount">
+      <button class="full" onclick="placeTrade('BUY')">Buy BTC</button>
+    </div>
+    <div class="card">
+      <h3>Sell BTC</h3>
+      <p class="muted">This prototype does not hold real BTC.</p>
+      <label>Amount (USD)</label>
+      <input id="sellAmount" type="number" min="1" step="0.01" placeholder="Amount">
+      <button class="full" style="background:var(--red)" onclick="placeTrade('SELL')">Sell BTC</button>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Trading Chat</h3>
+    <p class="muted">Messages are stored in this browser only.</p>
+    <div id="chatLog" class="chatlog"></div>
+    <form id="chatForm">
+      <input id="chatMessage" maxlength="300" required placeholder="Write a message">
+      <button class="full">Send Message</button>
+    </form>
+  </div>
+</section>
 
-    <section id="page-deposit" class="page hidden">
-      <div class="card">
-        <h2>USDT Deposit (TRC20)</h2>
-        <p>Send USDT using the TRON (TRC20) network only.</p>
-        <label>Your deposit address</label>
-        <input id="depositAddress" value="TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62" readonly>
-        <button class="full" onclick="copyDepositAddress()">Copy Deposit Address</button>
-        <p id="copyMessage" class="muted"></p>
-        <p class="muted">Check the network and address carefully before sending. Sending a different token or using the wrong network may cause permanent loss.</p>
-      </div>
-      <div class="card">
-        <h3>Submit Deposit Request</h3>
-        <p class="muted">Submitting a request does not itself confirm payment or add money to your balance.</p>
-        <form id="depositForm">
-          <label>Amount (USDT)</label>
-          <input id="depositAmount" type="number" min="0.01" step="0.01" required placeholder="Amount sent">
-          <label>Transaction ID (TXID)</label>
-          <input id="depositTxid" required minlength="10" placeholder="Paste blockchain transaction ID">
-          <button class="full">Submit Deposit Request</button>
-        </form>
-        <p id="depositMessage" class="muted"></p>
-      </div>
-      <div class="card">
-        <h3>Deposit Requests</h3>
-        <div id="depositHistory"></div>
-      </div>
-    </section>
+<section id="page-deposit" class="page hidden">
+  <div class="card">
+    <h2>USDT Deposit (TRC20)</h2>
+    <p>Send USDT using the TRON TRC20 network only.</p>
+    <label>Deposit Address</label>
+    <input id="depositAddress" value="TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62" readonly>
+    <button class="full" onclick="copyDepositAddress()">Copy Address</button>
+    <p id="copyMessage" class="muted"></p>
+    <p class="muted">Check the address and network carefully before sending funds.</p>
+  </div>
+  <div class="card">
+    <h3>Submit Deposit Request</h3>
+    <p class="muted">Balance will not increase until the payment is independently verified.</p>
+    <form id="depositForm">
+      <label>Amount (USDT)</label>
+      <input id="depositAmount" type="number" min="0.01" step="0.01" required placeholder="Amount sent">
+      <label>Transaction ID (TXID)</label>
+      <input id="depositTxid" required minlength="10" placeholder="Paste transaction ID">
+      <button class="full">Submit Deposit Request</button>
+    </form>
+    <p id="depositMessage" class="muted"></p>
+  </div>
+  <div class="card"><h3>Deposit Requests</h3><div id="depositHistory"></div></div>
+</section>
 
-    <section id="page-withdraw" class="page hidden">
-      <div class="card">
-        <h2>Withdraw USDT</h2>
-        <p class="muted">Withdrawal requests remain pending in this prototype. No real transfer is performed.</p>
-        <p>Available balance: <strong id="withdrawBalance">$0.00</strong></p>
-        <form id="withdrawForm">
-          <label>Amount (USD)</label>
-          <input id="withdrawAmount" type="number" min="1" step="0.01" required placeholder="Amount">
-          <label>Your TRC20 wallet address</label>
-          <input id="withdrawAddress" required minlength="20" placeholder="Enter receiving wallet address">
-          <button class="full">Submit Withdrawal Request</button>
-        </form>
-        <p id="withdrawMessage" class="muted"></p>
-      </div>
-    </section>
+<section id="page-withdraw" class="page hidden">
+  <div class="card">
+    <h2>Withdraw USDT</h2>
+    <p class="muted">Requests remain pending; no real transfer is performed.</p>
+    <p>Available balance: <strong id="withdrawBalance">$0.00</strong></p>
+    <form id="withdrawForm">
+      <label>Amount (USD)</label>
+      <input id="withdrawAmount" type="number" min="1" step="0.01" required>
+      <label>Receiving TRC20 Wallet Address</label>
+      <input id="withdrawAddress" required minlength="20" placeholder="Wallet address">
+      <button class="full">Submit Withdrawal Request</button>
+    </form>
+    <p id="withdrawMessage" class="muted"></p>
+  </div>
+</section>
 
-    <section id="page-history" class="page hidden">
-      <div class="card">
-        <h2>Transaction History</h2>
-        <div class="tablewrap">
-          <table>
-            <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Status</th><th>Details</th></tr></thead>
-            <tbody id="historyRows"></tbody>
-          </table>
-        </div>
-        <p id="emptyHistory" class="muted">No transactions yet.</p>
-      </div>
-    </section>
+<section id="page-history" class="page hidden">
+  <div class="card">
+    <h2>Transaction History</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Status</th><th>Details</th></tr></thead>
+        <tbody id="historyRows"></tbody>
+      </table>
+    </div>
+    <p id="emptyHistory" class="muted">No transactions yet.</p>
+  </div>
+</section>
 
-    <section id="page-profile" class="page hidden">
-      <div class="card">
-        <h2>My Profile</h2>
-        <label>Full Name</label><input id="profileName" readonly>
-        <label>Email</label><input id="profileEmail" readonly>
-        <label>Account Balance</label><input id="profileBalance" readonly>
-        <label>Account Created</label><input id="profileCreated" readonly>
-        <button class="full" style="background:var(--red)" onclick="logout()">Logout</button>
-      </div>
-    </section>
-  </main>
+<section id="page-profile" class="page hidden">
+  <div class="card">
+    <h2>My Profile</h2>
+    <label>Full Name</label><input id="profileName" readonly>
+    <label>Email</label><input id="profileEmail" readonly>
+    <label>Account Balance</label><input id="profileBalance" readonly>
+    <label>Account Created</label><input id="profileCreated" readonly>
+    <button class="full" style="background:var(--red)" onclick="logout()">Logout</button>
+  </div>
+</section>
+</main>
 </div>
 
 <footer>BitPro Trading · Prototype interface</footer>
@@ -227,95 +216,91 @@ footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
 <script>
 "use strict";
 
-const DEPOSIT_ADDRESS = "TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62";
-const USERS_KEY = "bitpro_users_v1";
-const SESSION_KEY = "bitpro_session_v1";
-let isRegister = true;
-let currentUser = null;
-let btcPrice = 0;
+const DEPOSIT_ADDRESS="TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62";
+const USERS_KEY="bitpro_users_v1";
+const SESSION_KEY="bitpro_session_v1";
+const WELCOME_BONUS=10;
+let currentUser=null;
+let isRegister=true;
+let btcPrice=0;
 
 function readUsers(){
-  try { return JSON.parse(localStorage.getItem(USERS_KEY) || "{}"); }
-  catch(e){ return {}; }
+  try{return JSON.parse(localStorage.getItem(USERS_KEY)||"{}")}
+  catch(e){return {}}
 }
 function saveUsers(users){
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-function money(value){
-  return "$" + Number(value || 0).toLocaleString("en-US", {
-    minimumFractionDigits:2, maximumFractionDigits:2
-  });
-}
-function safeText(value){
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
+  localStorage.setItem(USERS_KEY,JSON.stringify(users));
 }
 function saveCurrent(){
-  if(!currentUser) return;
-  const users = readUsers();
-  users[currentUser.email] = currentUser;
+  if(!currentUser)return;
+  const users=readUsers();
+  users[currentUser.email]=currentUser;
   saveUsers(users);
 }
+function money(v){
+  return "$"+Number(v||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function safeText(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
 function defaultUser(name,email,password){
-  return {
-    name,email,password,balance:0,
-    created:new Date().toISOString(),
-    history:[],chat:[]
-  };
+  return {name,email,password,balance:0,created:new Date().toISOString(),history:[],chat:[]};
 }
-function addHistory(type,amount,status,details){
-  currentUser.history = currentUser.history || [];
-  currentUser.history.unshift({
-    id:Date.now().toString(36) + Math.random().toString(36).slice(2,7),
-    date:new Date().toISOString(),
-    type,amount:Number(amount)||0,status,details
-  });
-  saveCurrent();
-  renderAll();
+function authMessage(msg){
+  document.getElementById("authMessage").textContent=msg;
 }
-
 function setAuthMode(register){
-  isRegister = register;
-  document.getElementById("authTitle").textContent = register ? "Create BitPro Account" : "Login to BitPro";
-  document.getElementById("authButton").textContent = register ? "Create Account" : "Login";
+  isRegister=register;
+  document.getElementById("authTitle").textContent=register?"Create BitPro Account":"Login to BitPro";
+  document.getElementById("authButton").textContent=register?"Create Account":"Login";
   document.getElementById("nameField").classList.toggle("hidden",!register);
-  document.getElementById("fullName").required = register;
-  document.getElementById("switchAuth").textContent = register
-    ? "Already have an account? Login"
-    : "New user? Create Account";
-  document.getElementById("authMessage").textContent = "";
+  document.getElementById("fullName").required=register;
+  document.getElementById("switchAuth").textContent=register?"Already have an account? Login":"New user? Create Account";
+  authMessage("");
 }
-document.getElementById("switchAuth").addEventListener("click",()=>{
-  setAuthMode(!isRegister);
-});
+document.getElementById("switchAuth").addEventListener("click",()=>setAuthMode(!isRegister));
+
 document.getElementById("authForm").addEventListener("submit",e=>{
   e.preventDefault();
-  const name = document.getElementById("fullName").value.trim();
-  const email = document.getElementById("email").value.trim().toLowerCase();
-  const password = document.getElementById("password").value;
-  const users = readUsers();
+  const name=document.getElementById("fullName").value.trim();
+  const email=document.getElementById("email").value.trim().toLowerCase();
+  const password=document.getElementById("password").value;
+  const users=readUsers();
+
   if(isRegister){
-    if(!name){return authMessage("Enter your name.");}
-    if(users[email]){return authMessage("This email already has an account. Please login.");}
-    currentUser = defaultUser(name,email,password);
-    users[email] = currentUser;
+    if(!name)return authMessage("Enter your name.");
+    if(users[email])return authMessage("This email already has an account. Please login.");
+
+    // NEW ACCOUNT: ADD $10 WELCOME BONUS
+    currentUser=defaultUser(name,email,password);
+    currentUser.balance=WELCOME_BONUS;
+
+    // Record the bonus in account history
+    currentUser.history.push({
+      id:Date.now().toString(36),
+      date:new Date().toISOString(),
+      type:"Welcome Bonus",
+      amount:WELCOME_BONUS,
+      status:"Credited",
+      details:"New account welcome bonus"
+    });
+
+    users[email]=currentUser;
     saveUsers(users);
     localStorage.setItem(SESSION_KEY,email);
     openApp();
+    alert("Welcome to BitPro! Your $10 welcome bonus has been added.");
   }else{
-    const user = users[email];
-    if(!user || user.password !== password){
-      return authMessage("Incorrect email or password.");
-    }
-    currentUser = user;
+    const user=users[email];
+    if(!user||user.password!==password)return authMessage("Incorrect email or password.");
+    currentUser=user;
+    if(!currentUser.history)currentUser.history=[];
+    if(!currentUser.chat)currentUser.chat=[];
     localStorage.setItem(SESSION_KEY,email);
     openApp();
   }
 });
-function authMessage(message){
-  document.getElementById("authMessage").textContent = message;
-}
+
 function openApp(){
   document.getElementById("authPage").classList.add("hidden");
   document.getElementById("app").classList.remove("hidden");
@@ -324,210 +309,163 @@ function openApp(){
 }
 function logout(){
   localStorage.removeItem(SESSION_KEY);
-  currentUser = null;
+  currentUser=null;
   document.getElementById("app").classList.add("hidden");
   document.getElementById("authPage").classList.remove("hidden");
-  document.getElementById("password").value = "";
+  document.getElementById("password").value="";
   setAuthMode(false);
 }
 function showPage(page){
-  document.querySelectorAll(".page").forEach(el=>el.classList.add("hidden"));
-  const target = document.getElementById("page-"+page);
-  if(target) target.classList.remove("hidden");
-  document.querySelectorAll(".nav button").forEach(btn=>{
-    btn.classList.toggle("active",btn.dataset.page===page);
-  });
-  if(page==="live") renderChat();
-  if(page==="history") renderHistory();
-  if(page==="deposit") renderDepositHistory();
-  if(page==="profile") renderProfile();
+  document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
+  document.getElementById("page-"+page).classList.remove("hidden");
+  document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===page));
+  if(page==="live")renderChat();
+  if(page==="history")renderHistory();
+  if(page==="deposit")renderDepositHistory();
+  if(page==="profile")renderProfile();
+}
+function addHistory(type,amount,status,details){
+  currentUser.history=currentUser.history||[];
+  currentUser.history.unshift({id:Date.now().toString(36),date:new Date().toISOString(),type,amount:Number(amount)||0,status,details});
+  saveCurrent();
+  renderAll();
 }
 function renderAll(){
   if(!currentUser)return;
-  const balance = money(currentUser.balance);
+  const bal=money(currentUser.balance);
   document.getElementById("headerAccount").classList.remove("hidden");
-  document.getElementById("headerEmail").textContent = currentUser.email;
-  document.getElementById("headerBalance").textContent = balance;
-  document.getElementById("dashboardBalance").textContent = balance;
-  document.getElementById("tradeBalance").textContent = balance;
-  document.getElementById("withdrawBalance").textContent = balance;
-  document.getElementById("profileBalance").value = balance;
-  const history = currentUser.history || [];
-  document.getElementById("depositCount").textContent =
-    history.filter(x=>x.type==="Deposit").length;
-  renderHistory();
-  renderDepositHistory();
-  renderProfile();
-  renderRecent();
+  document.getElementById("headerEmail").textContent=currentUser.email;
+  document.getElementById("headerBalance").textContent=bal;
+  document.getElementById("dashboardBalance").textContent=bal;
+  document.getElementById("tradeBalance").textContent=bal;
+  document.getElementById("withdrawBalance").textContent=bal;
+  document.getElementById("depositCount").textContent=(currentUser.history||[]).filter(x=>x.type==="Deposit").length;
+  renderHistory();renderDepositHistory();renderProfile();renderRecent();
 }
 function renderProfile(){
   if(!currentUser)return;
-  document.getElementById("profileName").value = currentUser.name;
-  document.getElementById("profileEmail").value = currentUser.email;
-  document.getElementById("profileBalance").value = money(currentUser.balance);
-  document.getElementById("profileCreated").value =
-    new Date(currentUser.created).toLocaleString();
+  document.getElementById("profileName").value=currentUser.name;
+  document.getElementById("profileEmail").value=currentUser.email;
+  document.getElementById("profileBalance").value=money(currentUser.balance);
+  document.getElementById("profileCreated").value=new Date(currentUser.created).toLocaleString();
 }
 function renderHistory(){
   if(!currentUser)return;
-  const rows = document.getElementById("historyRows");
-  const history = currentUser.history || [];
-  rows.innerHTML = history.map(x=>`
-    <tr>
-      <td>${safeText(new Date(x.date).toLocaleString())}</td>
-      <td>${safeText(x.type)}</td>
-      <td>${money(x.amount)}</td>
-      <td><span class="badge">${safeText(x.status)}</span></td>
-      <td>${safeText(x.details)}</td>
-    </tr>`).join("");
-  document.getElementById("emptyHistory").classList.toggle("hidden",history.length>0);
+  const h=currentUser.history||[];
+  document.getElementById("historyRows").innerHTML=h.map(x=>`<tr>
+    <td>${safeText(new Date(x.date).toLocaleString())}</td>
+    <td>${safeText(x.type)}</td><td>${money(x.amount)}</td>
+    <td><span class="badge">${safeText(x.status)}</span></td>
+    <td>${safeText(x.details)}</td></tr>`).join("");
+  document.getElementById("emptyHistory").classList.toggle("hidden",h.length>0);
 }
 function renderDepositHistory(){
   if(!currentUser)return;
-  const deposits = (currentUser.history||[]).filter(x=>x.type==="Deposit");
-  document.getElementById("depositHistory").innerHTML = deposits.length
-    ? deposits.map(x=>`<div class="card">
-        <div class="row"><strong>${money(x.amount)} USDT</strong><span class="badge">${safeText(x.status)}</span></div>
-        <p class="muted">${safeText(x.details)}</p>
-        <p class="muted">${safeText(new Date(x.date).toLocaleString())}</p>
-      </div>`).join("")
-    : '<p class="muted">No deposit requests yet.</p>';
+  const h=(currentUser.history||[]).filter(x=>x.type==="Deposit");
+  document.getElementById("depositHistory").innerHTML=h.length?h.map(x=>`<div class="card">
+    <div class="row"><strong>${money(x.amount)} USDT</strong><span class="badge">${safeText(x.status)}</span></div>
+    <p class="muted">${safeText(x.details)}</p>
+    <p class="muted">${safeText(new Date(x.date).toLocaleString())}</p></div>`).join(""):'<p class="muted">No deposit requests yet.</p>';
 }
 function renderRecent(){
-  const history = (currentUser.history||[]).slice(0,5);
-  document.getElementById("recentHistory").innerHTML = history.length
-    ? history.map(x=>`<p>${safeText(x.type)} · ${money(x.amount)} · ${safeText(x.status)}</p>`).join("")
-    : "No activity yet.";
+  const h=(currentUser.history||[]).slice(0,5);
+  document.getElementById("recentHistory").innerHTML=h.length?h.map(x=>`<p>${safeText(x.type)} · ${money(x.amount)} · ${safeText(x.status)}</p>`).join(""):"No activity yet.";
 }
 async function copyDepositAddress(){
   try{
     await navigator.clipboard.writeText(DEPOSIT_ADDRESS);
-    document.getElementById("copyMessage").textContent = "Address copied.";
+    document.getElementById("copyMessage").textContent="Address copied.";
   }catch(e){
-    const field = document.getElementById("depositAddress");
-    field.focus(); field.select();
-    document.getElementById("copyMessage").textContent =
-      "Select the address and choose Copy.";
+    const field=document.getElementById("depositAddress");
+    field.focus();field.select();
+    document.getElementById("copyMessage").textContent="Select the address and choose Copy.";
   }
 }
+function depositMessage(msg){document.getElementById("depositMessage").textContent=msg}
 document.getElementById("depositForm").addEventListener("submit",e=>{
   e.preventDefault();
-  const amount = Number(document.getElementById("depositAmount").value);
-  const txid = document.getElementById("depositTxid").value.trim();
-  if(!Number.isFinite(amount)||amount<=0){
-    return depositMessage("Enter a valid amount.");
-  }
-  if(txid.length<10){
-    return depositMessage("Enter a valid transaction ID.");
-  }
-  const alreadyUsed = Object.values(readUsers()).some(user=>
-    (user.history||[]).some(h=>h.type==="Deposit" && h.txid===txid)
-  );
-  if(alreadyUsed){
-    return depositMessage("This TXID has already been submitted.");
-  }
-  currentUser.history = currentUser.history || [];
+  const amount=Number(document.getElementById("depositAmount").value);
+  const txid=document.getElementById("depositTxid").value.trim();
+  if(!Number.isFinite(amount)||amount<=0)return depositMessage("Enter a valid amount.");
+  if(txid.length<10)return depositMessage("Enter a valid transaction ID.");
+
+  const duplicate=Object.values(readUsers()).some(u=>(u.history||[]).some(h=>h.type==="Deposit"&&h.txid===txid));
+  if(duplicate)return depositMessage("This TXID has already been submitted.");
+
+  currentUser.history=currentUser.history||[];
   currentUser.history.unshift({
-    id:Date.now().toString(36),
-    date:new Date().toISOString(),
-    type:"Deposit",
-    amount,
-    status:"Pending verification",
-    details:"TXID: "+txid,
-    txid
+    id:Date.now().toString(36),date:new Date().toISOString(),
+    type:"Deposit",amount,status:"Pending verification",
+    details:"TXID: "+txid,txid
   });
-  saveCurrent();
-  renderAll();
-  document.getElementById("depositForm").reset();
-  depositMessage("Request submitted. Balance will not change until payment is independently verified.");
+  saveCurrent();renderAll();e.target.reset();
+  depositMessage("Request submitted. Balance remains unchanged until payment is verified.");
 });
-function depositMessage(message){
-  document.getElementById("depositMessage").textContent = message;
-}
 document.getElementById("withdrawForm").addEventListener("submit",e=>{
   e.preventDefault();
-  const amount = Number(document.getElementById("withdrawAmount").value);
-  const address = document.getElementById("withdrawAddress").value.trim();
-  if(!Number.isFinite(amount)||amount<=0){
-    return withdrawMessage("Enter a valid amount.");
-  }
-  if(amount>Number(currentUser.balance)){
-    return withdrawMessage("Insufficient account balance.");
-  }
-  if(address.length<20){
-    return withdrawMessage("Enter a valid wallet address.");
-  }
+  const amount=Number(document.getElementById("withdrawAmount").value);
+  const address=document.getElementById("withdrawAddress").value.trim();
+  if(!Number.isFinite(amount)||amount<=0)return withdrawMessage("Enter a valid amount.");
+  if(amount>Number(currentUser.balance))return withdrawMessage("Insufficient balance.");
+  if(address.length<20)return withdrawMessage("Enter a valid wallet address.");
   addHistory("Withdraw",amount,"Pending review","Wallet: "+address);
-  document.getElementById("withdrawForm").reset();
-  withdrawMessage("Withdrawal request submitted. No transfer has been made.");
+  e.target.reset();
+  withdrawMessage("Request submitted. No real transfer has been made.");
 });
-function withdrawMessage(message){
-  document.getElementById("withdrawMessage").textContent = message;
-}
+function withdrawMessage(msg){document.getElementById("withdrawMessage").textContent=msg}
+
 function placeTrade(side){
-  const field = document.getElementById(side==="BUY"?"buyAmount":"sellAmount");
-  const amount = Number(field.value);
-  if(!Number.isFinite(amount)||amount<=0){
-    return alert("Enter a valid amount.");
-  }
-  if(side==="BUY"){
-    if(amount>Number(currentUser.balance)) return alert("Insufficient balance.");
-    currentUser.balance = Number(currentUser.balance)-amount;
-  }else{
-    return alert("This prototype does not hold real BTC, so real selling is unavailable.");
-  }
-  addHistory("Trade",amount,"Simulated","BTC/USDT "+side);
-  field.value = "";
-  alert("Local simulation only. No real crypto was bought.");
+  const field=document.getElementById(side==="BUY"?"buyAmount":"sellAmount");
+  const amount=Number(field.value);
+  if(!Number.isFinite(amount)||amount<=0)return alert("Enter a valid amount.");
+  if(side==="SELL")return alert("This prototype does not hold real BTC, so real selling is unavailable.");
+  if(amount>Number(currentUser.balance))return alert("Insufficient balance.");
+  currentUser.balance=Number(currentUser.balance)-amount;
+  addHistory("Trade",amount,"Simulated","BTC/USDT BUY");
+  field.value="";
+  alert("Simulation only. No real cryptocurrency was purchased.");
 }
 function changeTimeframe(){
-  const interval = document.getElementById("timeframe").value;
-  const chart = document.getElementById("chart");
-  chart.src = "https://s.tradingview.com/widgetembed/?frameElementId=tvchart&symbol=BINANCE%3ABTCUSDT&interval="+encodeURIComponent(interval)+"&hidesidetoolbar=0&symboledit=0&saveimage=0&toolbarbg=%23141c2f&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=en";
+  const interval=document.getElementById("timeframe").value;
+  document.getElementById("chart").src="https://s.tradingview.com/widgetembed/?frameElementId=tvchart&symbol=BINANCE%3ABTCUSDT&interval="+encodeURIComponent(interval)+"&hidesidetoolbar=0&symboledit=0&saveimage=0&toolbarbg=%23141c2f&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=en";
 }
 async function updatePrice(){
   try{
-    const response = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT");
-    if(!response.ok) throw new Error("Price unavailable");
-    const data = await response.json();
-    btcPrice = Number(data.price);
-    const formatted = "$"+btcPrice.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
-    document.getElementById("livePrice").textContent = formatted;
-    document.getElementById("dashPrice").textContent = formatted;
+    const r=await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT");
+    if(!r.ok)throw Error();
+    const d=await r.json();btcPrice=Number(d.price);
+    const p="$"+btcPrice.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+    document.getElementById("livePrice").textContent=p;
+    document.getElementById("dashPrice").textContent=p;
   }catch(e){
-    document.getElementById("livePrice").textContent = "Unavailable";
-    document.getElementById("dashPrice").textContent = "Unavailable";
+    document.getElementById("livePrice").textContent="Unavailable";
+    document.getElementById("dashPrice").textContent="Unavailable";
   }
 }
 function renderChat(){
   if(!currentUser)return;
-  const chat = currentUser.chat || [];
-  document.getElementById("chatLog").innerHTML = chat.map(x=>
-    `<p><strong>${safeText(x.name)}:</strong> ${safeText(x.message)}</p>`
-  ).join("");
-  document.getElementById("chatLog").scrollTop =
-    document.getElementById("chatLog").scrollHeight;
+  const chat=currentUser.chat||[];
+  document.getElementById("chatLog").innerHTML=chat.map(x=>`<p><strong>${safeText(x.name)}:</strong> ${safeText(x.message)}</p>`).join("");
+  document.getElementById("chatLog").scrollTop=document.getElementById("chatLog").scrollHeight;
 }
 document.getElementById("chatForm").addEventListener("submit",e=>{
   e.preventDefault();
-  const input = document.getElementById("chatMessage");
-  const message = input.value.trim();
-  if(!message)return;
-  currentUser.chat = currentUser.chat || [];
+  const input=document.getElementById("chatMessage");
+  const message=input.value.trim();if(!message)return;
+  currentUser.chat=currentUser.chat||[];
   currentUser.chat.push({name:currentUser.name,message});
-  currentUser.chat = currentUser.chat.slice(-100);
-  saveCurrent();
-  input.value = "";
-  renderChat();
+  currentUser.chat=currentUser.chat.slice(-100);
+  saveCurrent();input.value="";renderChat();
 });
 
-const savedEmail = localStorage.getItem(SESSION_KEY);
+// Restore existing session if available
+const savedEmail=localStorage.getItem(SESSION_KEY);
 if(savedEmail){
-  const savedUser = readUsers()[savedEmail];
+  const savedUser=readUsers()[savedEmail];
   if(savedUser){
-    currentUser = savedUser;
-    if(!currentUser.history) currentUser.history=[];
-    if(!currentUser.chat) currentUser.chat=[];
+    currentUser=savedUser;
+    if(!currentUser.history)currentUser.history=[];
+    if(!currentUser.chat)currentUser.chat=[];
     openApp();
   }else{
     localStorage.removeItem(SESSION_KEY);
