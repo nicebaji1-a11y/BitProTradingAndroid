@@ -3,12 +3,12 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BitPro Trading</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#09101f;color:#f2f5ff;font-family:Arial,sans-serif}
-header{padding:20px;background:#121b2e;color:#28d5a0;font-size:25px;font-weight:bold}
+header{padding:20px;background:#121b2e;color:#28d5a0;font-size:26px;font-weight:bold}
 main{max-width:650px;margin:auto;padding:16px}
 .card{background:#141e32;border:1px solid #2b3851;border-radius:15px;padding:20px;margin-bottom:16px}
 h2{font-size:27px;margin-top:0}
@@ -16,71 +16,62 @@ label{display:block;margin-top:15px;color:#bdc9dc}
 input,select{width:100%;padding:14px;margin-top:7px;border-radius:9px;border:1px solid #394963;background:#0a1223;color:white;font-size:16px}
 button{border:0;border-radius:9px;padding:14px;font-size:15px;font-weight:bold;cursor:pointer}
 .primary{background:#22c99a;color:#071c15}
-.secondary{background:#253149;color:white}
+.secondary,nav button{background:#253149;color:white}
 .full{width:100%;margin-top:16px}
 .link{color:#35ddb0;text-decoration:underline;cursor:pointer}
 .muted{color:#9baac2;font-size:13px;line-height:1.7}
 nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
-nav button{flex:1;min-width:85px;background:#202c43;color:white}
+nav button{flex:1;min-width:75px}
 nav button.active{background:#22c99a;color:#061b14}
 .price{font-size:29px;color:#35ddb0;font-weight:bold}
 .hidden{display:none!important}
 .address{overflow-wrap:anywhere;background:#0a1223;padding:12px;border-radius:8px}
 .item{padding:12px 0;border-bottom:1px solid #2a3850;overflow-wrap:anywhere}
 .status{color:#ffd166}
+.message{margin-top:12px;line-height:1.6}
 </style>
 </head>
 <body>
 <header>₿ BitPro Trading</header>
 <main>
 
-<!-- REGISTER PAGE -->
+<!-- REGISTER -->
 <section id="registerPage" class="card">
 <h2>Create Account</h2>
 <p class="muted">BitPro Trading-এ নতুন অ্যাকাউন্ট তৈরি করুন।</p>
-
 <form id="registerForm">
 <label>Full Name</label>
 <input id="regName" required maxlength="80" placeholder="আপনার নাম">
-
 <label>Email Address</label>
 <input id="regEmail" type="email" required placeholder="আপনার ইমেইল">
-
 <label>Password</label>
 <input id="regPassword" type="password" required minlength="8" placeholder="কমপক্ষে ৮ অক্ষর">
-
 <label>Confirm Password</label>
 <input id="regConfirm" type="password" required minlength="8" placeholder="আবার পাসওয়ার্ড দিন">
-
 <button class="primary full" type="submit">Create Account</button>
-<p id="regMessage" class="muted"></p>
+<p id="regMessage" class="message muted" role="status"></p>
 </form>
-
 <p>আগে অ্যাকাউন্ট আছে?
 <span class="link" onclick="showAuth('loginPage')">Login করুন</span></p>
 </section>
 
-<!-- LOGIN PAGE -->
+<!-- LOGIN -->
 <section id="loginPage" class="card hidden">
 <h2>Welcome Back</h2>
 <p class="muted">আপনার অ্যাকাউন্টে Login করুন।</p>
-
 <form id="loginForm">
 <label>Email Address</label>
 <input id="loginEmail" type="email" required placeholder="আপনার ইমেইল">
-
 <label>Password</label>
 <input id="loginPassword" type="password" required placeholder="পাসওয়ার্ড">
-
 <button class="primary full" type="submit">Login</button>
-<p id="loginMessage" class="muted"></p>
+<p id="loginMessage" class="message muted" role="status"></p>
 </form>
-
 <p>অ্যাকাউন্ট নেই?
 <span class="link" onclick="showAuth('registerPage')">Register করুন</span></p>
 </section>
 
-<!-- DASHBOARD: REGISTER/LOGIN SUCCESS ONLY -->
+<!-- DASHBOARD -->
 <section id="dashboard" class="hidden">
 <nav>
 <button class="active" onclick="showTab('home',this)">Home</button>
@@ -93,21 +84,18 @@ nav button.active{background:#22c99a;color:#061b14}
 <div class="card">
 <p class="muted">Welcome</p>
 <h2 id="welcomeName">BitPro User</h2>
-<p class="muted">USDT Account Balance</p>
+<p class="muted">Verified Balance</p>
 <div class="price" id="balance">0.00 USDT</div>
-<p class="muted">এই সংস্করণে বাস্তব ব্যালেন্স যাচাই ও পেমেন্ট সার্ভার যুক্ত হয়নি।</p>
+<p class="muted">যাচাই করা হয়নি এমন Deposit ব্যালেন্সে যোগ হয় না।</p>
 </div>
-
 <div class="card">
-<h3>Deposit Wallet</h3>
+<h3>USDT Deposit Wallet</h3>
 <p class="muted">Network: TRON (TRC20)</p>
-<div class="address" id="walletAddress">TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62</div>
+<div class="address" id="walletAddress"></div>
 <button class="primary full" onclick="copyWallet()">Copy Address</button>
-<p class="muted">শুধু সঠিক নেটওয়ার্ক ব্যবহার করুন। টাকা পাঠানোর আগে ঠিকানা যাচাই করুন।</p>
+<p class="muted">পাঠানোর আগে নেটওয়ার্ক ও ঠিকানা যাচাই করুন।</p>
 </div>
-
 <div class="card">
-<h3>Account</h3>
 <p id="accountEmail" class="muted"></p>
 <button class="secondary full" onclick="logout()">Logout</button>
 </div>
@@ -122,7 +110,7 @@ nav button.active{background:#22c99a;color:#061b14}
 <label>Transaction Hash (TXID)</label>
 <input id="depTx" placeholder="TXID দিন">
 <button class="primary full" onclick="requestDeposit()">Submit Deposit Request</button>
-<p id="depMessage" class="muted"></p>
+<p id="depMessage" class="message muted" role="status"></p>
 </div>
 </div>
 
@@ -134,7 +122,7 @@ nav button.active{background:#22c99a;color:#061b14}
 <label>Amount (USDT)</label>
 <input id="withAmount" type="number" min="0.000001" step="any" placeholder="উত্তোলনের পরিমাণ">
 <button class="primary full" onclick="requestWithdraw()">Submit Withdraw Request</button>
-<p id="withMessage" class="muted"></p>
+<p id="withMessage" class="message muted" role="status"></p>
 </div>
 </div>
 
@@ -149,8 +137,18 @@ nav button.active{background:#22c99a;color:#061b14}
 
 <script>
 const WALLET="TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62";
+
+/*
+এই সংস্করণটি UI পরীক্ষা করার জন্য।
+পাসওয়ার্ড বা বাস্তব অ্যাকাউন্ট স্থানীয়ভাবে সংরক্ষণ করা হয় না।
+রিফ্রেশ করলে পরীক্ষামূলক অ্যাকাউন্ট মুছে যাবে।
+*/
+let testAccount=null;
 let currentUser=null;
 let transactions=[];
+let balance=0;
+
+document.getElementById("walletAddress").textContent=WALLET;
 
 function showAuth(id){
  document.getElementById("registerPage").classList.toggle("hidden",id!=="registerPage");
@@ -158,36 +156,57 @@ function showAuth(id){
  document.getElementById("dashboard").classList.add("hidden");
 }
 
-function enterDashboard(name,email){
- currentUser={name,email};
+function enterDashboard(user){
+ currentUser=user;
  document.getElementById("registerPage").classList.add("hidden");
  document.getElementById("loginPage").classList.add("hidden");
  document.getElementById("dashboard").classList.remove("hidden");
- document.getElementById("welcomeName").textContent="Welcome, "+name;
- document.getElementById("accountEmail").textContent=email;
+ document.getElementById("welcomeName").textContent="Welcome, "+user.name;
+ document.getElementById("accountEmail").textContent=user.email;
+ document.getElementById("balance").textContent=balance.toFixed(2)+" USDT";
+ showTab("home",document.querySelector("nav button"));
 }
 
 document.getElementById("registerForm").addEventListener("submit",function(e){
  e.preventDefault();
+
  const name=document.getElementById("regName").value.trim();
  const email=document.getElementById("regEmail").value.trim().toLowerCase();
  const password=document.getElementById("regPassword").value;
  const confirm=document.getElementById("regConfirm").value;
+ const msg=document.getElementById("regMessage");
 
  if(password!==confirm){
-  document.getElementById("regMessage").textContent="দুটি পাসওয়ার্ড মিলছে না।";
+  msg.textContent="দুটি পাসওয়ার্ড মিলছে না।";
+  return;
+ }
+ if(password.length<8){
+  msg.textContent="পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।";
   return;
  }
 
- // UI preview only; does not create a secure account.
- document.getElementById("regMessage").textContent=
- "ইন্টারফেস প্রস্তুত, কিন্তু নিরাপদ সার্ভার ছাড়া বাস্তব অ্যাকাউন্ট তৈরি করা যাবে না।";
+ // Temporary in-memory test account only
+ testAccount={name,email,password};
+ msg.textContent="পরীক্ষামূলক অ্যাকাউন্ট তৈরি হয়েছে। Dashboard খুলছে...";
+ enterDashboard({name,email});
 });
 
 document.getElementById("loginForm").addEventListener("submit",function(e){
  e.preventDefault();
- document.getElementById("loginMessage").textContent=
- "বাস্তব Login চালু করতে backend authentication প্রয়োজন।";
+
+ const email=document.getElementById("loginEmail").value.trim().toLowerCase();
+ const password=document.getElementById("loginPassword").value;
+ const msg=document.getElementById("loginMessage");
+
+ if(!testAccount){
+  msg.textContent="এই সেশনে অ্যাকাউন্ট নেই। আগে Register করুন।";
+  return;
+ }
+ if(email!==testAccount.email||password!==testAccount.password){
+  msg.textContent="ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।";
+  return;
+ }
+ enterDashboard(testAccount);
 });
 
 function showTab(id,button){
@@ -210,17 +229,24 @@ async function copyWallet(){
 function requestDeposit(){
  const amount=Number(document.getElementById("depAmount").value);
  const tx=document.getElementById("depTx").value.trim();
+ const msg=document.getElementById("depMessage");
+
  if(!Number.isFinite(amount)||amount<=0||!tx){
-  document.getElementById("depMessage").textContent="সঠিক Amount ও TXID দিন।";
+  msg.textContent="সঠিক Amount ও TXID দিন।";
   return;
  }
+ if(transactions.some(t=>t.type==="Deposit"&&t.reference===tx)){
+  msg.textContent="এই TXID ইতিমধ্যে এই সেশনে দেওয়া হয়েছে।";
+  return;
+ }
+
  transactions.unshift({
   type:"Deposit",amount,reference:tx,
   status:"Pending verification",
   time:new Date().toLocaleString()
  });
- document.getElementById("depMessage").textContent=
- "অনুরোধ নেওয়া হয়েছে। সার্ভার ও ব্লকচেইন যাচাই না হওয়া পর্যন্ত Pending থাকবে।";
+
+ msg.textContent="অনুরোধ রেকর্ড হয়েছে। ব্লকচেইন যাচাই না হওয়া পর্যন্ত Pending থাকবে।";
  document.getElementById("depAmount").value="";
  document.getElementById("depTx").value="";
 }
@@ -228,39 +254,55 @@ function requestDeposit(){
 function requestWithdraw(){
  const amount=Number(document.getElementById("withAmount").value);
  const address=document.getElementById("withAddress").value.trim();
+ const msg=document.getElementById("withMessage");
+
  if(!Number.isFinite(amount)||amount<=0||!address){
-  document.getElementById("withMessage").textContent="সঠিক Amount ও Wallet Address দিন।";
+  msg.textContent="সঠিক Amount ও Wallet Address দিন।";
   return;
  }
+ if(amount>balance){
+  msg.textContent="যাচাইকৃত ব্যালেন্স পর্যাপ্ত নয়।";
+  return;
+ }
+
  transactions.unshift({
   type:"Withdraw",amount,reference:address,
   status:"Pending secure backend",
   time:new Date().toLocaleString()
  });
- document.getElementById("withMessage").textContent=
- "অনুরোধটি শুধু এই পেজে রেকর্ড হয়েছে। বাস্তব উত্তোলনের জন্য নিরাপদ backend প্রয়োজন।";
+ msg.textContent="অনুরোধ রেকর্ড হয়েছে; বাস্তব উত্তোলনের জন্য নিরাপদ সার্ভার প্রয়োজন।";
  document.getElementById("withAmount").value="";
  document.getElementById("withAddress").value="";
 }
 
 function renderHistory(){
  const el=document.getElementById("historyList");
- if(!transactions.length){el.textContent="কোনো লেনদেন নেই।";return;}
  el.replaceChildren();
+
+ if(!transactions.length){
+  el.textContent="কোনো লেনদেন নেই।";
+  return;
+ }
+
  transactions.forEach(t=>{
   const item=document.createElement("div");
   item.className="item";
+
   const title=document.createElement("strong");
   title.textContent=t.type+" · "+t.amount+" USDT";
+
   const status=document.createElement("p");
   status.className="status";
   status.textContent=t.status;
+
   const time=document.createElement("p");
   time.className="muted";
   time.textContent=t.time;
+
   const ref=document.createElement("p");
   ref.className="muted";
   ref.textContent="Reference: "+t.reference;
+
   item.append(title,status,time,ref);
   el.appendChild(item);
  });
@@ -273,3 +315,4 @@ function logout(){
 </script>
 </body>
 </html>
+ 
