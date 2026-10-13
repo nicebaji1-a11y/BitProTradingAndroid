@@ -1,497 +1,360 @@
 
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BitPro Trading</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BitPro - Crypto Trading</title>
 <style>
-:root{
-  --bg:#07111f;--panel:#111e30;--panel2:#23344d;
-  --green:#27d6a5;--red:#ff637a;--text:#f1f5ff;
-  --muted:#9eacc3;--border:#2b3c55;--blue:#3979ff;
-}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
-header{padding:18px;background:#0d192a;border-bottom:1px solid var(--border)}
-.brand{display:flex;align-items:center;gap:12px}
-.brand svg{width:56px;height:56px;flex-shrink:0}
-.brand-title{font-size:clamp(23px,6vw,34px);font-weight:800}
-.brand-title span{color:var(--green)}
-.tagline{color:var(--muted);font-size:12px;margin-top:4px}
-.container{max-width:720px;margin:auto;padding:15px}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:17px;padding:18px;margin-bottom:15px}
-h2,h3{margin-top:0}
-.muted{color:var(--muted);font-size:14px;line-height:1.6}
-.small{font-size:12px;color:var(--muted);line-height:1.6}
-label{display:block;margin:13px 0 7px;font-size:14px}
-input,select{
-  width:100%;padding:13px;border-radius:9px;
-  border:1px solid var(--border);background:#091525;color:white;font-size:16px
-}
-button{padding:13px 14px;border:0;border-radius:10px;background:var(--panel2);color:white;font-weight:bold;cursor:pointer}
-.primary{background:var(--green);color:#061a15}
-.sell-btn{background:var(--red);color:#25050c}
-.full{width:100%;margin-top:12px}
+body{margin:0;background:#0b0e11;color:#eaecef;font-family:Arial,sans-serif}
+header{display:flex;align-items:center;justify-content:space-between;padding:16px;background:#181a20;border-bottom:1px solid #30343b;gap:12px}
+.logo{font-size:25px;font-weight:bold;color:#f0b90b}
+button{border:0;padding:12px 16px;border-radius:7px;font-weight:bold;cursor:pointer}
+.primary{background:#f0b90b;color:#111}
+.secondary{background:#30343b;color:#fff}
+.danger{background:#f6465d;color:white}
+.container{max-width:1100px;margin:auto;padding:18px}
+.card{background:#181a20;border:1px solid #30343b;border-radius:12px;padding:18px;margin-bottom:16px}
+h2{font-size:19px;margin-top:0}
+input{width:100%;padding:13px;margin:7px 0 12px;background:#0b0e11;color:white;border:1px solid #474d57;border-radius:7px;font-size:15px}
+label{font-size:13px;color:#b7bdc6}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.price{font-size:26px;font-weight:bold;color:#f0b90b}
+.balance{font-size:32px;font-weight:bold;margin:12px 0;color:#f0b90b}
+.muted{color:#848e9c;font-size:13px}
+.tabs{display:flex;gap:8px;margin-bottom:15px}
+.tabs button{flex:1}
+.green{color:#0ecb81}
+.red{color:#f6465d}
 .hidden{display:none!important}
-nav{display:flex;gap:7px;overflow-x:auto;padding:4px 0 15px}
-nav button{flex-shrink:0;white-space:nowrap}
-nav button.active,.trade-toggle button.active{background:var(--green);color:#061a15}
-.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.balance{font-size:27px;font-weight:bold;color:var(--green);overflow-wrap:anywhere}
-.price{font-size:34px;font-weight:bold;margin:13px 0}
-.address{background:#091525;border:1px solid var(--border);border-radius:9px;padding:12px;overflow-wrap:anywhere}
-.trade-toggle{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}
-.trade-toggle button{padding:15px;font-size:17px}
-.quote{padding:13px;background:#091525;border-radius:10px;margin-top:12px}
-.status{color:#ffcc66;font-size:13px}
-#btcChart{width:100%;height:210px;display:block}
-a{color:var(--green)}
+#message{padding:10px 0;color:#f0b90b}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:10px;border-bottom:1px solid #30343b}
+.table-wrap{overflow-x:auto}
+footer{text-align:center;color:#848e9c;padding:25px;font-size:12px}
+@media(max-width:650px){
+ .grid{grid-template-columns:1fr}
+ header{padding:12px}
+ .container{padding:12px}
+ .balance{font-size:27px}
+}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="brand">
-    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="BitPro Logo">
-      <circle cx="50" cy="50" r="46" fill="#0d192a" stroke="#27d6a5" stroke-width="4"/>
-      <text x="50" y="68" text-anchor="middle" font-size="59" font-weight="bold" fill="#27d6a5">₿</text>
-      <path d="M59 72L81 46M70 46H81V57" fill="none" stroke="#27d6a5" stroke-width="4" stroke-linecap="round"/>
-    </svg>
-    <div>
-      <div class="brand-title"><span>BitPro</span> Trading</div>
-      <div class="tagline">Trade Smarter • Grow Faster</div>
-    </div>
-  </div>
+ <div class="logo">₿ BitPro</div>
+ <div id="authButtons">
+  <button class="secondary" onclick="showAuth('login')">Login</button>
+  <button class="primary" onclick="showAuth('register')">Register</button>
+ </div>
+ <button id="logoutBtn" class="secondary hidden" onclick="logout()">Logout</button>
 </header>
 
 <div class="container">
 
-<!-- REGISTER -->
-<section id="registerPage" class="card">
-  <h2>Create Account</h2>
-  <p class="muted">BitPro Trading-এ নতুন অ্যাকাউন্ট তৈরি করুন।</p>
-  <form id="registerForm">
-    <label>Full Name</label>
-    <input id="regName" required placeholder="আপনার নাম">
-    <label>Email</label>
-    <input id="regEmail" type="email" required placeholder="ইমেইল">
-    <label>Password</label>
-    <input id="regPassword" type="password" minlength="6" required placeholder="কমপক্ষে ৬ অক্ষর">
-    <label>Confirm Password</label>
-    <input id="regConfirm" type="password" required placeholder="পাসওয়ার্ড আবার লিখুন">
-    <button class="primary full" type="submit">Register</button>
-  </form>
-  <p class="muted">অ্যাকাউন্ট আছে? <a href="#" onclick="showAuth('login');return false">Login করুন</a></p>
-  <p id="registerMessage" class="muted"></p>
+<section id="authSection" class="card">
+ <h2 id="authTitle">Create Account</h2>
+ <p class="muted">Register to receive your $10 welcome bonus.</p>
+ <form id="authForm">
+  <div id="nameField">
+   <label>Your Name</label>
+   <input id="name" placeholder="Enter your name" autocomplete="name">
+  </div>
+  <label>Email Address</label>
+  <input id="email" type="email" placeholder="Enter email" required autocomplete="email">
+  <label>Password</label>
+  <input id="password" type="password" placeholder="Minimum 6 characters" required minlength="6" autocomplete="current-password">
+  <button id="authSubmit" class="primary" type="submit">Register & Get $10</button>
+ </form>
+ <p id="switchText" class="muted">Already registered?
+  <a href="#" style="color:#f0b90b" onclick="showAuth('login');return false">Login</a>
+ </p>
+ <div id="message" role="status"></div>
 </section>
 
-<!-- LOGIN -->
-<section id="loginPage" class="card hidden">
-  <h2>Login</h2>
-  <form id="loginForm">
-    <label>Email</label>
-    <input id="loginEmail" type="email" required>
-    <label>Password</label>
-    <input id="loginPassword" type="password" required>
-    <button class="primary full" type="submit">Login</button>
-  </form>
-  <p class="muted">অ্যাকাউন্ট নেই? <a href="#" onclick="showAuth('register');return false">Register করুন</a></p>
-  <p id="loginMessage" class="muted"></p>
-</section>
-
-<!-- DASHBOARD -->
 <section id="dashboard" class="hidden">
 
-  <nav>
-    <button class="active" onclick="openTab('home')">Home</button>
-    <button onclick="openTab('btc')">₿ BTC Trade</button>
-    <button onclick="openTab('deposit')">Deposit</button>
-    <button onclick="openTab('withdraw')">Withdraw</button>
-    <button onclick="openTab('history')">History</button>
-  </nav>
+ <div class="card">
+  <p class="muted">Welcome, <span id="userName"></span></p>
+  <h2>My Wallet</h2>
+  <div class="muted">Available Balance (USDT)</div>
+  <div class="balance">$<span id="balance">10.00</span></div>
+  <p class="muted">Welcome bonus: $10.00 on registration</p>
+ </div>
 
-  <!-- HOME -->
-  <div id="home" class="tab">
-    <div class="card">
-      <p class="muted">Welcome to BitPro</p>
-      <h2 id="welcomeName">Trader</h2>
-      <p class="muted">Demo USDT Balance</p>
-      <div class="balance" id="homeUSDT">1,000.00 USDT</div>
-      <p class="muted">Demo BTC Balance</p>
-      <div class="balance" id="homeBTC">0.00000000 BTC</div>
-      <p class="small">এগুলো শুধু পরীক্ষামূলক ব্যালেন্স; বাস্তব অর্থ নয়।</p>
-    </div>
-
-    <div class="card">
-      <h3>₿ BTC / USDT</h3>
-      <div class="price" id="homePrice">Loading...</div>
-      <p id="homeChange" class="muted">লাইভ দাম লোড হচ্ছে...</p>
-      <button class="primary full" onclick="openTab('btc')">Trade BTC</button>
-    </div>
-
-    <div class="card">
-      <h3>USDT Deposit Wallet</h3>
-      <p class="muted">Network: TRON (TRC20)</p>
-      <div class="address">TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62</div>
-      <button class="full" onclick="copyWallet()">Copy Address</button>
-    </div>
+ <div class="grid">
+  <div class="card">
+   <h2>BTC Market</h2>
+   <div class="muted">Bitcoin / USDT</div>
+   <div class="price" id="btcPrice">Loading...</div>
+   <p id="btcChange" class="muted">BTC market price</p>
+   <button class="secondary" onclick="refreshPrice()">Refresh Price</button>
   </div>
 
-  <!-- BTC TRADING -->
-  <div id="btc" class="tab hidden">
-    <div class="card">
-      <h2>₿ BTC / USDT</h2>
-      <p class="muted">Live Bitcoin Market Price</p>
-      <div class="price" id="btcPrice">Loading...</div>
-      <p id="btcChange" class="muted">Market data loading...</p>
-      <p id="btcUpdated" class="small"></p>
-      <button class="full" onclick="loadBTC()">Refresh Price</button>
-    </div>
-
-    <div class="card">
-      <h3>BTC Price Chart</h3>
-      <canvas id="btcChart" width="600" height="240"></canvas>
-      <p class="muted">সাম্প্রতিক ৫ মিনিটের মার্কেট ডেটা।</p>
-    </div>
-
-    <div class="card">
-      <h2>Spot Trading</h2>
-      <p class="muted">Demo Trading • বাস্তব অর্ডার নয়</p>
-
-      <div class="trade-toggle">
-        <button id="buyTab" class="active" onclick="setTradeSide('buy')">Buy BTC</button>
-        <button id="sellTab" onclick="setTradeSide('sell')">Sell BTC</button>
-      </div>
-
-      <div class="row">
-        <span class="muted">Available USDT</span>
-        <b id="tradeUSDT">1,000.00</b>
-      </div>
-      <div class="row" style="margin-top:10px">
-        <span class="muted">Available BTC</span>
-        <b id="tradeBTC">0.00000000</b>
-      </div>
-
-      <div id="buyForm">
-        <label>Buy Amount (USDT)</label>
-        <input id="buyAmount" type="number" min="1" step="any" placeholder="যেমন 100" oninput="updateQuote()">
-        <div class="quote">
-          <div class="row"><span class="muted">BTC Price</span><b id="buyPrice">--</b></div>
-          <div class="row" style="margin-top:10px"><span class="muted">Trading Fee (0.1%)</span><b id="buyFee">0.00 USDT</b></div>
-          <div class="row" style="margin-top:10px"><span class="muted">Estimated BTC</span><b id="buyQty">0 BTC</b></div>
-          <div class="row" style="margin-top:10px"><span class="muted">Total Cost</span><b id="buyTotal">0.00 USDT</b></div>
-        </div>
-        <button class="primary full" onclick="executeBuy()">Confirm Demo Buy</button>
-      </div>
-
-      <div id="sellForm" class="hidden">
-        <label>Sell Amount (BTC)</label>
-        <input id="sellAmount" type="number" min="0.00000001" step="any" placeholder="যেমন 0.001" oninput="updateQuote()">
-        <div class="quote">
-          <div class="row"><span class="muted">BTC Price</span><b id="sellPrice">--</b></div>
-          <div class="row" style="margin-top:10px"><span class="muted">Gross Value</span><b id="sellGross">0.00 USDT</b></div>
-          <div class="row" style="margin-top:10px"><span class="muted">Trading Fee (0.1%)</span><b id="sellFee">0.00 USDT</b></div>
-          <div class="row" style="margin-top:10px"><span class="muted">You Receive</span><b id="sellReceive">0.00 USDT</b></div>
-        </div>
-        <button class="sell-btn full" onclick="executeSell()">Confirm Demo Sell</button>
-      </div>
-
-      <p id="tradeMessage" class="muted"></p>
-      <p class="small">দাম পরিবর্তনের কারণে হিসাব বদলাতে পারে। এই Demo Trading-এ বাস্তব ক্রিপ্টো কেনাবেচা বা টাকা স্থানান্তর হয় না।</p>
-    </div>
-
-    <div class="card">
-      <h3>My BTC Assets</h3>
-      <div class="row"><span class="muted">BTC Owned</span><b id="assetBTC">0.00000000 BTC</b></div>
-      <div class="row" style="margin-top:12px"><span class="muted">Estimated Value</span><b id="assetValue">0.00 USDT</b></div>
-    </div>
+  <div class="card">
+   <h2>BTC Trade</h2>
+   <div class="tabs">
+    <button id="buyTab" class="primary" onclick="setSide('buy')">Buy BTC</button>
+    <button id="sellTab" class="secondary" onclick="setSide('sell')">Sell BTC</button>
+   </div>
+   <label>Amount (USDT)</label>
+   <input id="amount" type="number" min="1" step="0.01" placeholder="Enter USDT amount">
+   <p class="muted">Estimated BTC: <strong id="estimated">0.00000000</strong></p>
+   <p class="muted">Fee: 0.1%</p>
+   <button id="tradeBtn" class="primary" style="width:100%" onclick="trade()">Buy BTC</button>
+   <div id="tradeMessage" role="status"></div>
   </div>
+ </div>
 
-  <!-- DEPOSIT -->
-  <div id="deposit" class="tab hidden">
-    <div class="card">
-      <h2>Deposit USDT</h2>
-      <p class="muted">Network: TRON (TRC20)</p>
-      <div class="address">TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62</div>
-      <button class="full" onclick="copyWallet()">Copy Address</button>
-      <label>Amount (USDT)</label>
-      <input id="depositAmount" type="number" min="0.01" step="any">
-      <label>Transaction ID (TXID)</label>
-      <input id="depositTxid" placeholder="TRON Transaction ID">
-      <button class="primary full" onclick="submitDeposit()">Submit Deposit Request</button>
-      <p id="depositMessage" class="muted"></p>
-      <p class="small">TXID দিলেই Deposit নিশ্চিত হয় না। এই প্রোটোটাইপ ব্লকচেইন যাচাই করে না।</p>
-    </div>
+ <div class="card">
+  <h2>My Assets</h2>
+  <div class="grid">
+   <div>
+    <p class="muted">USDT Balance</p>
+    <h2 id="usdtAsset">$10.00</h2>
+   </div>
+   <div>
+    <p class="muted">BTC Balance</p>
+    <h2 id="btcAsset">0 BTC</h2>
+   </div>
   </div>
+ </div>
 
-  <!-- WITHDRAW -->
-  <div id="withdraw" class="tab hidden">
-    <div class="card">
-      <h2>Withdraw USDT</h2>
-      <label>Amount (USDT)</label>
-      <input id="withdrawAmount" type="number" min="0.01" step="any">
-      <label>TRC20 Wallet Address</label>
-      <input id="withdrawAddress" placeholder="Wallet Address">
-      <button class="primary full" onclick="submitWithdraw()">Submit Withdraw Request</button>
-      <p id="withdrawMessage" class="muted"></p>
-      <p class="small">এই ফর্ম অনুরোধ রেকর্ড করে; বাস্তব পেমেন্ট পাঠায় না।</p>
-    </div>
+ <div class="card">
+  <h2>Trade History</h2>
+  <div class="table-wrap">
+   <table>
+    <thead><tr><th>Time</th><th>Type</th><th>Amount</th><th>Price</th></tr></thead>
+    <tbody id="history">
+     <tr><td colspan="4" class="muted">No transactions yet</td></tr>
+    </tbody>
+   </table>
   </div>
+ </div>
 
-  <!-- HISTORY -->
-  <div id="history" class="tab hidden">
-    <div class="card">
-      <h2>Transaction History</h2>
-      <div id="historyList"><p class="muted">এখনো কোনো রেকর্ড নেই।</p></div>
-    </div>
-  </div>
-
-  <button class="full" onclick="logout()">Logout</button>
 </section>
 </div>
 
+<footer>BitPro © 2026</footer>
+
 <script>
-const WALLET="TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62";
-const FEE_RATE=0.001;
+const $ = id => document.getElementById(id);
+const USERS_KEY = "bitpro_users_v1";
+const SESSION_KEY = "bitpro_session_v1";
 
-let liveBTCPrice=0;
-let btcCandles=[];
-let tradeSide="buy";
-let demoUSDT=1000;
-let demoBTC=0;
-let historyItems=[];
+let currentEmail = null;
+let side = "buy";
+let btcPrice = 0;
+let marketTimer = null;
 
-function money(n){
-  return Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+function getUsers(){
+ try { return JSON.parse(localStorage.getItem(USERS_KEY) || "{}"); }
+ catch(e){ return {}; }
 }
-function qty(n){return Number(n).toFixed(8);}
+function saveUsers(users){
+ localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+function showAuth(mode){
+ $("authSection").classList.remove("hidden");
+ $("dashboard").classList.add("hidden");
+ $("message").textContent = "";
+ $("authForm").reset();
 
-function showAuth(page){
-  document.getElementById("registerPage").classList.toggle("hidden",page!=="register");
-  document.getElementById("loginPage").classList.toggle("hidden",page!=="login");
+ const registering = mode === "register";
+ $("authTitle").textContent = registering ? "Create Account" : "Login";
+ $("authSubmit").textContent = registering ? "Register & Get $10" : "Login";
+ $("nameField").classList.toggle("hidden", !registering);
+ $("name").required = registering;
+ $("switchText").innerHTML = registering
+  ? 'Already registered? <a href="#" style="color:#f0b90b" onclick="showAuth(\\'login\\');return false">Login</a>'
+  : 'New user? <a href="#" style="color:#f0b90b" onclick="showAuth(\\'register\\');return false">Register</a>';
+ $("authForm").dataset.mode = mode;
 }
-function openTab(id){
-  document.querySelectorAll(".tab").forEach(x=>x.classList.add("hidden"));
-  document.getElementById(id).classList.remove("hidden");
-  document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
-  const b=[...document.querySelectorAll("nav button")].find(x=>x.getAttribute("onclick")?.includes("'"+id+"'"));
-  if(b)b.classList.add("active");
-  if(id==="btc")loadBTC();
-}
-function enterDashboard(name){
-  document.getElementById("registerPage").classList.add("hidden");
-  document.getElementById("loginPage").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
-  document.getElementById("welcomeName").textContent="Welcome, "+name;
-  updateBalances();
-  openTab("home");
-}
-document.getElementById("registerForm").addEventListener("submit",e=>{
-  e.preventDefault();
-  const name=document.getElementById("regName").value.trim();
-  const email=document.getElementById("regEmail").value.trim().toLowerCase();
-  const password=document.getElementById("regPassword").value;
-  if(password!==document.getElementById("regConfirm").value){
-    document.getElementById("registerMessage").textContent="পাসওয়ার্ড মিলছে না।";return;
+
+$("authForm").addEventListener("submit", function(e){
+ e.preventDefault();
+ const mode = this.dataset.mode || "register";
+ const email = $("email").value.trim().toLowerCase();
+ const password = $("password").value;
+ const users = getUsers();
+
+ if(mode === "register"){
+  if(!$("name").value.trim()){
+   $("message").textContent = "Please enter your name.";
+   return;
   }
-  sessionStorage.setItem("bitproUser",JSON.stringify({name,email,password}));
-  enterDashboard(name);
-});
-document.getElementById("loginForm").addEventListener("submit",e=>{
-  e.preventDefault();
-  const saved=sessionStorage.getItem("bitproUser");
-  if(!saved){
-    document.getElementById("loginMessage").textContent="এই সেশনে অ্যাকাউন্ট নেই। Register করুন।";return;
+  if(users[email]){
+   $("message").textContent = "This email is already registered. Please login.";
+   return;
   }
-  const u=JSON.parse(saved);
-  if(document.getElementById("loginEmail").value.trim().toLowerCase()===u.email&&
-     document.getElementById("loginPassword").value===u.password){
-    enterDashboard(u.name);
-  }else document.getElementById("loginMessage").textContent="ইমেইল বা পাসওয়ার্ড ভুল।";
+
+  // Local prototype only. Real accounts require a secure backend.
+  users[email] = {
+   name: $("name").value.trim(),
+   password: password,
+   balance: 10,
+   btc: 0,
+   bonusGranted: true,
+   history: []
+  };
+  saveUsers(users);
+  loginUser(email);
+  $("message").textContent = "";
+ }else{
+  if(!users[email] || users[email].password !== password){
+   $("message").textContent = "Incorrect email or password.";
+   return;
+  }
+  loginUser(email);
+ }
 });
+
+function loginUser(email){
+ currentEmail = email;
+ localStorage.setItem(SESSION_KEY, email);
+ $("authSection").classList.add("hidden");
+ $("dashboard").classList.remove("hidden");
+ $("authButtons").classList.add("hidden");
+ $("logoutBtn").classList.remove("hidden");
+ render();
+ refreshPrice();
+}
+
 function logout(){
-  document.getElementById("dashboard").classList.add("hidden");
-  showAuth("login");
+ currentEmail = null;
+ localStorage.removeItem(SESSION_KEY);
+ if(marketTimer) clearInterval(marketTimer);
+ $("authButtons").classList.remove("hidden");
+ $("logoutBtn").classList.add("hidden");
+ showAuth("login");
 }
 
-function updateBalances(){
-  document.getElementById("homeUSDT").textContent=money(demoUSDT)+" USDT";
-  document.getElementById("homeBTC").textContent=qty(demoBTC)+" BTC";
-  document.getElementById("tradeUSDT").textContent=money(demoUSDT)+" USDT";
-  document.getElementById("tradeBTC").textContent=qty(demoBTC)+" BTC";
-  document.getElementById("assetBTC").textContent=qty(demoBTC)+" BTC";
-  document.getElementById("assetValue").textContent=money(demoBTC*liveBTCPrice)+" USDT";
+function account(){
+ return getUsers()[currentEmail];
 }
 
-function setTradeSide(side){
-  tradeSide=side;
-  document.getElementById("buyForm").classList.toggle("hidden",side!=="buy");
-  document.getElementById("sellForm").classList.toggle("hidden",side!=="sell");
-  document.getElementById("buyTab").classList.toggle("active",side==="buy");
-  document.getElementById("sellTab").classList.toggle("active",side==="sell");
-  document.getElementById("tradeMessage").textContent="";
-  updateQuote();
+function updateAccount(data){
+ const users = getUsers();
+ users[currentEmail] = data;
+ saveUsers(users);
 }
 
-function updateQuote(){
-  const price=liveBTCPrice;
-  document.getElementById("buyPrice").textContent=price?"$"+money(price):"--";
-  document.getElementById("sellPrice").textContent=price?"$"+money(price):"--";
+function render(){
+ const u = account();
+ if(!u) return;
+ $("userName").textContent = u.name;
+ $("balance").textContent = Number(u.balance).toFixed(2);
+ $("usdtAsset").textContent = "$" + Number(u.balance).toFixed(2);
+ $("btcAsset").textContent = Number(u.btc).toFixed(8) + " BTC";
 
-  const buyAmount=Number(document.getElementById("buyAmount").value);
-  const buyValid=Number.isFinite(buyAmount)&&buyAmount>0&&price>0;
-  const buyFee=buyValid?buyAmount*FEE_RATE:0;
-  const buyTotal=buyValid?buyAmount+buyFee:0;
-  const buyQty=buyValid?buyAmount/price:0;
-
-  document.getElementById("buyFee").textContent=money(buyFee)+" USDT";
-  document.getElementById("buyTotal").textContent=money(buyTotal)+" USDT";
-  document.getElementById("buyQty").textContent=qty(buyQty)+" BTC";
-
-  const sellAmount=Number(document.getElementById("sellAmount").value);
-  const sellValid=Number.isFinite(sellAmount)&&sellAmount>0&&price>0;
-  const gross=sellValid?sellAmount*price:0;
-  const fee=gross*FEE_RATE;
-  document.getElementById("sellGross").textContent=money(gross)+" USDT";
-  document.getElementById("sellFee").textContent=money(fee)+" USDT";
-  document.getElementById("sellReceive").textContent=money(gross-fee)+" USDT";
-}
-
-function executeBuy(){
-  const amount=Number(document.getElementById("buyAmount").value);
-  if(!liveBTCPrice){message("আগে BTC লাইভ দাম লোড হতে দিন।");return;}
-  if(!Number.isFinite(amount)||amount<=0){message("সঠিক USDT Amount লিখুন।");return;}
-  const total=amount*(1+FEE_RATE);
-  if(total>demoUSDT){message("পর্যাপ্ত Demo USDT নেই।");return;}
-  const received=amount/liveBTCPrice;
-  demoUSDT-=total;
-  demoBTC+=received;
-  addHistory("Demo Buy BTC",received,"Price $"+money(liveBTCPrice),"Completed (Demo)");
-  updateBalances();
-  document.getElementById("buyAmount").value="";
-  updateQuote();
-  message("Demo Buy সফল! "+qty(received)+" BTC যোগ হয়েছে।");
-}
-
-function executeSell(){
-  const amount=Number(document.getElementById("sellAmount").value);
-  if(!liveBTCPrice){message("আগে BTC লাইভ দাম লোড হতে দিন।");return;}
-  if(!Number.isFinite(amount)||amount<=0){message("সঠিক BTC Amount লিখুন।");return;}
-  if(amount>demoBTC){message("আপনার Demo BTC ব্যালেন্স যথেষ্ট নয়।");return;}
-  const gross=amount*liveBTCPrice;
-  const fee=gross*FEE_RATE;
-  const received=gross-fee;
-  demoBTC-=amount;
-  demoUSDT+=received;
-  addHistory("Demo Sell BTC",amount,"Price $"+money(liveBTCPrice),"Completed (Demo)");
-  updateBalances();
-  document.getElementById("sellAmount").value="";
-  updateQuote();
-  message("Demo Sell সফল! "+money(received)+" USDT যোগ হয়েছে।");
-}
-
-function message(text){
-  document.getElementById("tradeMessage").textContent=text;
-}
-async function copyWallet(){
-  try{await navigator.clipboard.writeText(WALLET);alert("Wallet address copied");}
-  catch(e){prompt("Wallet address কপি করুন:",WALLET);}
-}
-function esc(v){
-  return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-function addHistory(type,amount,reference,status){
-  historyItems.unshift({type,amount,reference,status,time:new Date().toLocaleString()});
-  renderHistory();
-}
-function renderHistory(){
-  const list=document.getElementById("historyList");
-  if(!historyItems.length){list.innerHTML='<p class="muted">এখনো কোনো রেকর্ড নেই।</p>';return;}
-  list.innerHTML=historyItems.map(x=>`
-    <div class="card">
-      <div class="row"><b>${esc(x.type)}</b><span class="status">${esc(x.status)}</span></div>
-      <p class="muted">Amount: ${esc(x.amount)}</p>
-      <p class="muted">Reference: ${esc(x.reference)}</p>
-      <p class="small">${esc(x.time)}</p>
-    </div>`).join("");
-}
-
-function submitDeposit(){
-  const amount=Number(document.getElementById("depositAmount").value);
-  const txid=document.getElementById("depositTxid").value.trim();
-  if(!Number.isFinite(amount)||amount<=0||!txid){
-    document.getElementById("depositMessage").textContent="সঠিক Amount ও TXID দিন।";return;
-  }
-  addHistory("Deposit request",amount+" USDT",txid,"Pending verification");
-  document.getElementById("depositMessage").textContent="অনুরোধ রেকর্ড হয়েছে; ব্যালেন্স বাড়েনি।";
-}
-function submitWithdraw(){
-  const amount=Number(document.getElementById("withdrawAmount").value);
-  const address=document.getElementById("withdrawAddress").value.trim();
-  if(!Number.isFinite(amount)||amount<=0||!address){
-    document.getElementById("withdrawMessage").textContent="সঠিক Amount ও Wallet Address দিন।";return;
-  }
-  addHistory("Withdraw request",amount+" USDT",address,"Pending request");
-  document.getElementById("withdrawMessage").textContent="অনুরোধ রেকর্ড হয়েছে; পেমেন্ট পাঠানো হয়নি।";
-}
-
-async function loadBTC(){
-  try{
-    const r=await fetch("https://data-api.binance.vision/api/v3/ticker/24hr?symbol=BTCUSDT");
-    if(!r.ok)throw Error("API");
-    const d=await r.json();
-    liveBTCPrice=Number(d.lastPrice);
-    const price="$"+money(liveBTCPrice);
-    const ch=Number(d.priceChangePercent);
-    const change="24h: "+(ch>=0?"+":"")+ch.toFixed(2)+"%";
-    document.getElementById("btcPrice").textContent=price;
-    document.getElementById("btcChange").textContent=change;
-    document.getElementById("btcChange").style.color=ch>=0?"#27d6a5":"#ff637a";
-    document.getElementById("btcUpdated").textContent="Updated: "+new Date().toLocaleTimeString();
-    document.getElementById("homePrice").textContent=price;
-    document.getElementById("homeChange").textContent=change;
-    document.getElementById("homeChange").style.color=ch>=0?"#27d6a5":"#ff637a";
-    updateBalances();
-    updateQuote();
-    await loadChart();
-  }catch(e){
-    document.getElementById("btcPrice").textContent="Price unavailable";
-    document.getElementById("btcChange").textContent="ইন্টারনেট সংযোগ পরীক্ষা করে Refresh চাপুন।";
-  }
-}
-async function loadChart(){
-  try{
-    const r=await fetch("https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=5m&limit=40");
-    if(!r.ok)throw Error("API");
-    const rows=await r.json();
-    btcCandles=rows.map(row=>Number(row[4]));
-    drawChart();
-  }catch(e){
-    const c=document.getElementById("btcChart"),x=c.getContext("2d");
-    x.clearRect(0,0,c.width,c.height);x.fillStyle="#9eacc3";x.fillText("Chart unavailable",15,30);
-  }
-}
-function drawChart(){
-  const c=document.getElementById("btcChart"),x=c.getContext("2d");
-  const w=c.width,h=c.height;
-  x.clearRect(0,0,w,h);
-  if(btcCandles.length<2)return;
-  const min=Math.min(...btcCandles),max=Math.max(...btcCandles),range=max-min||1;
-  x.strokeStyle="#293c55";
-  for(let i=1;i<5;i++){x.beginPath();x.moveTo(0,i*h/5);x.lineTo(w,i*h/5);x.stroke();}
-  x.beginPath();
-  btcCandles.forEach((p,i)=>{
-    const px=i*w/(btcCandles.length-1),py=h-((p-min)/range)*(h-20)-10;
-    if(i===0)x.moveTo(px,py);else x.lineTo(px,py);
+ const history = $("history");
+ history.innerHTML = "";
+ if(!u.history.length){
+  history.innerHTML = '<tr><td colspan="4" class="muted">No transactions yet</td></tr>';
+ }else{
+  u.history.slice().reverse().forEach(item => {
+   const tr = document.createElement("tr");
+   [item.time, item.type, item.amount, "$"+Number(item.price).toLocaleString()].forEach((value,i)=>{
+    const td = document.createElement("td");
+    td.textContent = value;
+    if(i===1) td.className = item.type==="BUY" ? "green" : "red";
+    tr.appendChild(td);
+   });
+   history.appendChild(tr);
   });
-  x.strokeStyle=btcCandles[btcCandles.length-1]>=btcCandles[0]?"#27d6a5":"#ff637a";
-  x.lineWidth=3;x.stroke();
+ }
+ updateEstimate();
 }
 
-loadBTC();
-setInterval(loadBTC,30000);
+function setSide(value){
+ side = value;
+ $("buyTab").className = value==="buy" ? "primary" : "secondary";
+ $("sellTab").className = value==="sell" ? "danger" : "secondary";
+ $("tradeBtn").textContent = value==="buy" ? "Buy BTC" : "Sell BTC";
+ $("tradeBtn").className = value==="buy" ? "primary" : "danger";
+ $("tradeMessage").textContent = "";
+ updateEstimate();
+}
+
+$("amount").addEventListener("input", updateEstimate);
+
+function updateEstimate(){
+ const amount = Number($("amount").value);
+ const fee = amount * 0.001;
+ const quantity = btcPrice > 0 ? Math.max(0, amount-fee)/btcPrice : 0;
+ $("estimated").textContent = quantity.toFixed(8);
+}
+
+async function refreshPrice(){
+ try{
+  const response = await fetch("https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT");
+  if(!response.ok) throw new Error("Market unavailable");
+  const data = await response.json();
+  btcPrice = Number(data.lastPrice);
+  $("btcPrice").textContent = "$" + btcPrice.toLocaleString("en-US",{maximumFractionDigits:2});
+  const change = Number(data.priceChangePercent);
+  $("btcChange").textContent = "24h: " + change.toFixed(2) + "%";
+  $("btcChange").className = change >= 0 ? "green" : "red";
+  updateEstimate();
+ }catch(e){
+  $("btcPrice").textContent = btcPrice ? "$"+btcPrice.toLocaleString() : "Unavailable";
+  $("btcChange").textContent = "Unable to load market price. Try again.";
+ }
+}
+
+function trade(){
+ const u = account();
+ if(!u || btcPrice <= 0){
+  $("tradeMessage").textContent = "Market price unavailable. Refresh and try again.";
+  return;
+ }
+
+ const amount = Number($("amount").value);
+ if(!Number.isFinite(amount) || amount <= 0){
+  $("tradeMessage").textContent = "Enter a valid amount.";
+  return;
+ }
+
+ const fee = amount * 0.001;
+ const quantity = (amount-fee)/btcPrice;
+
+ if(side==="buy"){
+  if(amount > u.balance){
+   $("tradeMessage").textContent = "Insufficient USDT balance.";
+   return;
+  }
+  u.balance -= amount;
+  u.btc += quantity;
+ }else{
+  if(quantity > u.btc){
+   $("tradeMessage").textContent = "Insufficient BTC balance.";
+   return;
+  }
+  u.btc -= quantity;
+  u.balance += amount-fee;
+ }
+
+ u.history.push({
+  time:new Date().toLocaleString(),
+  type:side.toUpperCase(),
+  amount:side==="buy" ? quantity.toFixed(8)+" BTC" : amount.toFixed(2)+" USDT",
+  price:btcPrice
+ });
+
+ updateAccount(u);
+ render();
+ $("amount").value = "";
+ $("tradeMessage").textContent = "Order updated successfully.";
+}
+
+showAuth("register");
+
+const savedSession = localStorage.getItem(SESSION_KEY);
+if(savedSession && getUsers()[savedSession]){
+ loginUser(savedSession);
+}
 </script>
 </body>
 </html>
