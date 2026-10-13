@@ -12,6 +12,7 @@ body{margin:0;background:var(--bg);color:var(--text);font:15px Arial,sans-serif}
 header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:#11192a;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
 .logo{font-size:23px;font-weight:bold;color:var(--green)}
 button{border:0;border-radius:8px;padding:11px 14px;background:var(--blue);color:white;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}
 input,select{width:100%;padding:12px;margin:7px 0 14px;background:#0d1424;border:1px solid var(--line);border-radius:8px;color:white}
 label{color:#c6d0e1;font-size:13px}
 .container{max-width:1150px;margin:auto;padding:18px}
@@ -79,12 +80,11 @@ footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
 </nav>
 
 <main class="container">
-
 <section id="page-dashboard" class="page">
   <div class="card">
     <p class="muted">Account Balance</p>
     <div class="stat" id="dashboardBalance">$10.00</div>
-    <p class="muted">USD account balance</p>
+    <p class="muted">USD account balance · prototype only</p>
     <button onclick="showPage('deposit')">Deposit</button>
     <button style="background:#26334b" onclick="showPage('withdraw')">Withdraw</button>
     <button style="background:#26334b" onclick="showPage('live')">Trade BTC</button>
@@ -135,7 +135,7 @@ footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
   </div>
   <div class="card">
     <h3>Trading Chat</h3>
-    <p class="muted">Messages are stored in this browser only.</p>
+    <p class="muted">Messages are saved to your profile; this is not a shared live chat.</p>
     <div id="chatLog" class="chatlog"></div>
     <form id="chatForm">
       <input id="chatMessage" maxlength="300" required placeholder="Write a message">
@@ -147,16 +147,16 @@ footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
 <section id="page-deposit" class="page hidden">
   <div class="card">
     <h2>USDT Deposit (TRC20)</h2>
-    <p>Send USDT using the TRON TRC20 network only.</p>
+    <p>Verify the network and address independently before sending funds.</p>
     <label>Deposit Address</label>
     <input id="depositAddress" value="TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62" readonly>
     <button class="full" onclick="copyDepositAddress()">Copy Address</button>
     <p id="copyMessage" class="muted"></p>
-    <p class="muted">Check the address and network carefully before sending funds.</p>
+    <p class="muted">Do not send funds to this address unless you have verified ownership and network.</p>
   </div>
   <div class="card">
     <h3>Submit Deposit Request</h3>
-    <p class="muted">Balance will not increase until the payment is independently verified.</p>
+    <p class="muted">This form does not verify blockchain payments or credit funds.</p>
     <form id="depositForm">
       <label>Amount (USDT)</label>
       <input id="depositAmount" type="number" min="0.01" step="0.01" required placeholder="Amount sent">
@@ -211,268 +211,466 @@ footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
 </main>
 </div>
 
-<footer>BitPro Trading · Prototype interface</footer>
+<footer>BitPro Trading · Prototype interface; no real trades or transfers</footer>
 
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 "use strict";
 
-const DEPOSIT_ADDRESS="TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62";
-const USERS_KEY="bitpro_users_v1";
-const SESSION_KEY="bitpro_session_v1";
-const WELCOME_BONUS=10;
-let currentUser=null;
-let isRegister=true;
-let btcPrice=0;
+// Firebase Web App configuration for project bitpro-c6604
+const firebaseConfig = {
+  apiKey: "AIzaSyB7ioPAkkvP-xyCk8hUKQumFWc9i02K0Dw",
+  authDomain: "bitpro-c6604.firebaseapp.com",
+  projectId: "bitpro-c6604",
+  storageBucket: "bitpro-c6604.firebasestorage.app",
+  messagingSenderId: "661608820441",
+  appId: "1:661608820441:web:23be96769d79c1fb5198c8",
+  measurementId: "G-5LV04QWVG7"
+};
 
-function readUsers(){
-  try{return JSON.parse(localStorage.getItem(USERS_KEY)||"{}")}
-  catch(e){return {}}
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const WELCOME_BONUS = 10;
+const DEPOSIT_ADDRESS = "TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62";
+
+let currentUser = null;
+let profile = null;
+let isRegister = true;
+let btcPrice = 0;
+let unsubscribeProfile = null;
+
+function money(v) {
+  return "$" + Number(v || 0).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
 }
-function saveUsers(users){
-  localStorage.setItem(USERS_KEY,JSON.stringify(users));
+
+function safeText(v) {
+  return String(v ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  }[c]));
 }
-function saveCurrent(){
-  if(!currentUser)return;
-  const users=readUsers();
-  users[currentUser.email]=currentUser;
-  saveUsers(users);
+
+function authMessage(msg) {
+  document.getElementById("authMessage").textContent = msg;
 }
-function money(v){
-  return "$"+Number(v||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+function friendlyError(e) {
+  const m = {
+    "auth/email-already-in-use":"This email already has an account. Please login.",
+    "auth/invalid-email":"Please enter a valid email address.",
+    "auth/weak-password":"Password must be at least 6 characters.",
+    "auth/invalid-credential":"Incorrect email or password.",
+    "auth/user-not-found":"No account found. Please register first.",
+    "auth/wrong-password":"Incorrect email or password.",
+    "auth/too-many-requests":"Too many attempts. Try again later.",
+    "permission-denied":"Firestore permission denied. Firestore Rules must permit a user to access only their own profile."
+  };
+  return m[e.code] || e.message || "Something went wrong. Please try again.";
 }
-function safeText(v){
-  return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-function defaultUser(name,email,password){
-  return {name,email,password,balance:0,created:new Date().toISOString(),history:[],chat:[]};
-}
-function authMessage(msg){
-  document.getElementById("authMessage").textContent=msg;
-}
-function setAuthMode(register){
-  isRegister=register;
-  document.getElementById("authTitle").textContent=register?"Create BitPro Account":"Login to BitPro";
-  document.getElementById("authButton").textContent=register?"Create Account":"Login";
-  document.getElementById("nameField").classList.toggle("hidden",!register);
-  document.getElementById("fullName").required=register;
-  document.getElementById("switchAuth").textContent=register?"Already have an account? Login":"New user? Create Account";
+
+function setAuthMode(register) {
+  isRegister = register;
+  document.getElementById("authTitle").textContent =
+    register ? "Create BitPro Account" : "Login to BitPro";
+  document.getElementById("authButton").textContent =
+    register ? "Create Account" : "Login";
+  document.getElementById("nameField").classList.toggle("hidden", !register);
+  document.getElementById("fullName").required = register;
+  document.getElementById("switchAuth").textContent =
+    register ? "Already have an account? Login" : "New user? Create Account";
   authMessage("");
 }
-document.getElementById("switchAuth").addEventListener("click",()=>setAuthMode(!isRegister));
 
-document.getElementById("authForm").addEventListener("submit",e=>{
+document.getElementById("switchAuth").addEventListener("click", () => setAuthMode(!isRegister));
+
+document.getElementById("authForm").addEventListener("submit", async e => {
   e.preventDefault();
-  const name=document.getElementById("fullName").value.trim();
-  const email=document.getElementById("email").value.trim().toLowerCase();
-  const password=document.getElementById("password").value;
-  const users=readUsers();
 
-  if(isRegister){
-    if(!name)return authMessage("Enter your name.");
-    if(users[email])return authMessage("This email already has an account. Please login.");
+  const name = document.getElementById("fullName").value.trim();
+  const email = document.getElementById("email").value.trim().toLowerCase();
+  const password = document.getElementById("password").value;
+  const button = document.getElementById("authButton");
 
-    // NEW ACCOUNT: ADD $10 WELCOME BONUS
-    currentUser=defaultUser(name,email,password);
-    currentUser.balance=WELCOME_BONUS;
+  button.disabled = true;
+  authMessage(isRegister ? "Creating your account..." : "Logging in...");
 
-    // Record the bonus in account history
-    currentUser.history.push({
-      id:Date.now().toString(36),
-      date:new Date().toISOString(),
-      type:"Welcome Bonus",
-      amount:WELCOME_BONUS,
-      status:"Credited",
-      details:"New account welcome bonus"
-    });
+  try {
+    if (isRegister) {
+      if (!name) throw new Error("Enter your name.");
 
-    users[email]=currentUser;
-    saveUsers(users);
-    localStorage.setItem(SESSION_KEY,email);
-    openApp();
-    alert("Welcome to BitPro! Your $10 welcome bonus has been added.");
-  }else{
-    const user=users[email];
-    if(!user||user.password!==password)return authMessage("Incorrect email or password.");
-    currentUser=user;
-    if(!currentUser.history)currentUser.history=[];
-    if(!currentUser.chat)currentUser.chat=[];
-    localStorage.setItem(SESSION_KEY,email);
-    openApp();
+      const cred = await auth.createUserWithEmailAndPassword(email, password);
+      await cred.user.updateProfile({ displayName: name });
+
+      const userRef = db.collection("users").doc(cred.user.uid);
+      await userRef.set({
+        name,
+        email: cred.user.email,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        balance: WELCOME_BONUS,
+        history: [{
+          id: String(Date.now()),
+          date: new Date().toISOString(),
+          type: "Welcome Bonus",
+          amount: WELCOME_BONUS,
+          status: "Credited",
+          details: "Prototype welcome bonus; not withdrawable money"
+        }],
+        chat: []
+      });
+
+      authMessage("");
+    } else {
+      await auth.signInWithEmailAndPassword(email, password);
+      authMessage("");
+    }
+  } catch (err) {
+    authMessage(friendlyError(err));
+  } finally {
+    button.disabled = false;
   }
 });
 
-function openApp(){
+function openApp() {
   document.getElementById("authPage").classList.add("hidden");
   document.getElementById("app").classList.remove("hidden");
-  renderAll();
   showPage("dashboard");
+  loadProfile();
 }
-function logout(){
-  localStorage.removeItem(SESSION_KEY);
-  currentUser=null;
+
+async function loadProfile() {
+  if (!currentUser) return;
+
+  const ref = db.collection("users").doc(currentUser.uid);
+
+  try {
+    const snap = await ref.get();
+
+    if (!snap.exists) {
+      await ref.set({
+        name: currentUser.displayName || "BitPro User",
+        email: currentUser.email,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        balance: 0,
+        history: [],
+        chat: []
+      });
+    }
+
+    if (unsubscribeProfile) unsubscribeProfile();
+
+    unsubscribeProfile = ref.onSnapshot(doc => {
+      if (!doc.exists) return;
+      profile = doc.data();
+      if (!Array.isArray(profile.history)) profile.history = [];
+      if (!Array.isArray(profile.chat)) profile.chat = [];
+      renderAll();
+    }, err => authMessage(friendlyError(err)));
+
+  } catch (err) {
+    document.getElementById("authPage").classList.remove("hidden");
+    document.getElementById("app").classList.add("hidden");
+    authMessage("Could not load your Firestore profile. " + friendlyError(err));
+  }
+}
+
+async function saveProfile() {
+  if (!currentUser || !profile) throw new Error("Profile is not ready.");
+  await db.collection("users").doc(currentUser.uid).set(profile, { merge: true });
+}
+
+async function logout() {
+  if (unsubscribeProfile) {
+    unsubscribeProfile();
+    unsubscribeProfile = null;
+  }
+
+  await auth.signOut();
+  profile = null;
+  currentUser = null;
   document.getElementById("app").classList.add("hidden");
   document.getElementById("authPage").classList.remove("hidden");
-  document.getElementById("password").value="";
+  document.getElementById("password").value = "";
   setAuthMode(false);
 }
-function showPage(page){
-  document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
-  document.getElementById("page-"+page).classList.remove("hidden");
-  document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===page));
-  if(page==="live")renderChat();
-  if(page==="history")renderHistory();
-  if(page==="deposit")renderDepositHistory();
-  if(page==="profile")renderProfile();
+
+function showPage(page) {
+  document.querySelectorAll(".page").forEach(x => x.classList.add("hidden"));
+  document.getElementById("page-" + page).classList.remove("hidden");
+  document.querySelectorAll(".nav button").forEach(x =>
+    x.classList.toggle("active", x.dataset.page === page)
+  );
+  if (page === "live") renderChat();
+  if (page === "history") renderHistory();
+  if (page === "deposit") renderDepositHistory();
+  if (page === "profile") renderProfile();
 }
-function addHistory(type,amount,status,details){
-  currentUser.history=currentUser.history||[];
-  currentUser.history.unshift({id:Date.now().toString(36),date:new Date().toISOString(),type,amount:Number(amount)||0,status,details});
-  saveCurrent();
+
+async function addHistory(type, amount, status, details) {
+  profile.history = profile.history || [];
+  profile.history.unshift({
+    id: Date.now().toString(36),
+    date: new Date().toISOString(),
+    type, amount: Number(amount) || 0, status, details
+  });
+  await saveProfile();
   renderAll();
 }
-function renderAll(){
-  if(!currentUser)return;
-  const bal=money(currentUser.balance);
+
+function renderAll() {
+  if (!currentUser || !profile) return;
+  const bal = money(profile.balance);
+
   document.getElementById("headerAccount").classList.remove("hidden");
-  document.getElementById("headerEmail").textContent=currentUser.email;
-  document.getElementById("headerBalance").textContent=bal;
-  document.getElementById("dashboardBalance").textContent=bal;
-  document.getElementById("tradeBalance").textContent=bal;
-  document.getElementById("withdrawBalance").textContent=bal;
-  document.getElementById("depositCount").textContent=(currentUser.history||[]).filter(x=>x.type==="Deposit").length;
-  renderHistory();renderDepositHistory();renderProfile();renderRecent();
+  document.getElementById("headerEmail").textContent = currentUser.email || "";
+  document.getElementById("headerBalance").textContent = bal;
+  document.getElementById("dashboardBalance").textContent = bal;
+  document.getElementById("tradeBalance").textContent = bal;
+  document.getElementById("withdrawBalance").textContent = bal;
+
+  document.getElementById("depositCount").textContent =
+    (profile.history || []).filter(x => x.type === "Deposit").length;
+
+  renderHistory();
+  renderDepositHistory();
+  renderProfile();
+  renderRecent();
+  renderChat();
 }
-function renderProfile(){
-  if(!currentUser)return;
-  document.getElementById("profileName").value=currentUser.name;
-  document.getElementById("profileEmail").value=currentUser.email;
-  document.getElementById("profileBalance").value=money(currentUser.balance);
-  document.getElementById("profileCreated").value=new Date(currentUser.created).toLocaleString();
+
+function renderProfile() {
+  if (!profile || !currentUser) return;
+
+  document.getElementById("profileName").value =
+    profile.name || currentUser.displayName || "";
+  document.getElementById("profileEmail").value = currentUser.email || "";
+  document.getElementById("profileBalance").value = money(profile.balance);
+
+  const created = profile.createdAt;
+  document.getElementById("profileCreated").value =
+    created && created.toDate ? created.toDate().toLocaleString() :
+    (created ? new Date(created).toLocaleString() : "Just now");
 }
-function renderHistory(){
-  if(!currentUser)return;
-  const h=currentUser.history||[];
-  document.getElementById("historyRows").innerHTML=h.map(x=>`<tr>
-    <td>${safeText(new Date(x.date).toLocaleString())}</td>
-    <td>${safeText(x.type)}</td><td>${money(x.amount)}</td>
-    <td><span class="badge">${safeText(x.status)}</span></td>
-    <td>${safeText(x.details)}</td></tr>`).join("");
-  document.getElementById("emptyHistory").classList.toggle("hidden",h.length>0);
+
+function renderHistory() {
+  if (!profile) return;
+  const h = profile.history || [];
+
+  document.getElementById("historyRows").innerHTML = h.map(x => `
+    <tr>
+      <td>${safeText(new Date(x.date).toLocaleString())}</td>
+      <td>${safeText(x.type)}</td>
+      <td>${money(x.amount)}</td>
+      <td><span class="badge">${safeText(x.status)}</span></td>
+      <td>${safeText(x.details)}</td>
+    </tr>`).join("");
+
+  document.getElementById("emptyHistory").classList.toggle("hidden", h.length > 0);
 }
-function renderDepositHistory(){
-  if(!currentUser)return;
-  const h=(currentUser.history||[]).filter(x=>x.type==="Deposit");
-  document.getElementById("depositHistory").innerHTML=h.length?h.map(x=>`<div class="card">
-    <div class="row"><strong>${money(x.amount)} USDT</strong><span class="badge">${safeText(x.status)}</span></div>
-    <p class="muted">${safeText(x.details)}</p>
-    <p class="muted">${safeText(new Date(x.date).toLocaleString())}</p></div>`).join(""):'<p class="muted">No deposit requests yet.</p>';
+
+function renderDepositHistory() {
+  if (!profile) return;
+  const h = (profile.history || []).filter(x => x.type === "Deposit");
+
+  document.getElementById("depositHistory").innerHTML = h.length
+    ? h.map(x => `
+      <div class="card">
+        <div class="row"><strong>${money(x.amount)} USDT</strong>
+        <span class="badge">${safeText(x.status)}</span></div>
+        <p class="muted">${safeText(x.details)}</p>
+        <p class="muted">${safeText(new Date(x.date).toLocaleString())}</p>
+      </div>`).join("")
+    : '<p class="muted">No deposit requests yet.</p>';
 }
-function renderRecent(){
-  const h=(currentUser.history||[]).slice(0,5);
-  document.getElementById("recentHistory").innerHTML=h.length?h.map(x=>`<p>${safeText(x.type)} · ${money(x.amount)} · ${safeText(x.status)}</p>`).join(""):"No activity yet.";
+
+function renderRecent() {
+  if (!profile) return;
+  const h = (profile.history || []).slice(0, 5);
+
+  document.getElementById("recentHistory").innerHTML = h.length
+    ? h.map(x => `<p>${safeText(x.type)} · ${money(x.amount)} · ${safeText(x.status)}</p>`).join("")
+    : "No activity yet.";
 }
-async function copyDepositAddress(){
-  try{
+
+async function copyDepositAddress() {
+  try {
     await navigator.clipboard.writeText(DEPOSIT_ADDRESS);
-    document.getElementById("copyMessage").textContent="Address copied.";
-  }catch(e){
-    const field=document.getElementById("depositAddress");
-    field.focus();field.select();
-    document.getElementById("copyMessage").textContent="Select the address and choose Copy.";
+    document.getElementById("copyMessage").textContent = "Address copied.";
+  } catch (e) {
+    const f = document.getElementById("depositAddress");
+    f.focus();
+    f.select();
+    document.getElementById("copyMessage").textContent = "Select the address and choose Copy.";
   }
 }
-function depositMessage(msg){document.getElementById("depositMessage").textContent=msg}
-document.getElementById("depositForm").addEventListener("submit",e=>{
+
+function depositMessage(msg) {
+  document.getElementById("depositMessage").textContent = msg;
+}
+
+document.getElementById("depositForm").addEventListener("submit", async e => {
   e.preventDefault();
-  const amount=Number(document.getElementById("depositAmount").value);
-  const txid=document.getElementById("depositTxid").value.trim();
-  if(!Number.isFinite(amount)||amount<=0)return depositMessage("Enter a valid amount.");
-  if(txid.length<10)return depositMessage("Enter a valid transaction ID.");
+  if (!profile) return depositMessage("Profile is loading. Try again.");
 
-  const duplicate=Object.values(readUsers()).some(u=>(u.history||[]).some(h=>h.type==="Deposit"&&h.txid===txid));
-  if(duplicate)return depositMessage("This TXID has already been submitted.");
+  const amount = Number(document.getElementById("depositAmount").value);
+  const txid = document.getElementById("depositTxid").value.trim();
 
-  currentUser.history=currentUser.history||[];
-  currentUser.history.unshift({
-    id:Date.now().toString(36),date:new Date().toISOString(),
-    type:"Deposit",amount,status:"Pending verification",
-    details:"TXID: "+txid,txid
+  if (!Number.isFinite(amount) || amount <= 0) return depositMessage("Enter a valid amount.");
+  if (txid.length < 10) return depositMessage("Enter a valid transaction ID.");
+  if ((profile.history || []).some(h => h.type === "Deposit" && h.txid === txid)) {
+    return depositMessage("This TXID has already been submitted on your account.");
+  }
+
+  profile.history = profile.history || [];
+  profile.history.unshift({
+    id: Date.now().toString(36),
+    date: new Date().toISOString(),
+    type: "Deposit",
+    amount,
+    status: "Pending verification",
+    details: "TXID: " + txid,
+    txid
   });
-  saveCurrent();renderAll();e.target.reset();
-  depositMessage("Request submitted. Balance remains unchanged until payment is verified.");
-});
-document.getElementById("withdrawForm").addEventListener("submit",e=>{
-  e.preventDefault();
-  const amount=Number(document.getElementById("withdrawAmount").value);
-  const address=document.getElementById("withdrawAddress").value.trim();
-  if(!Number.isFinite(amount)||amount<=0)return withdrawMessage("Enter a valid amount.");
-  if(amount>Number(currentUser.balance))return withdrawMessage("Insufficient balance.");
-  if(address.length<20)return withdrawMessage("Enter a valid wallet address.");
-  addHistory("Withdraw",amount,"Pending review","Wallet: "+address);
-  e.target.reset();
-  withdrawMessage("Request submitted. No real transfer has been made.");
-});
-function withdrawMessage(msg){document.getElementById("withdrawMessage").textContent=msg}
 
-function placeTrade(side){
-  const field=document.getElementById(side==="BUY"?"buyAmount":"sellAmount");
-  const amount=Number(field.value);
-  if(!Number.isFinite(amount)||amount<=0)return alert("Enter a valid amount.");
-  if(side==="SELL")return alert("This prototype does not hold real BTC, so real selling is unavailable.");
-  if(amount>Number(currentUser.balance))return alert("Insufficient balance.");
-  currentUser.balance=Number(currentUser.balance)-amount;
-  addHistory("Trade",amount,"Simulated","BTC/USDT BUY");
-  field.value="";
-  alert("Simulation only. No real cryptocurrency was purchased.");
+  try {
+    await saveProfile();
+    e.target.reset();
+    depositMessage("Request submitted. Balance remains unchanged until payment is verified.");
+  } catch (err) {
+    depositMessage(friendlyError(err));
+  }
+});
+
+function withdrawMessage(msg) {
+  document.getElementById("withdrawMessage").textContent = msg;
 }
-function changeTimeframe(){
-  const interval=document.getElementById("timeframe").value;
-  document.getElementById("chart").src="https://s.tradingview.com/widgetembed/?frameElementId=tvchart&symbol=BINANCE%3ABTCUSDT&interval="+encodeURIComponent(interval)+"&hidesidetoolbar=0&symboledit=0&saveimage=0&toolbarbg=%23141c2f&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=en";
-}
-async function updatePrice(){
-  try{
-    const r=await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT");
-    if(!r.ok)throw Error();
-    const d=await r.json();btcPrice=Number(d.price);
-    const p="$"+btcPrice.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
-    document.getElementById("livePrice").textContent=p;
-    document.getElementById("dashPrice").textContent=p;
-  }catch(e){
-    document.getElementById("livePrice").textContent="Unavailable";
-    document.getElementById("dashPrice").textContent="Unavailable";
+
+document.getElementById("withdrawForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!profile) return withdrawMessage("Profile is loading. Try again.");
+
+  const amount = Number(document.getElementById("withdrawAmount").value);
+  const address = document.getElementById("withdrawAddress").value.trim();
+
+  if (!Number.isFinite(amount) || amount <= 0) return withdrawMessage("Enter a valid amount.");
+  if (amount > Number(profile.balance)) return withdrawMessage("Insufficient balance.");
+  if (address.length < 20) return withdrawMessage("Enter a valid wallet address.");
+
+  try {
+    await addHistory("Withdraw", amount, "Pending review", "Wallet: " + address);
+    e.target.reset();
+    withdrawMessage("Request submitted. No real transfer has been made.");
+  } catch (err) {
+    withdrawMessage(friendlyError(err));
+  }
+});
+
+async function placeTrade(side) {
+  if (!profile) return alert("Profile is loading. Try again.");
+
+  const field = document.getElementById(side === "BUY" ? "buyAmount" : "sellAmount");
+  const amount = Number(field.value);
+
+  if (!Number.isFinite(amount) || amount <= 0) return alert("Enter a valid amount.");
+  if (side === "SELL") return alert("This prototype does not hold real BTC, so selling is unavailable.");
+  if (amount > Number(profile.balance)) return alert("Insufficient balance.");
+
+  profile.balance = Number(profile.balance) - amount;
+
+  try {
+    await addHistory("Trade", amount, "Simulated", "BTC/USDT BUY");
+    field.value = "";
+    alert("Simulation only. No real cryptocurrency was purchased.");
+  } catch (err) {
+    alert(friendlyError(err));
   }
 }
-function renderChat(){
-  if(!currentUser)return;
-  const chat=currentUser.chat||[];
-  document.getElementById("chatLog").innerHTML=chat.map(x=>`<p><strong>${safeText(x.name)}:</strong> ${safeText(x.message)}</p>`).join("");
-  document.getElementById("chatLog").scrollTop=document.getElementById("chatLog").scrollHeight;
+
+function changeTimeframe() {
+  const interval = document.getElementById("timeframe").value;
+  document.getElementById("chart").src =
+    "https://s.tradingview.com/widgetembed/?frameElementId=tvchart&symbol=BINANCE%3ABTCUSDT&interval=" +
+    encodeURIComponent(interval) +
+    "&hidesidetoolbar=0&symboledit=0&saveimage=0&toolbarbg=%23141c2f&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=en";
 }
-document.getElementById("chatForm").addEventListener("submit",e=>{
+
+async function updatePrice() {
+  try {
+    const r = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT");
+    if (!r.ok) throw Error();
+    const d = await r.json();
+    btcPrice = Number(d.price);
+
+    const p = "$" + btcPrice.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
+    document.getElementById("livePrice").textContent = p;
+    document.getElementById("dashPrice").textContent = p;
+  } catch (e) {
+    document.getElementById("livePrice").textContent = "Unavailable";
+    document.getElementById("dashPrice").textContent = "Unavailable";
+  }
+}
+
+function renderChat() {
+  if (!profile) return;
+  const chat = profile.chat || [];
+  document.getElementById("chatLog").innerHTML = chat.map(x =>
+    `<p><strong>${safeText(x.name)}:</strong> ${safeText(x.message)}</p>`
+  ).join("");
+  document.getElementById("chatLog").scrollTop =
+    document.getElementById("chatLog").scrollHeight;
+}
+
+document.getElementById("chatForm").addEventListener("submit", async e => {
   e.preventDefault();
-  const input=document.getElementById("chatMessage");
-  const message=input.value.trim();if(!message)return;
-  currentUser.chat=currentUser.chat||[];
-  currentUser.chat.push({name:currentUser.name,message});
-  currentUser.chat=currentUser.chat.slice(-100);
-  saveCurrent();input.value="";renderChat();
+  if (!profile) return;
+
+  const input = document.getElementById("chatMessage");
+  const message = input.value.trim();
+  if (!message) return;
+
+  profile.chat = profile.chat || [];
+  profile.chat.push({
+    name: profile.name || currentUser.displayName || "User",
+    message
+  });
+  profile.chat = profile.chat.slice(-100);
+
+  try {
+    await saveProfile();
+    input.value = "";
+    renderChat();
+  } catch (err) {
+    alert(friendlyError(err));
+  }
 });
 
-// Restore existing session if available
-const savedEmail=localStorage.getItem(SESSION_KEY);
-if(savedEmail){
-  const savedUser=readUsers()[savedEmail];
-  if(savedUser){
-    currentUser=savedUser;
-    if(!currentUser.history)currentUser.history=[];
-    if(!currentUser.chat)currentUser.chat=[];
+auth.onAuthStateChanged(user => {
+  currentUser = user;
+
+  if (user) {
     openApp();
-  }else{
-    localStorage.removeItem(SESSION_KEY);
+  } else {
+    if (unsubscribeProfile) {
+      unsubscribeProfile();
+      unsubscribeProfile = null;
+    }
+    profile = null;
+    document.getElementById("headerAccount").classList.add("hidden");
+    document.getElementById("app").classList.add("hidden");
+    document.getElementById("authPage").classList.remove("hidden");
   }
-}
+});
+
 updatePrice();
-setInterval(updatePrice,15000);
+setInterval(updatePrice, 15000);
 </script>
 </body>
 </html>
