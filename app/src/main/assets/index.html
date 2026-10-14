@@ -3,360 +3,303 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Saylor Casino</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAYLOR CASINO</title>
 <style>
-:root {
-  --bg:#0a0a0d;
-  --panel:#17171d;
-  --gold:#e8bd54;
-  --red:#e53945;
-  --text:#fff;
-  --muted:#aaa;
-}
-* {box-sizing:border-box}
-body {
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:Arial,sans-serif;padding-bottom:75px
-}
-header {
-  display:flex;justify-content:space-between;align-items:center;
-  padding:16px;background:#141419;border-bottom:1px solid #393027;
-  position:sticky;top:0;z-index:5
-}
-.logo {font-size:23px;font-weight:900;color:var(--gold)}
-button,input,select {
-  font:inherit;border-radius:8px;padding:11px;border:1px solid #38383f
-}
-button {cursor:pointer;background:var(--gold);color:#111;font-weight:bold}
-input,select {background:#101014;color:white;width:100%}
-nav {
-  display:flex;gap:8px;overflow:auto;padding:12px;
-  background:#111115
-}
-nav button {white-space:nowrap}
-main {padding:14px;max-width:900px;margin:auto}
-.hero {
-  background:linear-gradient(130deg,#451317,#17120a 65%,#34270d);
-  border:1px solid #765723;border-radius:15px;padding:25px 18px;
-  margin-bottom:18px
-}
-h1 {font-size:27px;color:var(--gold);margin:0 0 10px}
-h2 {font-size:19px;color:var(--gold)}
-.muted {color:var(--muted);font-size:13px;line-height:1.6}
-.grid {display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.card {
-  background:var(--panel);border:1px solid #303038;
-  padding:14px;border-radius:12px
-}
-.game {
-  min-height:115px;display:flex;flex-direction:column;
-  justify-content:space-between;gap:10px
-}
-.game .emoji {font-size:30px}
-.game button {width:100%}
-.form {display:grid;gap:12px;max-width:430px}
-.row {display:flex;justify-content:space-between;gap:10px;align-items:center}
-section {margin-bottom:25px}
-.hidden {display:none!important}
-.badge {color:var(--gold);font-size:12px}
-footer {
-  position:fixed;bottom:0;left:0;right:0;background:#151519;
-  display:flex;justify-content:space-around;padding:10px 2px;
-  border-top:1px solid #383027;z-index:6
-}
-footer button {padding:9px 10px;font-size:12px}
-.notice {background:#282012;border:1px solid #685021;
-padding:12px;border-radius:9px;font-size:13px;line-height:1.6}
-@media(min-width:600px){.grid{grid-template-columns:repeat(4,1fr)}}
+:root{--bg:#09090c;--panel:#18181e;--gold:#edc252;--red:#e53945;--muted:#aaa}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif;padding-bottom:80px}
+header{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:18px 14px;background:#151519;border-bottom:1px solid #3b3020}
+.logo{color:var(--gold);font-size:clamp(17px,4.5vw,27px);font-weight:900}
+button,input,select{font:inherit;border-radius:10px;padding:12px;border:1px solid #393940}
+button{background:var(--gold);color:#111;font-weight:bold;cursor:pointer}
+input,select{width:100%;background:#111116;color:white}
+nav{display:flex;gap:8px;overflow-x:auto;padding:12px;background:#131317}
+nav button{white-space:nowrap}
+main{max-width:950px;margin:auto;padding:16px}
+section{margin-bottom:24px}
+h2{color:var(--gold)}
+.hero{padding:24px 18px;border:1px solid #725622;border-radius:15px;background:linear-gradient(130deg,#471419,#17120a,#30230d)}
+.hero h1{color:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.card{background:var(--panel);border:1px solid #34343b;border-radius:12px;padding:14px;min-width:0}
+.game{display:flex;flex-direction:column;gap:10px;min-height:145px}
+.emoji{font-size:30px}
+.form{display:grid;gap:13px}
+.muted{color:var(--muted);font-size:14px;line-height:1.6}
+.notice{background:#282014;border:1px solid #705526;padding:13px;border-radius:10px;line-height:1.7}
+.hidden{display:none!important}
+footer{position:fixed;bottom:0;left:0;right:0;background:#17171b;border-top:1px solid #443723;display:flex;gap:6px;justify-content:space-around;padding:8px 4px;z-index:5}
+footer button{padding:10px 8px;font-size:12px}
+.badge{color:var(--gold);font-size:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.actions button{flex:1}
+@media(min-width:600px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo">♠ SAYLOR CASINO</div>
-  <button onclick="showPage('auth')">Login</button>
+  <button onclick="show('auth')">Login</button>
 </header>
 
 <nav>
-  <button onclick="showPage('home')">Home</button>
-  <button onclick="showPage('games')">100+ Games</button>
-  <button onclick="showPage('wallet')">Wallet</button>
-  <button onclick="showPage('profile')">Profile</button>
-  <button onclick="showPage('history')">History</button>
+  <button onclick="show('home')">Home</button>
+  <button onclick="show('games')">100+ Games</button>
+  <button onclick="show('wallet')">Wallet</button>
+  <button onclick="show('profile')">Profile</button>
+  <button onclick="show('history')">History</button>
 </nav>
 
 <main>
 <section id="home">
   <div class="hero">
     <span class="badge">WELCOME TO SAYLOR</span>
-    <h1>Play. Enjoy. Repeat.</h1>
-    <p>Discover your favorite casino-style games.</p>
-    <button onclick="showPage('games')">Explore Games →</button>
+    <h1>SAYLOR CASINO</h1>
+    <p>Explore games. Enjoy the experience.</p>
+    <button onclick="show('games')">Explore Games →</button>
   </div>
-
   <h2>Game Categories</h2>
   <div class="grid">
-    <div class="card game"><span class="emoji">🎰</span>
-      <b>Slot Games</b><button onclick="filterGames('Slots')">Explore</button>
-    </div>
-    <div class="card game"><span class="emoji">🃏</span>
-      <b>Card Games</b><button onclick="filterGames('Cards')">Explore</button>
-    </div>
-    <div class="card game"><span class="emoji">🎡</span>
-      <b>Lucky Wheel</b><button onclick="filterGames('Arcade')">Explore</button>
-    </div>
-    <div class="card game"><span class="emoji">🎲</span>
-      <b>Dice Games</b><button onclick="filterGames('Dice')">Explore</button>
-    </div>
+    <div class="card game"><span class="emoji">🎰</span><b>Slots</b><button onclick="filter('Slots')">Explore</button></div>
+    <div class="card game"><span class="emoji">🃏</span><b>Card Games</b><button onclick="filter('Cards')">Explore</button></div>
+    <div class="card game"><span class="emoji">🎡</span><b>Arcade</b><button onclick="filter('Arcade')">Explore</button></div>
+    <div class="card game"><span class="emoji">🎲</span><b>Dice</b><button onclick="filter('Dice')">Explore</button></div>
   </div>
 </section>
 
 <section id="games" class="hidden">
-  <h2>🎮 Game Library</h2>
-  <p class="muted">১০০টির বেশি গেমের ক্যাটালগ। প্রতিটি কার্ডে এখন একটি প্রোটোটাইপ গেম স্ক্রিন খোলে; পূর্ণ গেমের জন্য আলাদা গেম ইঞ্জিন দরকার।</p>
+  <h2>🎮 100+ Games</h2>
   <input id="search" placeholder="Search games..." oninput="renderGames()">
+  <br><br>
   <select id="category" onchange="renderGames()">
-    <option value="All">All Categories</option>
-    <option value="Slots">Slots</option>
-    <option value="Cards">Cards</option>
-    <option value="Arcade">Arcade</option>
-    <option value="Dice">Dice</option>
+    <option>All</option><option>Slots</option><option>Cards</option><option>Arcade</option><option>Dice</option>
   </select>
-  <p id="gameCount" class="muted"></p>
+  <p id="count" class="muted"></p>
   <div id="gameGrid" class="grid"></div>
 </section>
 
 <section id="auth" class="hidden">
-  <h2 id="authTitle">Register</h2>
+  <h2 id="authHeading">Register</h2>
   <div class="form">
-    <input id="username" placeholder="Your name">
-    <input id="email" type="email" placeholder="Email address">
-    <input id="password" type="password" placeholder="Password (minimum 8 characters)">
+    <input id="name" placeholder="Your name" autocomplete="name">
+    <input id="email" type="email" placeholder="Email address" autocomplete="email">
+    <input id="password" type="password" placeholder="Password (8+ characters)" autocomplete="new-password">
     <button onclick="register()">Create Account</button>
-    <button onclick="login()" style="background:#292017;color:#fff">Login Instead</button>
-    <p id="authMessage" class="muted"></p>
+    <button onclick="login()" style="background:#30251a;color:white">Login Instead</button>
+    <p id="authMessage" class="muted" aria-live="polite"></p>
   </div>
-  <p class="notice">এটি লোকাল প্রোটোটাইপ। বাস্তব অ্যাকাউন্টের জন্য সার্ভারভিত্তিক Authentication যোগ করতে হবে।</p>
+  <div class="notice">এটি লোকাল প্রোটোটাইপ। এই ব্রাউজারের বাইরে নিরাপদ অ্যাকাউন্ট তৈরি বা পাসওয়ার্ড পুনরুদ্ধারের ব্যবস্থা নেই। বাস্তব ব্যবহারের জন্য সার্ভারভিত্তিক Authentication প্রয়োজন।</div>
 </section>
 
 <section id="profile" class="hidden">
-  <h2>👤 My Profile</h2>
+  <h2>👤 Profile</h2>
   <div class="card">
     <p>Name: <b id="profileName">Guest</b></p>
     <p>Email: <span id="profileEmail">Not logged in</span></p>
-    <p>Account: <span id="profileStatus">Guest session</span></p>
-    <button onclick="showPage('auth')">Register / Login</button>
-    <button onclick="logout()" style="background:#392025;color:white">Logout</button>
+    <p>Session: <span id="profileStatus">Guest</span></p>
+    <div class="actions">
+      <button onclick="show('auth')">Register / Login</button>
+      <button onclick="logout()" style="background:#3a2023;color:white">Logout</button>
+    </div>
   </div>
 </section>
 
 <section id="wallet" class="hidden">
-  <h2>💳 Wallet & Payments</h2>
-  <p class="notice">এই প্রোটোটাইপে কোনো বাস্তব টাকা গ্রহণ বা পাঠানো হয় না। অনুমোদিত পেমেন্ট প্রদানকারী ও সার্ভার যুক্ত না করা পর্যন্ত পেমেন্টের কোনো স্ট্যাটাস বাস্তব বলে গণ্য হবে না।</p>
+  <h2>💳 Wallet</h2>
+  <div class="notice">এখানে কোনো বাস্তব টাকা পাঠানো বা গ্রহণ করা হয় না। পেমেন্টের অনুরোধগুলো কেবল এই প্রোটোটাইপের পরীক্ষামূলক রেকর্ড।</div>
+  <br>
   <div class="card">
     <h3>Deposit Request</h3>
     <div class="form">
-      <label>Payment method</label>
-      <select id="depositMethod">
-        <option>bKash — authorization required</option>
-        <option>Approved payment provider</option>
+      <label>Payment Method</label>
+      <select id="method">
+        <option>bKash</option><option>Other approved provider</option>
       </select>
-      <label>Amount</label>
-      <input id="depositAmount" type="number" min="1" placeholder="Enter amount">
-      <button onclick="requestPayment('Deposit')">Submit Test Request</button>
+      <label>Amount (test only)</label>
+      <input id="depAmount" type="number" min="1" placeholder="Enter amount">
+      <button onclick="requestTx('Deposit')">Submit Test Request</button>
     </div>
   </div>
   <br>
   <div class="card">
     <h3>Withdraw Request</h3>
     <div class="form">
-      <label>Amount</label>
-      <input id="withdrawAmount" type="number" min="1" placeholder="Enter amount">
-      <button onclick="requestPayment('Withdraw')">Submit Test Request</button>
+      <label>Amount (test only)</label>
+      <input id="withAmount" type="number" min="1" placeholder="Enter amount">
+      <button onclick="requestTx('Withdraw')">Submit Test Request</button>
     </div>
   </div>
 </section>
 
 <section id="history" class="hidden">
   <h2>📋 Transaction History</h2>
-  <p class="muted">শুধু এই ব্রাউজার সেশনে তৈরি পরীক্ষামূলক অনুরোধগুলো দেখা যাবে।</p>
   <div id="historyList"></div>
 </section>
 
 <section id="play" class="hidden">
   <div class="card">
-    <h2 id="playTitle">Game</h2>
-    <p id="playDescription">Game preview</p>
-    <div id="playArea"></div>
-    <button onclick="showPage('games')">← Back to Games</button>
+    <h2 id="gameTitle">Game</h2>
+    <p id="gameDesc" class="muted"></p>
+    <div id="gameArea"></div>
+    <button onclick="show('games')">← Back to Games</button>
   </div>
 </section>
-
 </main>
 
 <footer>
-  <button onclick="showPage('home')">⌂ Home</button>
-  <button onclick="showPage('games')">🎮 Games</button>
-  <button onclick="showPage('wallet')">💳 Wallet</button>
-  <button onclick="showPage('profile')">👤 Profile</button>
+  <button onclick="show('home')">⌂ Home</button>
+  <button onclick="show('games')">🎮 Games</button>
+  <button onclick="show('wallet')">💳 Wallet</button>
+  <button onclick="show('profile')">👤 Profile</button>
 </footer>
 
 <script>
-const games = [];
-const types = [
-  {name:'Slots',icon:'🎰',items:[
-    'Golden Reels','Lucky Stars','Royal Spin','Diamond Rush',
-    'Treasure Wheel','Neon Fruits','Gold Rush','Lucky Seven',
-    'Crystal Spin','Red Dragon'
-  ]},
-  {name:'Cards',icon:'🃏',items:[
-    'Teen Patti','Poker Table','Blackjack','High Card',
-    'Classic Cards','Card Match','Royal Poker','Memory Cards',
-    'Solitaire','Lucky Cards'
-  ]},
-  {name:'Arcade',icon:'🎡',items:[
-    'Lucky Wheel','Color Match','Rocket Run','Treasure Hunt',
-    'Bubble Pop','Gem Match','Coin Flip','Speed Tap',
-    'Star Catcher','Puzzle Rush'
-  ]},
-  {name:'Dice',icon:'🎲',items:[
-    'Classic Dice','Dice Match','Lucky Dice','Number Roll',
-    'Double Dice','Dice Puzzle','Dice Tower','Target Roll',
-    'Dice Quest','Dice Challenge'
-  ]}
-];
+const $ = id => document.getElementById(id);
+const pages = ['home','games','auth','profile','wallet','history','play'];
+let currentUser = null;
+let transactions = [];
 
-// 4 categories × 30 catalog entries = 120 entries.
-// Names are catalog placeholders, not 120 fully developed games.
-types.forEach(type => {
-  for(let i=0;i<30;i++){
-    const base=type.items[i%type.items.length];
-    games.push({
-      name:i<type.items.length ? base : base+' '+(Math.floor(i/type.items.length)+1),
-      category:type.name, icon:type.icon
-    });
-  }
-});
-
-function showPage(id){
-  document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
+function show(id){
+  pages.forEach(p => $(p).classList.toggle('hidden',p!==id));
   if(id==='games')renderGames();
   if(id==='profile')renderProfile();
   if(id==='history')renderHistory();
   window.scrollTo(0,0);
 }
 
-function filterGames(category){
-  document.getElementById('category').value=category;
-  showPage('games');
-}
+const categories = [
+ {name:'Slots',icon:'🎰',games:['Golden Reels','Lucky Stars','Royal Spin','Diamond Rush','Treasure Wheel','Neon Fruits','Gold Rush','Lucky Seven','Crystal Spin','Red Dragon']},
+ {name:'Cards',icon:'🃏',games:['Teen Patti','Poker Table','Blackjack','High Card','Classic Cards','Card Match','Royal Poker','Memory Cards','Solitaire','Lucky Cards']},
+ {name:'Arcade',icon:'🎡',games:['Lucky Wheel','Color Match','Rocket Run','Treasure Hunt','Bubble Pop','Gem Match','Coin Flip','Speed Tap','Star Catcher','Puzzle Rush']},
+ {name:'Dice',icon:'🎲',games:['Classic Dice','Dice Match','Lucky Dice','Number Roll','Double Dice','Dice Puzzle','Dice Tower','Target Roll','Dice Quest','Dice Challenge']}
+];
 
+const games=[];
+categories.forEach(c=>{
+  for(let i=0;i<30;i++){
+    const base=c.games[i%c.games.length];
+    games.push({name:i<c.games.length?base:base+' '+(Math.floor(i/c.games.length)+1),category:c.name,icon:c.icon});
+  }
+});
+
+function filter(cat){
+  $('category').value=cat;
+  show('games');
+}
+function escapeHTML(s){
+  return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 function renderGames(){
-  const q=document.getElementById('search').value.toLowerCase();
-  const cat=document.getElementById('category').value;
-  const list=games.filter(g=>
-    g.name.toLowerCase().includes(q) &&
-    (cat==='All'||g.category===cat)
-  );
-  document.getElementById('gameCount').textContent=
-    list.length+' catalog entries';
-  document.getElementById('gameGrid').innerHTML=list.map((g,i)=>`
+  const q=$('search').value.trim().toLowerCase();
+  const cat=$('category').value;
+  const list=games.filter(g=>(cat==='All'||g.category===cat)&&g.name.toLowerCase().includes(q));
+  $('count').textContent=list.length+' catalog entries';
+  $('gameGrid').innerHTML=list.map((g,i)=>`
     <div class="card game">
       <span class="emoji">${g.icon}</span>
       <b>${escapeHTML(g.name)}</b>
       <span class="muted">${g.category}</span>
-      <button onclick="openGame('${escapeJS(g.name)}')">Open</button>
-    </div>
-  `).join('');
+      <button data-game-index="${games.indexOf(g)}">Open Game</button>
+    </div>`).join('');
 }
+$('gameGrid').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-game-index]');
+  if(!b)return;
+  const g=games[Number(b.dataset.gameIndex)];
+  $('gameTitle').textContent=g.name;
+  $('gameDesc').textContent=g.category+' game preview';
+  $('gameArea').innerHTML='<p class="notice">এটি গেমের ক্যাটালগ প্রিভিউ। পূর্ণ গেমের নিয়ম ও ইঞ্জিন এখনো যোগ করা হয়নি।</p>';
+  show('play');
+});
 
-function escapeHTML(s){
-  return s.replace(/[&<>"']/g,c=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;',
-    '"':'&quot;',"'":'&#39;'
-  }[c]));
+function getAccounts(){
+  try{return JSON.parse(sessionStorage.getItem('saylorAccounts')||'{}');}
+  catch(e){return {};}
 }
-function escapeJS(s){
-  return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+function saveAccounts(accounts){
+  sessionStorage.setItem('saylorAccounts',JSON.stringify(accounts));
 }
-
-function openGame(name){
-  document.getElementById('playTitle').textContent=name;
-  document.getElementById('playDescription').textContent=
-    'Game preview — এখানে এখনো পূর্ণ গেম ইঞ্জিন সংযুক্ত নেই।';
-  document.getElementById('playArea').innerHTML=
-    '<p class="notice">এটি একটি ক্যাটালগ প্রোটোটাইপ। গেমটির কার্যকর নিয়ম, অ্যানিমেশন ও ইন্টারঅ্যাকশন আলাদাভাবে তৈরি করতে হবে।</p>';
-  showPage('play');
+async function hashPassword(password){
+  if(!window.crypto?.subtle)throw new Error('নিরাপদ ক্রিপ্টোগ্রাফি নেই। HTTPS বা localhost ব্যবহার করুন।');
+  const bytes=new TextEncoder().encode(password);
+  const hash=await crypto.subtle.digest('SHA-256',bytes);
+  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-
-let currentUser=null;
-const history=[];
-
-function register(){
-  const name=document.getElementById('username').value.trim();
-  const email=document.getElementById('email').value.trim();
-  const password=document.getElementById('password').value;
-  const msg=document.getElementById('authMessage');
-
-  if(!name||!email||password.length<8){
-    msg.textContent='নাম, সঠিক ইমেইল ও কমপক্ষে ৮ অক্ষরের পাসওয়ার্ড দিন।';
-    return;
-  }
-  msg.textContent='এই ডেমোতে নিরাপদ সার্ভার নেই। বাস্তব নিবন্ধনের জন্য Backend Authentication প্রয়োজন।';
+async function register(){
+  const name=$('name').value.trim();
+  const email=$('email').value.trim().toLowerCase();
+  const password=$('password').value;
+  const msg=$('authMessage');
+  if(!name||!email||!password){msg.textContent='সব ঘর পূরণ করুন।';return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent='সঠিক ইমেইল লিখুন।';return;}
+  if(password.length<8){msg.textContent='পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।';return;}
+  try{
+    const accounts=getAccounts();
+    if(accounts[email]){msg.textContent='এই ইমেইল দিয়ে অ্যাকাউন্ট আছে। Login করুন।';return;}
+    accounts[email]={name,passwordHash:await hashPassword(password)};
+    saveAccounts(accounts);
+    currentUser={name,email};
+    $('password').value='';
+    msg.textContent='প্রোটোটাইপ অ্যাকাউন্ট তৈরি হয়েছে!';
+    renderProfile();
+    show('profile');
+  }catch(e){msg.textContent=e.message||'রেজিস্ট্রেশন সম্পন্ন হয়নি।';}
 }
-
-function login(){
-  document.getElementById('authMessage').textContent=
-    'বাস্তব Login-এর জন্য নিরাপদ Authentication সার্ভার যুক্ত করতে হবে।';
+async function login(){
+  const email=$('email').value.trim().toLowerCase();
+  const password=$('password').value;
+  const msg=$('authMessage');
+  if(!email||!password){msg.textContent='ইমেইল ও পাসওয়ার্ড দিন।';return;}
+  try{
+    const accounts=getAccounts();
+    const account=accounts[email];
+    if(!account||account.passwordHash!==await hashPassword(password)){
+      msg.textContent='ইমেইল বা পাসওয়ার্ড সঠিক নয়।';return;
+    }
+    currentUser={name:account.name,email};
+    $('password').value='';
+    msg.textContent='Login successful';
+    renderProfile();
+    show('profile');
+  }catch(e){msg.textContent=e.message||'Login করা যায়নি।';}
 }
-
 function logout(){
   currentUser=null;
   renderProfile();
-  showPage('home');
+  show('home');
 }
-
 function renderProfile(){
-  document.getElementById('profileName').textContent=
-    currentUser ? currentUser.name : 'Guest';
-  document.getElementById('profileEmail').textContent=
-    currentUser ? currentUser.email : 'Not logged in';
-  document.getElementById('profileStatus').textContent=
-    currentUser ? 'Prototype session' : 'Guest session';
+  $('profileName').textContent=currentUser?currentUser.name:'Guest';
+  $('profileEmail').textContent=currentUser?currentUser.email:'Not logged in';
+  $('profileStatus').textContent=currentUser?'Local prototype session':'Guest';
 }
-
-function requestPayment(type){
-  const field=document.getElementById(
-    type==='Deposit'?'depositAmount':'withdrawAmount'
-  );
-  const amount=Number(field.value);
-  if(!Number.isFinite(amount)||amount<=0){
-    alert('সঠিক পরিমাণ লিখুন।');
-    return;
-  }
-  history.unshift({
-    type,amount,status:'Test only — not processed',
+function requestTx(type){
+  if(!currentUser){alert('আগে Register অথবা Login করুন।');show('auth');return;}
+  const input=$(type==='Deposit'?'depAmount':'withAmount');
+  const amount=Number(input.value);
+  if(!Number.isFinite(amount)||amount<=0){alert('সঠিক পরিমাণ লিখুন।');return;}
+  transactions.unshift({
+    type,amount,method:type==='Deposit'?$('method').value:'Test request',
+    status:'TEST ONLY — NOT PROCESSED',
     time:new Date().toLocaleString()
   });
-  field.value='';
-  alert('পরীক্ষামূলক অনুরোধ তৈরি হয়েছে। কোনো টাকা পাঠানো বা গ্রহণ করা হয়নি।');
+  input.value='';
+  alert('পরীক্ষামূলক অনুরোধ সংরক্ষিত হয়েছে। কোনো টাকা লেনদেন হয়নি।');
   renderHistory();
 }
-
 function renderHistory(){
-  document.getElementById('historyList').innerHTML=history.length
-    ? history.map(t=>`
-      <div class="card" style="margin-bottom:10px">
-        <b>${t.type}</b> — ${t.amount}
-        <p class="muted">${t.status}</p>
-        <p class="muted">${t.time}</p>
-      </div>`).join('')
-    : '<p class="muted">এখনো কোনো পরীক্ষামূলক অনুরোধ নেই।</p>';
+  $('historyList').innerHTML=transactions.length?transactions.map(t=>`
+    <div class="card" style="margin-bottom:10px">
+      <b>${t.type}</b> — ${t.amount}
+      <p class="muted">${escapeHTML(t.method)}</p>
+      <p class="muted">${t.status}</p>
+      <p class="muted">${escapeHTML(t.time)}</p>
+    </div>`).join(''):'<p class="muted">কোনো পরীক্ষামূলক অনুরোধ নেই।</p>';
 }
-
 renderGames();
+renderProfile();
 </script>
 </body>
 </html>
