@@ -1,474 +1,589 @@
 
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SAYLOR CASINO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BitPro Trading</title>
 <style>
-:root {
-  --bg:#00150f;
-  --panel:#06271f;
-  --gold:#f5cf67;
-  --red:#ef2936;
-  --text:#fff;
-  --muted:#a9c1b7;
-}
-* { box-sizing:border-box; }
-body {
-  margin:0; background:var(--bg); color:var(--text);
-  font-family:Arial,"Noto Sans Bengali",sans-serif;
-  padding-bottom:80px;
-}
-button,input,select { font:inherit; }
-button { cursor:pointer; }
-header {
-  min-height:82px; padding:12px 15px;
-  display:flex; justify-content:space-between;
-  align-items:center; gap:10px;
-  background:#031a14; border-bottom:1px solid #6a5328;
-}
-.brand { min-width:0; color:var(--gold); font-weight:900; }
-.brand strong { display:block;font-size:clamp(18px,5vw,26px); }
-.brand small { letter-spacing:4px; }
-.btn {
-  border:1px solid #9c7b35; border-radius:10px;
-  padding:12px 15px; background:var(--gold);
-  color:#171006; font-weight:bold;
-}
-nav {
-  display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:6px; padding:9px; background:#05221a;
-}
-nav button {
-  min-width:0; padding:10px 2px;
-  border:1px solid #68542e; border-radius:9px;
-  color:#fff; background:#0b3026; font-size:13px;
-}
-main { max-width:760px; margin:auto; padding:12px; }
-.page { display:none; }
-.page.active { display:block; }
-.walletbar { display:flex; gap:8px; margin:10px 0 14px; }
-.coins,.bonus {
-  flex:1; text-align:center; padding:11px 5px;
-  border-radius:25px; font-size:13px; font-weight:bold;
-}
-.coins { color:var(--gold);border:1px solid var(--gold); }
-.bonus { color:#fff;background:#9b131c;border:1px solid var(--gold); }
-.hero {
-  min-height:205px; border:1px solid var(--gold);
-  border-radius:15px; padding:22px 16px;
-  display:flex; align-items:center;
-  background:radial-gradient(circle at 80% 45%,#6e301c,transparent 35%),
-  linear-gradient(120deg,#3a0910,#09271e 60%,#4c300e);
-}
-.hero h1 { color:var(--gold);font-size:32px;margin:8px 0; }
-.hero p { font-size:12px;letter-spacing:2px; }
-.cats {
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:7px;margin:15px 0;
-}
-.cat {
-  background:#0a3026;text-align:center;border-radius:11px;
-  padding:12px 4px;font-size:13px;
-}
-.cat span { display:block;font-size:27px;margin-bottom:5px; }
-.heading {
-  display:flex;justify-content:space-between;align-items:center;
-  margin:22px 0 12px;
-}
-.heading h2,h2 { color:var(--gold);font-size:21px;margin:0; }
-.heading button {
-  color:var(--gold);background:none;border:0;font-size:13px;
-}
-.grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px; }
-.game {
-  position:relative;overflow:hidden;min-width:0;
-  border:1px solid #b8974d;border-radius:11px;background:#09271f;
-}
-.art {
-  aspect-ratio:1/1;display:flex;align-items:center;
-  justify-content:center;font-size:clamp(32px,9vw,58px);
-  background:radial-gradient(circle,#5e411a,#102c22 70%);
-}
-.game:nth-child(3n+1) .art { background:radial-gradient(circle,#8c1918,#251019 75%); }
-.game:nth-child(3n+2) .art { background:radial-gradient(circle,#53600d,#10261b 75%); }
-.game:nth-child(3n) .art { background:radial-gradient(circle,#174e8c,#101b2a 75%); }
-.game strong {
-  display:block;padding:8px 3px;text-align:center;
-  font-size:12px;overflow-wrap:anywhere;
-}
-.tag {
-  position:absolute;top:5px;left:5px;background:var(--red);
-  color:white;padding:3px 5px;font-size:10px;border-radius:4px;
-}
-.card {
-  border:1px solid #81672f;border-radius:13px;
-  background:var(--panel);padding:15px;margin-bottom:13px;
-}
-.form { display:grid;gap:12px; }
-input,select {
-  width:100%;padding:13px;background:#101b17;
-  border:1px solid #635b4b;border-radius:9px;color:white;
-}
-.muted { color:var(--muted);font-size:13px;line-height:1.7; }
-.notice { padding:12px;background:#282319;border:1px solid #80672e;
-  border-radius:10px;line-height:1.7;font-size:13px; }
-.gameboard {
-  min-height:310px;border-radius:12px;padding:18px 8px;
-  background:radial-gradient(circle,#5b3719,#09291f 65%,#02160f);
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:22px;
-}
-.cards { display:flex;justify-content:center;gap:7px;flex-wrap:wrap; }
-.playcard {
-  width:68px;height:100px;background:#fffaf0;color:#a71924;
-  border:2px solid #d4b96e;border-radius:8px;
-  display:flex;flex-direction:column;justify-content:space-between;
-  padding:7px;font-size:17px;font-weight:bold;
-  box-shadow:0 3px 8px #0008;
-}
-.playcard span:last-child { align-self:flex-end; }
-.game-actions { display:flex;gap:8px;flex-wrap:wrap;justify-content:center; }
-footer {
-  position:fixed;bottom:0;left:0;right:0;z-index:5;
-  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
-  background:#03231b;border-top:1px solid #79602f;padding:6px 2px;
-}
-footer button {
-  background:none;border:0;color:#a9c1b7;font-size:11px;padding:5px 1px;
-}
-footer button span { display:block;font-size:22px;margin-bottom:4px; }
-footer button.selected { color:var(--gold); }
-@media(min-width:520px) {
-  .cats { grid-template-columns:repeat(6,minmax(0,1fr)); }
-  .grid { gap:12px; }
-  .game strong { font-size:14px; }
-}
+:root{--bg:#0b1020;--panel:#141c2f;--line:#27344d;--text:#f4f7ff;--muted:#9eabc2;--green:#13c784;--red:#ea3943;--blue:#3861fb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px Arial,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:#11192a;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.logo{font-size:23px;font-weight:bold;color:var(--green)}
+button{border:0;border-radius:8px;padding:11px 14px;background:var(--blue);color:white;font-weight:bold;cursor:pointer}
+input,select{width:100%;padding:12px;margin:7px 0 14px;background:#0d1424;border:1px solid var(--line);border-radius:8px;color:white}
+label{color:#c6d0e1;font-size:13px}
+.container{max-width:1150px;margin:auto;padding:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:17px;margin-bottom:16px}
+h2,h3{margin-top:0}
+.muted{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.stat{font-size:24px;font-weight:bold;margin-top:8px}
+.nav{display:flex;gap:8px;overflow-x:auto;padding:12px;background:#11192a}
+.nav button{white-space:nowrap;background:#202b41}
+.nav button.active{background:var(--green);color:#071b13}
+.hidden{display:none!important}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.smallbtn{padding:8px 10px;font-size:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:10px 7px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+.tablewrap{overflow-x:auto}
+.full{width:100%}
+#chart{height:430px;width:100%;border:0;border-radius:8px}
+.chatlog{height:180px;overflow:auto;background:#0d1424;border-radius:8px;padding:10px;margin-bottom:10px}
+.badge{padding:4px 8px;border-radius:20px;background:#343d50;font-size:12px}
+footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.container{padding:11px}header{padding:12px}.stat{font-size:21px}#chart{height:330px}}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="brand">
-    <strong>♠ SAYLOR</strong>
-    <small>CASINO</small>
+  <div class="logo">BitPro</div>
+  <div id="headerAccount" class="hidden" style="text-align:right">
+    <div id="headerEmail" style="font-size:12px"></div>
+    <strong id="headerBalance">$0.00</strong>
+    <button class="smallbtn" onclick="showPage('profile')">Profile</button>
   </div>
-  <button class="btn" onclick="showPage('auth')">Login</button>
 </header>
 
-<nav>
-  <button onclick="showPage('home')">⌂ Home</button>
-  <button onclick="showPage('games')">🎮 Games</button>
-  <button onclick="showPage('wallet')">Wallet</button>
-  <button onclick="showPage('profile')">Profile</button>
+<section id="authPage" class="container" style="max-width:480px">
+  <div class="card">
+    <h2 id="authTitle">Create BitPro Account</h2>
+    <p class="muted">Register and receive a $10 welcome bonus.</p>
+    <form id="authForm">
+      <div id="nameField">
+        <label>Full Name</label>
+        <input id="fullName" required placeholder="Your name" autocomplete="name">
+      </div>
+      <label>Email</label>
+      <input id="email" type="email" required placeholder="you@example.com" autocomplete="email">
+      <label>Password</label>
+      <input id="password" type="password" required minlength="6" placeholder="At least 6 characters" autocomplete="current-password">
+      <button id="authButton" class="full">Create Account</button>
+    </form>
+    <p id="authMessage" class="muted"></p>
+    <button id="switchAuth" class="full" style="background:#26334b">Already have an account? Login</button>
+  </div>
+</section>
+
+<div id="app" class="hidden">
+<nav class="nav">
+  <button class="active" data-page="dashboard" onclick="showPage('dashboard')">Dashboard</button>
+  <button data-page="live" onclick="showPage('live')">Live Trading</button>
+  <button data-page="deposit" onclick="showPage('deposit')">Deposit</button>
+  <button data-page="withdraw" onclick="showPage('withdraw')">Withdraw</button>
+  <button data-page="history" onclick="showPage('history')">History</button>
+  <button data-page="profile" onclick="showPage('profile')">Profile</button>
 </nav>
 
-<main>
-<section id="home" class="page active">
-  <div class="walletbar">
-    <div class="coins">🪙 10,000 SC</div>
-    <button class="bonus" onclick="alert('Bonus preview')">🎁 Daily Bonus</button>
-  </div>
+<main class="container">
 
-  <div class="hero">
-    <div>
-      <p>WELCOME TO</p>
-      <h1>SAYLOR<br>CASINO</h1>
-      <p>PLAY · SPIN · ENJOY</p>
-      <button class="btn" onclick="showPage('games')">Explore Games</button>
+<section id="page-dashboard" class="page">
+  <div class="card">
+    <p class="muted">Account Balance</p>
+    <div class="stat" id="dashboardBalance">$10.00</div>
+    <p class="muted">USD account balance</p>
+    <button onclick="showPage('deposit')">Deposit</button>
+    <button style="background:#26334b" onclick="showPage('withdraw')">Withdraw</button>
+    <button style="background:#26334b" onclick="showPage('live')">Trade BTC</button>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="muted">BTC/USDT Live Price</div><div id="dashPrice" class="stat">Loading...</div></div>
+    <div class="card"><div class="muted">Deposit Requests</div><div id="depositCount" class="stat">0</div></div>
+  </div>
+  <div class="card"><h3>Recent Activity</h3><div id="recentHistory" class="muted">No activity yet.</div></div>
+</section>
+
+<section id="page-live" class="page hidden">
+  <div class="card">
+    <div class="row">
+      <div><h2>BTC/USDT</h2><span class="muted">Bitcoin / Tether</span></div>
+      <div id="livePrice" class="stat">Loading...</div>
+    </div>
+    <div class="row" style="margin:12px 0">
+      <span class="muted">Market chart</span>
+      <select id="timeframe" onchange="changeTimeframe()" style="width:130px;margin:0">
+        <option value="1">1 minute</option>
+        <option value="5">5 minutes</option>
+        <option value="15" selected>15 minutes</option>
+        <option value="60">1 hour</option>
+        <option value="240">4 hours</option>
+        <option value="D">1 day</option>
+      </select>
+    </div>
+    <iframe id="chart" title="BTC USDT chart" loading="lazy"
+      src="https://s.tradingview.com/widgetembed/?frameElementId=tvchart&symbol=BINANCE%3ABTCUSDT&interval=15&hidesidetoolbar=0&symboledit=0&saveimage=0&toolbarbg=%23141c2f&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=en">
+    </iframe>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>Buy BTC</h3>
+      <p class="muted">Balance: <strong id="tradeBalance">$0.00</strong></p>
+      <label>Amount (USD)</label>
+      <input id="buyAmount" type="number" min="1" step="0.01" placeholder="Amount">
+      <button class="full" onclick="placeTrade('BUY')">Buy BTC</button>
+    </div>
+    <div class="card">
+      <h3>Sell BTC</h3>
+      <p class="muted">BTC transactions are not connected.</p>
+      <label>Amount (USD)</label>
+      <input id="sellAmount" type="number" min="1" step="0.01" placeholder="Amount">
+      <button class="full" style="background:var(--red)" onclick="placeTrade('SELL')">Sell BTC</button>
     </div>
   </div>
-
-  <div class="cats">
-    <div class="cat" onclick="setFilter('All')"><span>🔥</span>সেরা</div>
-    <div class="cat" onclick="setFilter('Slots')"><span>🎰</span>স্লট</div>
-    <div class="cat" onclick="setFilter('Arcade')"><span>🎲</span>মিনি গেম</div>
-    <div class="cat" onclick="setFilter('Cards')"><span>🃏</span>কার্ড</div>
-    <div class="cat" onclick="setFilter('Fishing')"><span>🐟</span>ফিশিং</div>
-    <div class="cat" onclick="setFilter('Dice')"><span>🎯</span>ডাইস</div>
-  </div>
-
-  <div class="heading">
-    <h2>🔥 সেরা গেম</h2>
-    <button onclick="showPage('games')">সব দেখুন ›</button>
-  </div>
-  <div id="featured" class="grid"></div>
-
-  <div class="heading">
-    <h2>👑 নতুন গেম</h2>
-    <button onclick="showPage('games')">সব দেখুন ›</button>
-  </div>
-  <div id="newGames" class="grid"></div>
-</section>
-
-<section id="games" class="page">
-  <h2 style="margin:8px 0 15px">🎮 Game Library</h2>
-  <div class="form">
-    <input id="search" placeholder="গেম খুঁজুন..." oninput="renderGames()">
-    <select id="category" onchange="renderGames()">
-      <option value="All">সব গেম</option>
-      <option>Slots</option><option>Cards</option>
-      <option>Arcade</option><option>Fishing</option><option>Dice</option>
-    </select>
-  </div>
-  <p id="count" class="muted"></p>
-  <div id="allGames" class="grid"></div>
-</section>
-
-<section id="play" class="page">
   <div class="card">
-    <h2 id="playTitle">Teen Patti</h2>
-    <p class="muted">নিজস্ব কার্ড গেম — শুধু বিনোদনের জন্য, কোনো বাজি বা বাস্তব অর্থ নেই।</p>
-    <div class="gameboard">
-      <p id="roundText">নতুন রাউন্ড শুরু করতে Deal Cards চাপুন।</p>
-      <div id="playerCards" class="cards"></div>
-      <div id="scoreText" class="muted"></div>
-      <div class="game-actions">
-        <button class="btn" onclick="dealCards()">Deal Cards</button>
-        <button class="btn" onclick="newRound()">New Game</button>
-      </div>
+    <h3>Trading Chat</h3>
+    <p class="muted">Messages are stored in this browser only.</p>
+    <div id="chatLog" class="chatlog"></div>
+    <form id="chatForm">
+      <input id="chatMessage" maxlength="300" required placeholder="Write a message">
+      <button class="full">Send Message</button>
+    </form>
+  </div>
+</section>
+
+<section id="page-deposit" class="page hidden">
+  <div class="card">
+    <h2>USDT Deposit (TRC20)</h2>
+    <p>Send USDT using the TRON TRC20 network only.</p>
+    <label>Deposit Address</label>
+    <input id="depositAddress" value="TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62" readonly>
+    <button class="full" onclick="copyDepositAddress()">Copy Address</button>
+    <p id="copyMessage" class="muted"></p>
+    <p class="muted">Check the address and network carefully before sending funds.</p>
+  </div>
+  <div class="card">
+    <h3>Submit Deposit Request</h3>
+    <p class="muted">Balance will not increase until the payment is independently verified.</p>
+    <form id="depositForm">
+      <label>Amount (USDT)</label>
+      <input id="depositAmount" type="number" min="0.01" step="0.01" required placeholder="Amount sent">
+      <label>Transaction ID (TXID)</label>
+      <input id="depositTxid" required minlength="10" placeholder="Paste transaction ID">
+      <button class="full">Submit Deposit Request</button>
+    </form>
+    <p id="depositMessage" class="muted"></p>
+  </div>
+  <div class="card"><h3>Deposit Requests</h3><div id="depositHistory"></div></div>
+</section>
+
+<!-- WITHDRAW: bKash, Nagad and USDT -->
+<section id="page-withdraw" class="page hidden">
+  <div class="card">
+    <h2>Withdraw</h2>
+    <p class="muted">Choose your withdrawal method.</p>
+    <p>Available balance: <strong id="withdrawBalance">$0.00</strong></p>
+    <form id="withdrawForm">
+      <label>Withdrawal Method</label>
+      <select id="withdrawMethod" required onchange="updateWithdrawFields()">
+        <option value="bKash">bKash</option>
+        <option value="Nagad">Nagad</option>
+        <option value="USDT">USDT (TRC20)</option>
+      </select>
+      <label>Amount (USD)</label>
+      <input id="withdrawAmount" type="number" min="1" step="0.01" required placeholder="Enter amount">
+      <label id="withdrawAddressLabel">bKash Number</label>
+      <input id="withdrawAddress" required placeholder="Enter bKash number">
+      <button class="full">Submit Withdrawal Request</button>
+    </form>
+    <p id="withdrawMessage" class="muted"></p>
+  </div>
+</section>
+
+<section id="page-history" class="page hidden">
+  <div class="card">
+    <h2>Transaction History</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Status</th><th>Details</th></tr></thead>
+        <tbody id="historyRows"></tbody>
+      </table>
     </div>
-    <br>
-    <button class="btn" onclick="showPage('games')">← সব গেম</button>
+    <p id="emptyHistory" class="muted">No transactions yet.</p>
   </div>
 </section>
 
-<section id="auth" class="page">
-  <h2 id="authTitle" style="margin:8px 0 15px">Register</h2>
-  <div class="card form">
-    <input id="username" placeholder="আপনার নাম" autocomplete="name">
-    <input id="email" type="email" placeholder="Email address" autocomplete="email">
-    <input id="password" type="password" placeholder="Password (কমপক্ষে ৮ অক্ষর)" autocomplete="current-password">
-    <button class="btn" onclick="register()">Create Account</button>
-    <button class="btn" onclick="login()">Login Instead</button>
-    <p id="authMsg" class="muted" aria-live="polite"></p>
-  </div>
-  <p class="notice">এটি একটি লোকাল প্রোটোটাইপ। স্থায়ী ও নিরাপদ অ্যাকাউন্টের জন্য সার্ভারভিত্তিক Authentication প্রয়োজন।</p>
-</section>
-
-<section id="profile" class="page">
-  <h2 style="margin:8px 0 15px">👤 Profile</h2>
+<section id="page-profile" class="page hidden">
   <div class="card">
-    <p>নাম: <b id="profileName">Guest</b></p>
-    <p>Email: <span id="profileEmail">Not logged in</span></p>
-    <p>অ্যাকাউন্ট: <span id="profileStatus">Guest</span></p>
-    <button class="btn" onclick="showPage('auth')">Register / Login</button>
-    <br><br>
-    <button class="btn" onclick="logout()">Logout</button>
-  </div>
-</section>
+    <h2>My Profile</h2>
+    <label>Full Name</label><input id="profileName" readonly>
+    <label>Email</label><input id="profileEmail" readonly>
+    <label>Account Balance</label><input id="profileBalance" readonly>
+    <label>Account Created</label><input id="profileCreated" readonly>
 
-<section id="wallet" class="page">
-  <h2 style="margin:8px 0 15px">💳 Wallet</h2>
-  <div class="notice">এই প্রোটোটাইপ বাস্তব টাকা গ্রহণ বা পাঠায় না। কোনো পেমেন্ট সফল হয়েছে বলে দেখানো হয় না।</div>
-  <br>
-  <div class="card form">
-    <h3>Deposit Request</h3>
-    <select id="paymentMethod"><option>bKash</option><option>অনুমোদিত পেমেন্ট প্রদানকারী</option></select>
-    <input id="depositAmount" type="number" min="1" placeholder="পরিমাণ">
-    <button class="btn" onclick="requestTransaction('Deposit')">Test Deposit Request</button>
-  </div>
-  <div class="card form">
-    <h3>Withdraw Request</h3>
-    <input id="withdrawAmount" type="number" min="1" placeholder="পরিমাণ">
-    <button class="btn" onclick="requestTransaction('Withdraw')">Test Withdraw Request</button>
-  </div>
-</section>
+    <h3 style="margin-top:20px">Referral Link</h3>
+    <p class="muted">Share this link with your friends.</p>
+    <input id="profileReferralLink" readonly>
+    <button class="full" onclick="copyReferralLink()">Copy Referral Link</button>
+    <p id="referralMessage" class="muted"></p>
 
-<section id="history" class="page">
-  <h2 style="margin:8px 0 15px">📋 History</h2>
-  <div id="historyList" class="card">কোনো পরীক্ষামূলক অনুরোধ নেই।</div>
+    <button class="full" style="background:var(--red)" onclick="logout()">Logout</button>
+  </div>
 </section>
 </main>
+</div>
 
-<footer>
-  <button id="tab-home" class="selected" onclick="showPage('home')"><span>⌂</span>বাড়ি</button>
-  <button onclick="alert('অফার প্রিভিউ')"><span>🎁</span>অফার</button>
-  <button id="tab-games" onclick="showPage('games')"><span>🎮</span>গেম</button>
-  <button id="tab-history" onclick="showPage('history')"><span>▤</span>হিস্ট্রি</button>
-  <button id="tab-profile" onclick="showPage('profile')"><span>👤</span>প্রোফাইল</button>
-</footer>
+<footer>BitPro Trading</footer>
 
 <script>
-const $=id=>document.getElementById(id);
-const pageIds=['home','games','play','auth','profile','wallet','history'];
-let user=null;
-let transactions=[];
-let deck=[], round=0;
+"use strict";
 
-const definitions=[
- ['Slots','🎰',['Fruit Slots','Lucky Seven','Golden Reels','Diamond Spin','Royal Slots','Treasure Gold','Neon Fruits','Lucky Bells','Dragon Spin','Star Jackpot']],
- ['Cards','🃏',['Teen Patti','Poker Table','Blackjack','Classic Cards','Royal Poker','Lucky Cards','Card Match','Solitaire','High Card','Memory Cards']],
- ['Arcade','🎮',['Lucky Wheel','Crash','Mines','Plinko','Color Match','Rocket Run','Treasure Hunt','Bubble Pop','Gem Match','Coin Flip']],
- ['Fishing','🐟',['Fishing Fun','Ocean Catch','Shark Hunter','Deep Sea','Golden Fish','Coral Quest','Ocean Treasure','Fish World','Sea Adventure','Aqua Catch']],
- ['Dice','🎲',['Dice Roll','Lucky Dice','Number Roll','Double Dice','Dice Tower','Target Roll','Dice Quest','Dice Puzzle','Dice Match','Dice Challenge']]
-];
-const games=[];
-definitions.forEach(([category,icon,names])=>{
- for(let i=0;i<25;i++){
-  const base=names[i%names.length];
-  games.push({category,icon,name:i<names.length?base:base+' '+(Math.floor(i/names.length)+1)});
- }
-});
+const DEPOSIT_ADDRESS="TFXQRyhXzH7cgvjdmrTyvKGjGJbEfSaR62";
+const USERS_KEY="bitpro_users_v1";
+const SESSION_KEY="bitpro_session_v1";
+const WELCOME_BONUS=10;
+let currentUser=null;
+let isRegister=true;
+let btcPrice=0;
 
-function escapeHTML(s){
- return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function readUsers(){
+  try{return JSON.parse(localStorage.getItem(USERS_KEY)||"{}")}
+  catch(e){return {}}
 }
-function gameCard(g,index){
- return `<div class="game" data-index="${index}">
- <div class="art">${g.icon}</div>
- ${index%3===0?'<span class="tag">HOT</span>':''}
- <strong>${escapeHTML(g.name)}</strong></div>`;
+function saveUsers(users){
+  localStorage.setItem(USERS_KEY,JSON.stringify(users));
 }
-function renderGames(){
- const query=$('search').value.trim().toLowerCase();
- const cat=$('category').value;
- const found=games.map((g,i)=>({...g,index:i})).filter(g=>
- (cat==='All'||g.category===cat)&&g.name.toLowerCase().includes(query));
- $('count').textContent=found.length+'টি ক্যাটালগ এন্ট্রি';
- $('allGames').innerHTML=found.map(g=>gameCard(g,g.index)).join('');
+function saveCurrent(){
+  if(!currentUser)return;
+  const users=readUsers();
+  users[currentUser.email]=currentUser;
+  saveUsers(users);
 }
-function setFilter(cat){
- $('category').value=cat;
- showPage('games');
+function money(v){
+  return "$"+Number(v||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 }
-$('allGames').addEventListener('click',e=>{
- const card=e.target.closest('.game');
- if(card)openGame(Number(card.dataset.index));
-});
-$('featured').innerHTML=[0,10,20,30,40,50,60,70,80].map(i=>gameCard(games[i],i)).join('');
-$('newGames').innerHTML=[90,91,92,93,94,95].map(i=>gameCard(games[i],i)).join('');
-$('featured').addEventListener('click',handleGameClick);
-$('newGames').addEventListener('click',handleGameClick);
-function handleGameClick(e){
- const card=e.target.closest('.game');
- if(card)openGame(Number(card.dataset.index));
+function safeText(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
-function openGame(i){
- const g=games[i];
- $('playTitle').textContent=g.name;
- round=0;
- $('playerCards').innerHTML='';
- $('scoreText').textContent='';
- $('roundText').textContent=g.category==='Cards'
- ?'Deal Cards চাপুন।':'এই গেমের পূর্ণ ইঞ্জিন এখনো তৈরি হয়নি। Teen Patti-ধাঁচের কার্ড প্রোটোটাইপ ব্যবহার করতে পারেন।';
- showPage('play');
+function defaultUser(name,email,password){
+  const referralCode="BP"+Math.random().toString(36).slice(2,10).toUpperCase();
+  return {name,email,password,referralCode,balance:0,created:new Date().toISOString(),history:[],chat:[]};
 }
-function shuffledDeck(){
- const suits=['♠','♥','♦','♣'];
- const ranks=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
- const d=[];
- suits.forEach(s=>ranks.forEach((r,i)=>d.push({suit:s,rank:r,value:i+1})));
- for(let i=d.length-1;i>0;i--){
-  const j=Math.floor(Math.random()*(i+1));
-  [d[i],d[j]]=[d[j],d[i]];
- }
- return d;
+function authMessage(msg){
+  document.getElementById("authMessage").textContent=msg;
 }
-function dealCards(){
- deck=shuffledDeck();
- round++;
- const hand=deck.slice(0,3);
- $('playerCards').innerHTML=hand.map(c=>
- `<div class="playcard" style="color:${c.suit==='♥'||c.suit==='♦'?'#bd1725':'#181818'}">
- <span>${c.rank}${c.suit}</span><span>${c.suit}</span></div>`).join('');
- $('roundText').textContent='রাউন্ড '+round+' — তোমার ৩টি কার্ড';
- $('scoreText').textContent='এটি একটি সাধারণ কার্ড-ডিল প্রোটোটাইপ; Teen Patti-র সম্পূর্ণ নিয়ম বা প্রতিপক্ষ এখনো নেই।';
+function setAuthMode(register){
+  isRegister=register;
+  document.getElementById("authTitle").textContent=register?"Create BitPro Account":"Login to BitPro";
+  document.getElementById("authButton").textContent=register?"Create Account":"Login";
+  document.getElementById("nameField").classList.toggle("hidden",!register);
+  document.getElementById("fullName").required=register;
+  document.getElementById("switchAuth").textContent=register?"Already have an account? Login":"New user? Create Account";
+  authMessage("");
 }
-function newRound(){
- $('playerCards').innerHTML='';
- $('roundText').textContent='নতুন রাউন্ড শুরু করতে Deal Cards চাপুন।';
- $('scoreText').textContent='';
-}
-function showPage(id){
- pageIds.forEach(p=>$(p).classList.toggle('active',p===id));
- ['home','games','history','profile'].forEach(p=>{
-  const tab=$('tab-'+p);
-  if(tab)tab.classList.toggle('selected',p===id);
- });
- if(id==='games')renderGames();
- if(id==='profile')renderProfile();
- if(id==='history')renderHistory();
- window.scrollTo(0,0);
-}
+document.getElementById("switchAuth").addEventListener("click",()=>setAuthMode(!isRegister));
 
-function getAccounts(){
- try{return JSON.parse(sessionStorage.getItem('saylorAccounts')||'{}')}
- catch(e){return {}}
-}
-async function passwordHash(p){
- if(!crypto.subtle)throw Error('HTTPS অথবা localhost ব্যবহার করুন।');
- const data=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(p));
- return [...new Uint8Array(data)].map(x=>x.toString(16).padStart(2,'0')).join('');
-}
-async function register(){
- const name=$('username').value.trim();
- const email=$('email').value.trim().toLowerCase();
- const pass=$('password').value;
- const msg=$('authMsg');
- if(!name||!email||!pass){msg.textContent='সব ঘর পূরণ করুন।';return}
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent='সঠিক ইমেইল দিন।';return}
- if(pass.length<8){msg.textContent='পাসওয়ার্ড অন্তত ৮ অক্ষরের হতে হবে।';return}
- try{
-  const a=getAccounts();
-  if(a[email]){msg.textContent='এই ইমেইলে অ্যাকাউন্ট আছে। Login করুন।';return}
-  a[email]={name,hash:await passwordHash(pass)};
-  sessionStorage.setItem('saylorAccounts',JSON.stringify(a));
-  user={name,email};
-  $('password').value='';
-  renderProfile();
-  showPage('profile');
- }catch(e){msg.textContent=e.message||'রেজিস্ট্রেশন ব্যর্থ';}
-}
-async function login(){
- const email=$('email').value.trim().toLowerCase();
- const pass=$('password').value;
- const msg=$('authMsg');
- if(!email||!pass){msg.textContent='Email ও password দিন।';return}
- try{
-  const a=getAccounts();
-  if(!a[email]||a[email].hash!==await passwordHash(pass)){
-   msg.textContent='Email অথবা password ভুল।';return;
+document.getElementById("authForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=document.getElementById("fullName").value.trim();
+  const email=document.getElementById("email").value.trim().toLowerCase();
+  const password=document.getElementById("password").value;
+  const users=readUsers();
+
+  if(isRegister){
+    if(!name)return authMessage("Enter your name.");
+    if(users[email])return authMessage("This email already has an account. Please login.");
+
+    currentUser=defaultUser(name,email,password);
+    currentUser.balance=WELCOME_BONUS;
+    currentUser.history.push({
+      id:Date.now().toString(36),
+      date:new Date().toISOString(),
+      type:"Welcome Bonus",
+      amount:WELCOME_BONUS,
+      status:"Credited",
+      details:"New account welcome bonus"
+    });
+
+    users[email]=currentUser;
+    saveUsers(users);
+    localStorage.setItem(SESSION_KEY,email);
+    openApp();
+    alert("Welcome to BitPro! Your $10 welcome bonus has been added.");
+  }else{
+    const user=users[email];
+    if(!user||user.password!==password)return authMessage("Incorrect email or password.");
+    currentUser=user;
+    if(!currentUser.history)currentUser.history=[];
+    if(!currentUser.chat)currentUser.chat=[];
+    localStorage.setItem(SESSION_KEY,email);
+    openApp();
   }
-  user={name:a[email].name,email};
-  $('password').value='';
+});
+
+function openApp(){
+  document.getElementById("authPage").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+  renderAll();
+  showPage("dashboard");
+}
+function logout(){
+  localStorage.removeItem(SESSION_KEY);
+  currentUser=null;
+  document.getElementById("app").classList.add("hidden");
+  document.getElementById("authPage").classList.remove("hidden");
+  document.getElementById("password").value="";
+  setAuthMode(false);
+}
+function showPage(page){
+  document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
+  document.getElementById("page-"+page).classList.remove("hidden");
+  document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===page));
+  if(page==="live")renderChat();
+  if(page==="history")renderHistory();
+  if(page==="deposit")renderDepositHistory();
+  if(page==="profile")renderProfile();
+  if(page==="withdraw")updateWithdrawFields();
+}
+function addHistory(type,amount,status,details){
+  currentUser.history=currentUser.history||[];
+  currentUser.history.unshift({id:Date.now().toString(36),date:new Date().toISOString(),type,amount:Number(amount)||0,status,details});
+  saveCurrent();
+  renderAll();
+}
+function renderAll(){
+  if(!currentUser)return;
+  const bal=money(currentUser.balance);
+  document.getElementById("headerAccount").classList.remove("hidden");
+  document.getElementById("headerEmail").textContent=currentUser.email;
+  document.getElementById("headerBalance").textContent=bal;
+  document.getElementById("dashboardBalance").textContent=bal;
+  document.getElementById("tradeBalance").textContent=bal;
+  document.getElementById("withdrawBalance").textContent=bal;
+  document.getElementById("depositCount").textContent=(currentUser.history||[]).filter(x=>x.type==="Deposit").length;
+  renderHistory();
+  renderDepositHistory();
   renderProfile();
-  showPage('profile');
- }catch(e){msg.textContent=e.message||'Login ব্যর্থ';}
+  renderRecent();
 }
-function logout(){user=null;renderProfile();showPage('home')}
 function renderProfile(){
- $('profileName').textContent=user?user.name:'Guest';
- $('profileEmail').textContent=user?user.email:'Not logged in';
- $('profileStatus').textContent=user?'Prototype session':'Guest';
+  if(!currentUser)return;
+  if(!currentUser.referralCode){
+    currentUser.referralCode="BP"+Math.random().toString(36).slice(2,10).toUpperCase();
+    saveCurrent();
+  }
+  document.getElementById("profileName").value=currentUser.name;
+  document.getElementById("profileEmail").value=currentUser.email;
+  document.getElementById("profileBalance").value=money(currentUser.balance);
+  document.getElementById("profileCreated").value=new Date(currentUser.created).toLocaleString();
+
+  // Change this base URL to your published website URL after GitHub Pages is enabled.
+  const base=window.location.href.split("?")[0].split("#")[0];
+  document.getElementById("profileReferralLink").value=base+"?ref="+encodeURIComponent(currentUser.referralCode);
 }
-function requestTransaction(type){
- if(!user){alert('আগে Register অথবা Login করুন।');showPage('auth');return}
- const input=$(type==='Deposit'?'depositAmount':'withdrawAmount');
- const amount=Number(input.value);
- if(!Number.isFinite(amount)||amount<=0){alert('সঠিক পরিমাণ লিখুন।');return}
- transactions.unshift({
-  type,amount,
-  method:type==='Deposit'?$('paymentMethod').value:'Test request',
-  status:'TEST ONLY — NOT PROCESSED',
-  time:new Date().toLocaleString()
- });
- input.value='';
- alert('পরীক্ষামূলক অনুরোধ তৈরি হয়েছে। কোনো টাকা লেনদেন হয়নি।');
- renderHistory();
+async function copyReferralLink(){
+  const field=document.getElementById("profileReferralLink");
+  const message=document.getElementById("referralMessage");
+  try{
+    await navigator.clipboard.writeText(field.value);
+    message.textContent="Referral link copied.";
+  }catch(e){
+    field.focus();
+    field.select();
+    try{
+      document.execCommand("copy");
+      message.textContent="Referral link copied.";
+    }catch(err){
+      message.textContent="Select the link and copy it.";
+    }
+  }
 }
 function renderHistory(){
- $('historyList').innerHTML=transactions.length?transactions.map(t=>
- `<div style="padding:10px 0;border-bottom:1px solid #536055">
- <b>${t.type}: ${t.amount}</b>
- <p class="muted">${escapeHTML(t.method)}</p>
- <p class="muted">${t.status}</p>
- <small>${escapeHTML(t.time)}</small></div>`).join('')
- :'কোনো পরীক্ষামূলক অনুরোধ নেই।';
+  if(!currentUser)return;
+  const h=currentUser.history||[];
+  document.getElementById("historyRows").innerHTML=h.map(x=>`<tr>
+    <td>${safeText(new Date(x.date).toLocaleString())}</td>
+    <td>${safeText(x.type)}</td>
+    <td>${money(x.amount)}</td>
+    <td><span class="badge">${safeText(x.status)}</span></td>
+    <td>${safeText(x.details)}</td>
+  </tr>`).join("");
+  document.getElementById("emptyHistory").classList.toggle("hidden",h.length>0);
 }
-renderGames();
-renderProfile();
+function renderDepositHistory(){
+  if(!currentUser)return;
+  const h=(currentUser.history||[]).filter(x=>x.type==="Deposit");
+  document.getElementById("depositHistory").innerHTML=h.length?h.map(x=>`<div class="card">
+    <div class="row"><strong>${money(x.amount)} USDT</strong><span class="badge">${safeText(x.status)}</span></div>
+    <p class="muted">${safeText(x.details)}</p>
+    <p class="muted">${safeText(new Date(x.date).toLocaleString())}</p>
+  </div>`).join(""):'<p class="muted">No deposit requests yet.</p>';
+}
+function renderRecent(){
+  const h=(currentUser.history||[]).slice(0,5);
+  document.getElementById("recentHistory").innerHTML=h.length?h.map(x=>`<p>${safeText(x.type)} · ${money(x.amount)} · ${safeText(x.status)}</p>`).join(""):"No activity yet.";
+}
+async function copyDepositAddress(){
+  try{
+    await navigator.clipboard.writeText(DEPOSIT_ADDRESS);
+    document.getElementById("copyMessage").textContent="Address copied.";
+  }catch(e){
+    const field=document.getElementById("depositAddress");
+    field.focus();
+    field.select();
+    document.getElementById("copyMessage").textContent="Select the address and choose Copy.";
+  }
+}
+function depositMessage(msg){
+  document.getElementById("depositMessage").textContent=msg;
+}
+document.getElementById("depositForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const amount=Number(document.getElementById("depositAmount").value);
+  const txid=document.getElementById("depositTxid").value.trim();
+  if(!Number.isFinite(amount)||amount<=0)return depositMessage("Enter a valid amount.");
+  if(txid.length<10)return depositMessage("Enter a valid transaction ID.");
+
+  const duplicate=Object.values(readUsers()).some(u=>(u.history||[]).some(h=>h.type==="Deposit"&&h.txid===txid));
+  if(duplicate)return depositMessage("This TXID has already been submitted.");
+
+  currentUser.history=currentUser.history||[];
+  currentUser.history.unshift({
+    id:Date.now().toString(36),
+    date:new Date().toISOString(),
+    type:"Deposit",
+    amount,
+    status:"Pending verification",
+    details:"TXID: "+txid,
+    txid
+  });
+  saveCurrent();
+  renderAll();
+  e.target.reset();
+  depositMessage("Request submitted. Balance remains unchanged until payment is verified.");
+});
+
+// WITHDRAW METHOD FIELDS
+function updateWithdrawFields(){
+  const method=document.getElementById("withdrawMethod").value;
+  const label=document.getElementById("withdrawAddressLabel");
+  const field=document.getElementById("withdrawAddress");
+
+  if(method==="bKash"){
+    label.textContent="bKash Number";
+    field.placeholder="Enter bKash number";
+    field.inputMode="tel";
+    field.minLength=10;
+    field.maxLength=15;
+  }else if(method==="Nagad"){
+    label.textContent="Nagad Number";
+    field.placeholder="Enter Nagad number";
+    field.inputMode="tel";
+    field.minLength=10;
+    field.maxLength=15;
+  }else{
+    label.textContent="USDT TRC20 Wallet Address";
+    field.placeholder="Enter TRC20 wallet address";
+    field.inputMode="text";
+    field.minLength=20;
+    field.maxLength=100;
+  }
+}
+
+document.getElementById("withdrawForm").addEventListener("submit",e=>{
+  e.preventDefault();
+
+  const amount=Number(document.getElementById("withdrawAmount").value);
+  const method=document.getElementById("withdrawMethod").value;
+  const address=document.getElementById("withdrawAddress").value.trim();
+
+  if(!Number.isFinite(amount)||amount<=0)
+    return withdrawMessage("Enter a valid amount.");
+
+  if(amount>Number(currentUser.balance))
+    return withdrawMessage("Insufficient balance.");
+
+  if(method==="USDT"&&address.length<20)
+    return withdrawMessage("Enter a valid TRC20 wallet address.");
+
+  if((method==="bKash"||method==="Nagad")&&!/^\+?[0-9]{10,15}$/.test(address))
+    return withdrawMessage("Enter a valid mobile number.");
+
+  addHistory("Withdraw",amount,"Pending review",method+" recipient: "+address);
+
+  e.target.reset();
+  updateWithdrawFields();
+  withdrawMessage("Request submitted for "+method+". No real transfer has been made.");
+});
+
+function withdrawMessage(msg){
+  document.getElementById("withdrawMessage").textContent=msg;
+}
+
+function placeTrade(side){
+  const field=document.getElementById(side==="BUY"?"buyAmount":"sellAmount");
+  const amount=Number(field.value);
+
+  if(!Number.isFinite(amount)||amount<=0)return alert("Enter a valid amount.");
+  if(side==="SELL")return alert("Selling is currently unavailable.");
+  if(amount>Number(currentUser.balance))return alert("Insufficient balance.");
+
+  currentUser.balance=Number(currentUser.balance)-amount;
+  addHistory("Trade",amount,"Recorded","BTC/USDT BUY");
+  field.value="";
+  alert("Your order has been recorded in this browser. No cryptocurrency transaction was made.");
+}
+
+function changeTimeframe(){
+  const interval=document.getElementById("timeframe").value;
+  document.getElementById("chart").src="https://s.tradingview.com/widgetembed/?frameElementId=tvchart&symbol=BINANCE%3ABTCUSDT&interval="+encodeURIComponent(interval)+"&hidesidetoolbar=0&symboledit=0&saveimage=0&toolbarbg=%23141c2f&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=en";
+}
+async function updatePrice(){
+  try{
+    const r=await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT");
+    if(!r.ok)throw Error();
+    const d=await r.json();
+    btcPrice=Number(d.price);
+    const p="$"+btcPrice.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+    document.getElementById("livePrice").textContent=p;
+    document.getElementById("dashPrice").textContent=p;
+  }catch(e){
+    document.getElementById("livePrice").textContent="Unavailable";
+    document.getElementById("dashPrice").textContent="Unavailable";
+  }
+}
+function renderChat(){
+  if(!currentUser)return;
+  const chat=currentUser.chat||[];
+  document.getElementById("chatLog").innerHTML=chat.map(x=>`<p><strong>${safeText(x.name)}:</strong> ${safeText(x.message)}</p>`).join("");
+  document.getElementById("chatLog").scrollTop=document.getElementById("chatLog").scrollHeight;
+}
+document.getElementById("chatForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const input=document.getElementById("chatMessage");
+  const message=input.value.trim();
+  if(!message)return;
+
+  currentUser.chat=currentUser.chat||[];
+  currentUser.chat.push({name:currentUser.name,message});
+  currentUser.chat=currentUser.chat.slice(-100);
+  saveCurrent();
+  input.value="";
+  renderChat();
+});
+
+// Restore saved session
+const savedEmail=localStorage.getItem(SESSION_KEY);
+if(savedEmail){
+  const savedUser=readUsers()[savedEmail];
+  if(savedUser){
+    currentUser=savedUser;
+    if(!currentUser.history)currentUser.history=[];
+    if(!currentUser.chat)currentUser.chat=[];
+    openApp();
+  }else{
+    localStorage.removeItem(SESSION_KEY);
+  }
+}
+updatePrice();
+setInterval(updatePrice,15000);
 </script>
+
+<a href="https://wa.me/855962052330" target="_blank" rel="noopener noreferrer" aria-label="Contact BitPro Customer Service on WhatsApp" style="position:fixed;right:16px;bottom:20px;z-index:99999;display:flex;align-items:center;gap:9px;padding:12px 16px;background:#25D366;color:#fff;text-decoration:none;font-family:Arial,sans-serif;font-size:14px;font-weight:700;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.35)">
+<span aria-hidden="true" style="font-size:21px;line-height:1">☏</span>
+<span>Customer Service</span>
+</a>
 </body>
 </html>
