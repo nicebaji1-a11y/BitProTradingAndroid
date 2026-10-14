@@ -3,239 +3,389 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SAYLOR CASINO</title>
 <style>
-:root{
- --bg:#001b17;--panel:#062a23;--gold:#f5ce63;
- --red:#f12732;--text:#fff;--muted:#a6bbb4;
+:root {
+  --bg:#00150f;
+  --panel:#06271f;
+  --gold:#f5cf67;
+  --red:#ef2936;
+  --text:#fff;
+  --muted:#a9c1b7;
 }
-*{box-sizing:border-box}
-body{margin:0;background:#00130f;color:var(--text);
-font-family:Arial,"Noto Sans Bengali",sans-serif;padding-bottom:78px}
-button,input,select{font:inherit}
-button{cursor:pointer}
-header{display:flex;align-items:center;justify-content:space-between;
-padding:15px 12px;background:#031b17;border-bottom:1px solid #624d25}
-.brand{color:var(--gold);font-weight:900;font-size:23px;
-text-shadow:0 1px 12px #7e541c}
-.login{background:var(--gold);border:1px solid #fff1b7;
-border-radius:10px;padding:11px 16px;font-weight:bold}
-nav{display:flex;gap:8px;overflow:auto;padding:10px;background:#031c17}
-nav button{flex-shrink:0;padding:10px 14px;border-radius:9px;
-border:1px solid #7b622f;background:#092c24;color:white}
-main{max-width:650px;margin:auto;padding:12px}
-.page{display:none}.page.active{display:block}
-.walletbar{display:flex;justify-content:space-between;align-items:center;
-gap:8px;margin:10px 0 14px}
-.coins{border:1px solid var(--gold);border-radius:30px;
-padding:9px 12px;color:var(--gold);font-weight:bold}
-.daily{border:1px solid #edca62;border-radius:25px;
-background:#a91319;color:#fff;padding:10px;font-weight:bold}
-.hero{height:195px;overflow:hidden;position:relative;
-border:1px solid var(--gold);border-radius:16px;
-background:radial-gradient(ellipse at 80% 20%,#a33d16,transparent 40%),
-linear-gradient(120deg,#38090e,#081d17 65%,#50310c);
-display:flex;align-items:center;padding:18px}
-.hero:after{content:"♠  ♦  🪙  ♣";position:absolute;right:10px;
-bottom:12px;font-size:24px;color:#ffda73;opacity:.8}
-.hero h1{font-size:31px;color:var(--gold);margin:8px 0;
-text-shadow:0 0 12px #9b570f}
-.hero p{font-size:12px;letter-spacing:2px}
-.hero button{background:var(--red);color:white;border:1px solid var(--gold);
-padding:10px;border-radius:22px}
-.cats{display:grid;grid-template-columns:repeat(6,minmax(66px,1fr));
-gap:6px;overflow-x:auto;margin:15px 0}
-.cat{background:#062c24;border-radius:12px;text-align:center;
-padding:12px 5px;font-size:12px;white-space:nowrap}
-.cat span{display:block;font-size:27px;margin-bottom:8px}
-.cat:first-child{background:linear-gradient(#ff563b,#ed151f)}
-.sectiontitle{display:flex;justify-content:space-between;align-items:center;
-margin:20px 0 12px}
-.sectiontitle h2{font-size:20px;margin:0}
-.sectiontitle button{background:none;border:0;color:var(--gold)}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
-.game{position:relative;border:1px solid var(--gold);
-border-radius:12px;overflow:hidden;background:#092a22;min-width:0}
-.art{aspect-ratio:1/1;display:flex;justify-content:center;
-align-items:center;font-size:clamp(35px,10vw,62px);
-background:radial-gradient(circle at 50% 35%,#6c431b,#102e28 60%,#031611)}
-.game:nth-child(3n+1) .art{background:radial-gradient(circle,#7b170f,#240b16 70%)}
-.game:nth-child(3n+2) .art{background:radial-gradient(circle,#4a4b0b,#06281e 70%)}
-.game:nth-child(3n) .art{background:radial-gradient(circle,#153b83,#08141e 70%)}
-.game strong{display:block;padding:8px 3px;text-align:center;
-font-size:12px;overflow-wrap:anywhere}
-.hot{position:absolute;top:5px;left:5px;background:#ef2632;
-border-radius:5px;padding:3px 6px;font-size:10px;font-weight:bold}
-.card{background:var(--panel);border:1px solid #82652c;
-border-radius:13px;padding:15px;margin-bottom:12px}
-.form{display:grid;gap:12px}
-input,select{width:100%;padding:13px;background:#10151a;
-border:1px solid #55515a;border-radius:10px;color:white}
-.action{background:var(--gold);color:#111;border:0;
-border-radius:10px;padding:13px;font-weight:bold}
-.secondary{background:#35251b;color:white;border:1px solid #73552d}
-h2{color:var(--gold)}
-.note{font-size:13px;color:var(--muted);line-height:1.7}
-footer{position:fixed;bottom:0;left:0;right:0;
-display:flex;justify-content:space-around;background:#03231c;
-border-top:1px solid #6a542b;padding:7px 2px;z-index:10}
-footer button{border:0;background:transparent;color:#b7c9c0;
-font-size:11px;padding:4px 3px}
-footer span{display:block;font-size:23px;margin-bottom:4px}
-footer button.selected{color:var(--gold)}
-.listitem{border-bottom:1px solid #38463e;padding:12px 0}
-@media(min-width:500px){
- main{padding:18px}
- .hero{height:230px}
- .grid{gap:12px}
- .game strong{font-size:14px}
+* { box-sizing:border-box; }
+body {
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
+  padding-bottom:80px;
+}
+button,input,select { font:inherit; }
+button { cursor:pointer; }
+header {
+  min-height:82px; padding:12px 15px;
+  display:flex; justify-content:space-between;
+  align-items:center; gap:10px;
+  background:#031a14; border-bottom:1px solid #6a5328;
+}
+.brand { min-width:0; color:var(--gold); font-weight:900; }
+.brand strong { display:block;font-size:clamp(18px,5vw,26px); }
+.brand small { letter-spacing:4px; }
+.btn {
+  border:1px solid #9c7b35; border-radius:10px;
+  padding:12px 15px; background:var(--gold);
+  color:#171006; font-weight:bold;
+}
+nav {
+  display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:6px; padding:9px; background:#05221a;
+}
+nav button {
+  min-width:0; padding:10px 2px;
+  border:1px solid #68542e; border-radius:9px;
+  color:#fff; background:#0b3026; font-size:13px;
+}
+main { max-width:760px; margin:auto; padding:12px; }
+.page { display:none; }
+.page.active { display:block; }
+.walletbar { display:flex; gap:8px; margin:10px 0 14px; }
+.coins,.bonus {
+  flex:1; text-align:center; padding:11px 5px;
+  border-radius:25px; font-size:13px; font-weight:bold;
+}
+.coins { color:var(--gold);border:1px solid var(--gold); }
+.bonus { color:#fff;background:#9b131c;border:1px solid var(--gold); }
+.hero {
+  min-height:205px; border:1px solid var(--gold);
+  border-radius:15px; padding:22px 16px;
+  display:flex; align-items:center;
+  background:radial-gradient(circle at 80% 45%,#6e301c,transparent 35%),
+  linear-gradient(120deg,#3a0910,#09271e 60%,#4c300e);
+}
+.hero h1 { color:var(--gold);font-size:32px;margin:8px 0; }
+.hero p { font-size:12px;letter-spacing:2px; }
+.cats {
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;margin:15px 0;
+}
+.cat {
+  background:#0a3026;text-align:center;border-radius:11px;
+  padding:12px 4px;font-size:13px;
+}
+.cat span { display:block;font-size:27px;margin-bottom:5px; }
+.heading {
+  display:flex;justify-content:space-between;align-items:center;
+  margin:22px 0 12px;
+}
+.heading h2,h2 { color:var(--gold);font-size:21px;margin:0; }
+.heading button {
+  color:var(--gold);background:none;border:0;font-size:13px;
+}
+.grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px; }
+.game {
+  position:relative;overflow:hidden;min-width:0;
+  border:1px solid #b8974d;border-radius:11px;background:#09271f;
+}
+.art {
+  aspect-ratio:1/1;display:flex;align-items:center;
+  justify-content:center;font-size:clamp(32px,9vw,58px);
+  background:radial-gradient(circle,#5e411a,#102c22 70%);
+}
+.game:nth-child(3n+1) .art { background:radial-gradient(circle,#8c1918,#251019 75%); }
+.game:nth-child(3n+2) .art { background:radial-gradient(circle,#53600d,#10261b 75%); }
+.game:nth-child(3n) .art { background:radial-gradient(circle,#174e8c,#101b2a 75%); }
+.game strong {
+  display:block;padding:8px 3px;text-align:center;
+  font-size:12px;overflow-wrap:anywhere;
+}
+.tag {
+  position:absolute;top:5px;left:5px;background:var(--red);
+  color:white;padding:3px 5px;font-size:10px;border-radius:4px;
+}
+.card {
+  border:1px solid #81672f;border-radius:13px;
+  background:var(--panel);padding:15px;margin-bottom:13px;
+}
+.form { display:grid;gap:12px; }
+input,select {
+  width:100%;padding:13px;background:#101b17;
+  border:1px solid #635b4b;border-radius:9px;color:white;
+}
+.muted { color:var(--muted);font-size:13px;line-height:1.7; }
+.notice { padding:12px;background:#282319;border:1px solid #80672e;
+  border-radius:10px;line-height:1.7;font-size:13px; }
+.gameboard {
+  min-height:310px;border-radius:12px;padding:18px 8px;
+  background:radial-gradient(circle,#5b3719,#09291f 65%,#02160f);
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:22px;
+}
+.cards { display:flex;justify-content:center;gap:7px;flex-wrap:wrap; }
+.playcard {
+  width:68px;height:100px;background:#fffaf0;color:#a71924;
+  border:2px solid #d4b96e;border-radius:8px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:7px;font-size:17px;font-weight:bold;
+  box-shadow:0 3px 8px #0008;
+}
+.playcard span:last-child { align-self:flex-end; }
+.game-actions { display:flex;gap:8px;flex-wrap:wrap;justify-content:center; }
+footer {
+  position:fixed;bottom:0;left:0;right:0;z-index:5;
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  background:#03231b;border-top:1px solid #79602f;padding:6px 2px;
+}
+footer button {
+  background:none;border:0;color:#a9c1b7;font-size:11px;padding:5px 1px;
+}
+footer button span { display:block;font-size:22px;margin-bottom:4px; }
+footer button.selected { color:var(--gold); }
+@media(min-width:520px) {
+  .cats { grid-template-columns:repeat(6,minmax(0,1fr)); }
+  .grid { gap:12px; }
+  .game strong { font-size:14px; }
 }
 </style>
 </head>
 <body>
+
 <header>
- <div class="brand">♠ SAYLOR<br><small style="font-size:12px;letter-spacing:4px">CASINO</small></div>
- <button class="login" onclick="openPage('auth')">Login</button>
+  <div class="brand">
+    <strong>♠ SAYLOR</strong>
+    <small>CASINO</small>
+  </div>
+  <button class="btn" onclick="showPage('auth')">Login</button>
 </header>
 
 <nav>
- <button onclick="openPage('home')">Home</button>
- <button onclick="openPage('games')">100+ Games</button>
- <button onclick="openPage('wallet')">Wallet</button>
- <button onclick="openPage('profile')">Profile</button>
- <button onclick="openPage('history')">History</button>
+  <button onclick="showPage('home')">⌂ Home</button>
+  <button onclick="showPage('games')">🎮 Games</button>
+  <button onclick="showPage('wallet')">Wallet</button>
+  <button onclick="showPage('profile')">Profile</button>
 </nav>
 
 <main>
-<div id="home" class="page active">
- <div class="walletbar">
-  <div class="coins">🪙 10,000 SC</div>
-  <button class="daily" onclick="alert('Bonus screen prototype')">🎁 Daily Bonus</button>
- </div>
-
- <div class="hero">
-  <div>
-   <p>WELCOME TO</p>
-   <h1>SAYLOR<br>CASINO</h1>
-   <p>PLAY · SPIN · ENJOY</p>
-   <button onclick="openPage('games')">Explore Games</button>
+<section id="home" class="page active">
+  <div class="walletbar">
+    <div class="coins">🪙 10,000 SC</div>
+    <button class="bonus" onclick="alert('Bonus preview')">🎁 Daily Bonus</button>
   </div>
- </div>
 
- <div class="cats">
-  <div class="cat" onclick="filterGames('All')"><span>🔥</span>সেরা</div>
-  <div class="cat" onclick="filterGames('Slots')"><span>🎰</span>স্লট</div>
-  <div class="cat" onclick="filterGames('Arcade')"><span>🎲</span>মিনি গেমস</div>
-  <div class="cat" onclick="filterGames('Live')"><span>🎮</span>লাইভ</div>
-  <div class="cat" onclick="filterGames('Fishing')"><span>🐟</span>মাছ ধরা</div>
-  <div class="cat" onclick="filterGames('Cards')"><span>🃏</span>কার্ড</div>
- </div>
+  <div class="hero">
+    <div>
+      <p>WELCOME TO</p>
+      <h1>SAYLOR<br>CASINO</h1>
+      <p>PLAY · SPIN · ENJOY</p>
+      <button class="btn" onclick="showPage('games')">Explore Games</button>
+    </div>
+  </div>
 
- <div class="sectiontitle"><h2>🔥 সেরা গেম</h2>
- <button onclick="openPage('games')">সব দেখুন ›</button></div>
- <div id="featured" class="grid"></div>
+  <div class="cats">
+    <div class="cat" onclick="setFilter('All')"><span>🔥</span>সেরা</div>
+    <div class="cat" onclick="setFilter('Slots')"><span>🎰</span>স্লট</div>
+    <div class="cat" onclick="setFilter('Arcade')"><span>🎲</span>মিনি গেম</div>
+    <div class="cat" onclick="setFilter('Cards')"><span>🃏</span>কার্ড</div>
+    <div class="cat" onclick="setFilter('Fishing')"><span>🐟</span>ফিশিং</div>
+    <div class="cat" onclick="setFilter('Dice')"><span>🎯</span>ডাইস</div>
+  </div>
 
- <div class="sectiontitle"><h2>👑 নতুন গেম</h2>
- <button onclick="openPage('games')">সব দেখুন ›</button></div>
- <div id="newgames" class="grid"></div>
-</div>
+  <div class="heading">
+    <h2>🔥 সেরা গেম</h2>
+    <button onclick="showPage('games')">সব দেখুন ›</button>
+  </div>
+  <div id="featured" class="grid"></div>
 
-<div id="games" class="page">
- <h2>🎮 Game Library</h2>
- <input id="search" placeholder="গেম খুঁজুন..." oninput="renderGames()">
- <br><br>
- <select id="filter" onchange="renderGames()">
-  <option value="All">সব গেম</option>
-  <option value="Slots">Slots</option>
-  <option value="Cards">Cards</option>
-  <option value="Arcade">Arcade</option>
-  <option value="Dice">Dice</option>
-  <option value="Fishing">Fishing</option>
- </select>
- <p id="total" class="note"></p>
- <div id="allgames" class="grid"></div>
-</div>
+  <div class="heading">
+    <h2>👑 নতুন গেম</h2>
+    <button onclick="showPage('games')">সব দেখুন ›</button>
+  </div>
+  <div id="newGames" class="grid"></div>
+</section>
 
-<div id="auth" class="page">
- <h2 id="authTitle">Register</h2>
- <div class="card form">
-  <input id="username" placeholder="আপনার নাম">
-  <input id="email" type="email" placeholder="Email address">
-  <input id="password" type="password" minlength="8" placeholder="Password (কমপক্ষে ৮ অক্ষর)">
-  <button class="action" onclick="register()">Create Account</button>
-  <button class="action secondary" onclick="login()">Login Instead</button>
-  <p id="authmsg" class="note" aria-live="polite"></p>
- </div>
- <p class="note">এই সংস্করণটি প্রোটোটাইপ। স্থায়ী ও নিরাপদ অ্যাকাউন্টের জন্য Firebase Authentication বা Backend প্রয়োজন।</p>
-</div>
-
-<div id="profile" class="page">
- <h2>👤 Profile</h2>
- <div class="card">
-  <p>নাম: <b id="pname">Guest</b></p>
-  <p>Email: <span id="pemail">Not logged in</span></p>
-  <p>Account: <span id="pstatus">Guest</span></p>
-  <button class="action" onclick="openPage('auth')">Register / Login</button>
-  <br><br>
-  <button class="action secondary" onclick="logout()">Logout</button>
- </div>
-</div>
-
-<div id="wallet" class="page">
- <h2>💳 Wallet</h2>
- <div class="card">
-  <p class="note">এটি পরীক্ষামূলক Wallet UI। কোনো বাস্তব টাকা গ্রহণ বা পাঠানো হয় না।</p>
-  <h3>Deposit Request</h3>
+<section id="games" class="page">
+  <h2 style="margin:8px 0 15px">🎮 Game Library</h2>
   <div class="form">
-   <select id="method"><option>bKash</option><option>Approved provider</option></select>
-   <input id="depositAmount" type="number" min="1" placeholder="পরিমাণ লিখুন">
-   <button class="action" onclick="requestTx('Deposit')">Submit Test Request</button>
+    <input id="search" placeholder="গেম খুঁজুন..." oninput="renderGames()">
+    <select id="category" onchange="renderGames()">
+      <option value="All">সব গেম</option>
+      <option>Slots</option><option>Cards</option>
+      <option>Arcade</option><option>Fishing</option><option>Dice</option>
+    </select>
   </div>
- </div>
- <div class="card">
-  <h3>Withdraw Request</h3>
-  <div class="form">
-   <input id="withdrawAmount" type="number" min="1" placeholder="পরিমাণ লিখুন">
-   <button class="action" onclick="requestTx('Withdraw')">Submit Test Request</button>
+  <p id="count" class="muted"></p>
+  <div id="allGames" class="grid"></div>
+</section>
+
+<section id="play" class="page">
+  <div class="card">
+    <h2 id="playTitle">Teen Patti</h2>
+    <p class="muted">নিজস্ব কার্ড গেম — শুধু বিনোদনের জন্য, কোনো বাজি বা বাস্তব অর্থ নেই।</p>
+    <div class="gameboard">
+      <p id="roundText">নতুন রাউন্ড শুরু করতে Deal Cards চাপুন।</p>
+      <div id="playerCards" class="cards"></div>
+      <div id="scoreText" class="muted"></div>
+      <div class="game-actions">
+        <button class="btn" onclick="dealCards()">Deal Cards</button>
+        <button class="btn" onclick="newRound()">New Game</button>
+      </div>
+    </div>
+    <br>
+    <button class="btn" onclick="showPage('games')">← সব গেম</button>
   </div>
- </div>
-</div>
+</section>
 
-<div id="history" class="page">
- <h2>📋 Transaction History</h2>
- <div id="transactions" class="card">কোনো পরীক্ষামূলক অনুরোধ নেই।</div>
-</div>
+<section id="auth" class="page">
+  <h2 id="authTitle" style="margin:8px 0 15px">Register</h2>
+  <div class="card form">
+    <input id="username" placeholder="আপনার নাম" autocomplete="name">
+    <input id="email" type="email" placeholder="Email address" autocomplete="email">
+    <input id="password" type="password" placeholder="Password (কমপক্ষে ৮ অক্ষর)" autocomplete="current-password">
+    <button class="btn" onclick="register()">Create Account</button>
+    <button class="btn" onclick="login()">Login Instead</button>
+    <p id="authMsg" class="muted" aria-live="polite"></p>
+  </div>
+  <p class="notice">এটি একটি লোকাল প্রোটোটাইপ। স্থায়ী ও নিরাপদ অ্যাকাউন্টের জন্য সার্ভারভিত্তিক Authentication প্রয়োজন।</p>
+</section>
 
-<div id="play" class="page">
- <div class="card">
-  <h2 id="playingTitle">Game</h2>
-  <div id="playingArt" class="art">🎮</div>
-  <p class="note">এটি একটি গেম প্রিভিউ। পূর্ণ গেম ইঞ্জিন এখনো যুক্ত করা হয়নি।</p>
-  <button class="action" onclick="openPage('games')">← সব গেম</button>
- </div>
-</div>
+<section id="profile" class="page">
+  <h2 style="margin:8px 0 15px">👤 Profile</h2>
+  <div class="card">
+    <p>নাম: <b id="profileName">Guest</b></p>
+    <p>Email: <span id="profileEmail">Not logged in</span></p>
+    <p>অ্যাকাউন্ট: <span id="profileStatus">Guest</span></p>
+    <button class="btn" onclick="showPage('auth')">Register / Login</button>
+    <br><br>
+    <button class="btn" onclick="logout()">Logout</button>
+  </div>
+</section>
+
+<section id="wallet" class="page">
+  <h2 style="margin:8px 0 15px">💳 Wallet</h2>
+  <div class="notice">এই প্রোটোটাইপ বাস্তব টাকা গ্রহণ বা পাঠায় না। কোনো পেমেন্ট সফল হয়েছে বলে দেখানো হয় না।</div>
+  <br>
+  <div class="card form">
+    <h3>Deposit Request</h3>
+    <select id="paymentMethod"><option>bKash</option><option>অনুমোদিত পেমেন্ট প্রদানকারী</option></select>
+    <input id="depositAmount" type="number" min="1" placeholder="পরিমাণ">
+    <button class="btn" onclick="requestTransaction('Deposit')">Test Deposit Request</button>
+  </div>
+  <div class="card form">
+    <h3>Withdraw Request</h3>
+    <input id="withdrawAmount" type="number" min="1" placeholder="পরিমাণ">
+    <button class="btn" onclick="requestTransaction('Withdraw')">Test Withdraw Request</button>
+  </div>
+</section>
+
+<section id="history" class="page">
+  <h2 style="margin:8px 0 15px">📋 History</h2>
+  <div id="historyList" class="card">কোনো পরীক্ষামূলক অনুরোধ নেই।</div>
+</section>
 </main>
 
 <footer>
- <button id="tab-home" class="selected" onclick="openPage('home')"><span>⌂</span>বাড়ি</button>
- <button onclick="alert('Offers prototype')"><span>🎁</span>অফার</button>
- <button id="tab-games" onclick="openPage('games')"><span>🎮</span>গেম</button>
- <button id="tab-history" onclick="openPage('history')"><span>▤</span>হিস্ট্রি</button>
- <button id="tab-profile" onclick="openPage('profile')"><span>👤</span>প্রোফাইল</button>
+  <button id="tab-home" class="selected" onclick="showPage('home')"><span>⌂</span>বাড়ি</button>
+  <button onclick="alert('অফার প্রিভিউ')"><span>🎁</span>অফার</button>
+  <button id="tab-games" onclick="showPage('games')"><span>🎮</span>গেম</button>
+  <button id="tab-history" onclick="showPage('history')"><span>▤</span>হিস্ট্রি</button>
+  <button id="tab-profile" onclick="showPage('profile')"><span>👤</span>প্রোফাইল</button>
 </footer>
 
 <script>
 const $=id=>document.getElementById(id);
-const pages=['home','games','auth','profile','wallet','history','play'];
-let currentUser=null;
-let tx=[];
+const pageIds=['home','games','play','auth','profile','wallet','history'];
+let user=null;
+let transactions=[];
+let deck=[], round=0;
 
-function openPage(id){
- pages.forEach(p=>$(p).classList.toggle('active',p===id));
+const definitions=[
+ ['Slots','🎰',['Fruit Slots','Lucky Seven','Golden Reels','Diamond Spin','Royal Slots','Treasure Gold','Neon Fruits','Lucky Bells','Dragon Spin','Star Jackpot']],
+ ['Cards','🃏',['Teen Patti','Poker Table','Blackjack','Classic Cards','Royal Poker','Lucky Cards','Card Match','Solitaire','High Card','Memory Cards']],
+ ['Arcade','🎮',['Lucky Wheel','Crash','Mines','Plinko','Color Match','Rocket Run','Treasure Hunt','Bubble Pop','Gem Match','Coin Flip']],
+ ['Fishing','🐟',['Fishing Fun','Ocean Catch','Shark Hunter','Deep Sea','Golden Fish','Coral Quest','Ocean Treasure','Fish World','Sea Adventure','Aqua Catch']],
+ ['Dice','🎲',['Dice Roll','Lucky Dice','Number Roll','Double Dice','Dice Tower','Target Roll','Dice Quest','Dice Puzzle','Dice Match','Dice Challenge']]
+];
+const games=[];
+definitions.forEach(([category,icon,names])=>{
+ for(let i=0;i<25;i++){
+  const base=names[i%names.length];
+  games.push({category,icon,name:i<names.length?base:base+' '+(Math.floor(i/names.length)+1)});
+ }
+});
+
+function escapeHTML(s){
+ return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function gameCard(g,index){
+ return `<div class="game" data-index="${index}">
+ <div class="art">${g.icon}</div>
+ ${index%3===0?'<span class="tag">HOT</span>':''}
+ <strong>${escapeHTML(g.name)}</strong></div>`;
+}
+function renderGames(){
+ const query=$('search').value.trim().toLowerCase();
+ const cat=$('category').value;
+ const found=games.map((g,i)=>({...g,index:i})).filter(g=>
+ (cat==='All'||g.category===cat)&&g.name.toLowerCase().includes(query));
+ $('count').textContent=found.length+'টি ক্যাটালগ এন্ট্রি';
+ $('allGames').innerHTML=found.map(g=>gameCard(g,g.index)).join('');
+}
+function setFilter(cat){
+ $('category').value=cat;
+ showPage('games');
+}
+$('allGames').addEventListener('click',e=>{
+ const card=e.target.closest('.game');
+ if(card)openGame(Number(card.dataset.index));
+});
+$('featured').innerHTML=[0,10,20,30,40,50,60,70,80].map(i=>gameCard(games[i],i)).join('');
+$('newGames').innerHTML=[90,91,92,93,94,95].map(i=>gameCard(games[i],i)).join('');
+$('featured').addEventListener('click',handleGameClick);
+$('newGames').addEventListener('click',handleGameClick);
+function handleGameClick(e){
+ const card=e.target.closest('.game');
+ if(card)openGame(Number(card.dataset.index));
+}
+function openGame(i){
+ const g=games[i];
+ $('playTitle').textContent=g.name;
+ round=0;
+ $('playerCards').innerHTML='';
+ $('scoreText').textContent='';
+ $('roundText').textContent=g.category==='Cards'
+ ?'Deal Cards চাপুন।':'এই গেমের পূর্ণ ইঞ্জিন এখনো তৈরি হয়নি। Teen Patti-ধাঁচের কার্ড প্রোটোটাইপ ব্যবহার করতে পারেন।';
+ showPage('play');
+}
+function shuffledDeck(){
+ const suits=['♠','♥','♦','♣'];
+ const ranks=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+ const d=[];
+ suits.forEach(s=>ranks.forEach((r,i)=>d.push({suit:s,rank:r,value:i+1})));
+ for(let i=d.length-1;i>0;i--){
+  const j=Math.floor(Math.random()*(i+1));
+  [d[i],d[j]]=[d[j],d[i]];
+ }
+ return d;
+}
+function dealCards(){
+ deck=shuffledDeck();
+ round++;
+ const hand=deck.slice(0,3);
+ $('playerCards').innerHTML=hand.map(c=>
+ `<div class="playcard" style="color:${c.suit==='♥'||c.suit==='♦'?'#bd1725':'#181818'}">
+ <span>${c.rank}${c.suit}</span><span>${c.suit}</span></div>`).join('');
+ $('roundText').textContent='রাউন্ড '+round+' — তোমার ৩টি কার্ড';
+ $('scoreText').textContent='এটি একটি সাধারণ কার্ড-ডিল প্রোটোটাইপ; Teen Patti-র সম্পূর্ণ নিয়ম বা প্রতিপক্ষ এখনো নেই।';
+}
+function newRound(){
+ $('playerCards').innerHTML='';
+ $('roundText').textContent='নতুন রাউন্ড শুরু করতে Deal Cards চাপুন।';
+ $('scoreText').textContent='';
+}
+function showPage(id){
+ pageIds.forEach(p=>$(p).classList.toggle('active',p===id));
  ['home','games','history','profile'].forEach(p=>{
-  const b=$('tab-'+p);
-  if(b)b.classList.toggle('selected',p===id);
+  const tab=$('tab-'+p);
+  if(tab)tab.classList.toggle('selected',p===id);
  });
  if(id==='games')renderGames();
  if(id==='profile')renderProfile();
@@ -243,123 +393,82 @@ function openPage(id){
  window.scrollTo(0,0);
 }
 
-const catalog=[
- ['Slots','🎰',['Fruit Slots','Lucky Seven','Golden Reels','Diamond Spin','Royal Slots','Treasure Gold','Neon Fruits','Lucky Bells','Dragon Spin','Star Jackpot']],
- ['Cards','🃏',['Teen Patti','Poker Table','Blackjack','Classic Cards','Royal Poker','Lucky Cards','Card Match','Solitaire','High Card','Memory Cards']],
- ['Arcade','🎮',['Lucky Wheel','Crash','Mines','Plinko','Color Match','Rocket Run','Treasure Hunt','Bubble Pop','Gem Match','Coin Flip']],
- ['Dice','🎲',['Dice Roll','Lucky Dice','Number Roll','Double Dice','Dice Tower','Target Roll','Dice Quest','Dice Puzzle','Dice Match','Dice Challenge']],
- ['Fishing','🐟',['Fishing Fun','Ocean Catch','Shark Hunter','Deep Sea','Golden Fish','Coral Quest','Ocean Treasure','Fish World','Sea Adventure','Aqua Catch']]
-];
-const games=[];
-catalog.forEach(([category,icon,names])=>{
- for(let i=0;i<25;i++){
-  let base=names[i%names.length];
-  games.push({category,icon,name:i<names.length?base:base+' '+(Math.floor(i/names.length)+1)});
- }
-});
-
-function card(g,i){
- return `<div class="game" data-i="${i}">
- <div class="art">${g.icon}</div>
- ${i%3===0?'<span class="hot">HOT</span>':''}
- <strong>${escapeHTML(g.name)}</strong></div>`;
-}
-function escapeHTML(s){
- return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-function renderGames(){
- const q=$('search').value.trim().toLowerCase();
- const cat=$('filter').value;
- const list=games.map((g,i)=>({...g,index:i})).filter(g=>
- (cat==='All'||g.category===cat)&&g.name.toLowerCase().includes(q));
- $('total').textContent=list.length+'টি ক্যাটালগ এন্ট্রি';
- $('allgames').innerHTML=list.map(g=>card(g,g.index)).join('');
-}
-function openGame(i){
- const g=games[i];
- $('playingTitle').textContent=g.name;
- $('playingArt').textContent=g.icon;
- openPage('play');
-}
-document.addEventListener('click',e=>{
- const g=e.target.closest('.game');
- if(g&&g.dataset.i!==undefined)openGame(Number(g.dataset.i));
-});
-
-function filterGames(cat){
- $('filter').value=cat;
- openPage('games');
-}
-$('featured').innerHTML=[0,10,20,30,40,50,60,70,80].map(i=>card(games[i],i)).join('');
-$('newgames').innerHTML=[90,91,92,93,94,95].map(i=>card(games[i],i)).join('');
-renderGames();
-
-function accounts(){
- try{return JSON.parse(sessionStorage.getItem('saylor_accounts')||'{}')}
+function getAccounts(){
+ try{return JSON.parse(sessionStorage.getItem('saylorAccounts')||'{}')}
  catch(e){return {}}
 }
-async function hash(p){
+async function passwordHash(p){
  if(!crypto.subtle)throw Error('HTTPS অথবা localhost ব্যবহার করুন।');
- const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(p));
- return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+ const data=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(p));
+ return [...new Uint8Array(data)].map(x=>x.toString(16).padStart(2,'0')).join('');
 }
 async function register(){
  const name=$('username').value.trim();
  const email=$('email').value.trim().toLowerCase();
- const password=$('password').value;
- const msg=$('authmsg');
- if(!name||!email||!password){msg.textContent='সব ঘর পূরণ করুন।';return}
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent='সঠিক ইমেইল লিখুন।';return}
- if(password.length<8){msg.textContent='পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।';return}
+ const pass=$('password').value;
+ const msg=$('authMsg');
+ if(!name||!email||!pass){msg.textContent='সব ঘর পূরণ করুন।';return}
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent='সঠিক ইমেইল দিন।';return}
+ if(pass.length<8){msg.textContent='পাসওয়ার্ড অন্তত ৮ অক্ষরের হতে হবে।';return}
  try{
-  const a=accounts();
-  if(a[email]){msg.textContent='এই ইমেইল আগে ব্যবহার করা হয়েছে। Login করুন।';return}
-  a[email]={name,hash:await hash(password)};
-  sessionStorage.setItem('saylor_accounts',JSON.stringify(a));
-  currentUser={name,email};
+  const a=getAccounts();
+  if(a[email]){msg.textContent='এই ইমেইলে অ্যাকাউন্ট আছে। Login করুন।';return}
+  a[email]={name,hash:await passwordHash(pass)};
+  sessionStorage.setItem('saylorAccounts',JSON.stringify(a));
+  user={name,email};
   $('password').value='';
   renderProfile();
-  openPage('profile');
- }catch(e){msg.textContent=e.message}
+  showPage('profile');
+ }catch(e){msg.textContent=e.message||'রেজিস্ট্রেশন ব্যর্থ';}
 }
 async function login(){
  const email=$('email').value.trim().toLowerCase();
- const password=$('password').value;
- const msg=$('authmsg');
- if(!email||!password){msg.textContent='Email ও password দিন।';return}
+ const pass=$('password').value;
+ const msg=$('authMsg');
+ if(!email||!pass){msg.textContent='Email ও password দিন।';return}
  try{
-  const a=accounts();
-  if(!a[email]||a[email].hash!==await hash(password)){
-   msg.textContent='Email অথবা password ভুল।';return
+  const a=getAccounts();
+  if(!a[email]||a[email].hash!==await passwordHash(pass)){
+   msg.textContent='Email অথবা password ভুল।';return;
   }
-  currentUser={name:a[email].name,email};
+  user={name:a[email].name,email};
   $('password').value='';
   renderProfile();
-  openPage('profile');
- }catch(e){msg.textContent=e.message}
+  showPage('profile');
+ }catch(e){msg.textContent=e.message||'Login ব্যর্থ';}
 }
-function logout(){currentUser=null;renderProfile();openPage('home')}
+function logout(){user=null;renderProfile();showPage('home')}
 function renderProfile(){
- $('pname').textContent=currentUser?currentUser.name:'Guest';
- $('pemail').textContent=currentUser?currentUser.email:'Not logged in';
- $('pstatus').textContent=currentUser?'Prototype session':'Guest';
+ $('profileName').textContent=user?user.name:'Guest';
+ $('profileEmail').textContent=user?user.email:'Not logged in';
+ $('profileStatus').textContent=user?'Prototype session':'Guest';
 }
-function requestTx(type){
- if(!currentUser){alert('আগে Login করুন।');openPage('auth');return}
- const field=$(type==='Deposit'?'depositAmount':'withdrawAmount');
- const amount=Number(field.value);
+function requestTransaction(type){
+ if(!user){alert('আগে Register অথবা Login করুন।');showPage('auth');return}
+ const input=$(type==='Deposit'?'depositAmount':'withdrawAmount');
+ const amount=Number(input.value);
  if(!Number.isFinite(amount)||amount<=0){alert('সঠিক পরিমাণ লিখুন।');return}
- tx.unshift({type,amount,status:'TEST ONLY — NOT PROCESSED',time:new Date().toLocaleString()});
- field.value='';
- alert('পরীক্ষামূলক অনুরোধ যোগ হয়েছে। কোনো টাকা লেনদেন হয়নি।');
+ transactions.unshift({
+  type,amount,
+  method:type==='Deposit'?$('paymentMethod').value:'Test request',
+  status:'TEST ONLY — NOT PROCESSED',
+  time:new Date().toLocaleString()
+ });
+ input.value='';
+ alert('পরীক্ষামূলক অনুরোধ তৈরি হয়েছে। কোনো টাকা লেনদেন হয়নি।');
  renderHistory();
 }
 function renderHistory(){
- $('transactions').innerHTML=tx.length?tx.map(t=>
- `<div class="listitem"><b>${t.type}</b> — ${t.amount}
- <p class="note">${t.status}</p><small>${escapeHTML(t.time)}</small></div>`
- ).join(''):'কোনো পরীক্ষামূলক অনুরোধ নেই।';
+ $('historyList').innerHTML=transactions.length?transactions.map(t=>
+ `<div style="padding:10px 0;border-bottom:1px solid #536055">
+ <b>${t.type}: ${t.amount}</b>
+ <p class="muted">${escapeHTML(t.method)}</p>
+ <p class="muted">${t.status}</p>
+ <small>${escapeHTML(t.time)}</small></div>`).join('')
+ :'কোনো পরীক্ষামূলক অনুরোধ নেই।';
 }
+renderGames();
+renderProfile();
 </script>
 </body>
 </html>
