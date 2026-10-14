@@ -204,6 +204,13 @@ footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
     <label>Email</label><input id="profileEmail" readonly>
     <label>Account Balance</label><input id="profileBalance" readonly>
     <label>Account Created</label><input id="profileCreated" readonly>
+
+    <h3 style="margin-top:20px">Referral Link</h3>
+    <p class="muted">Share this link with your friends.</p>
+    <input id="profileReferralLink" readonly>
+    <button class="full" onclick="copyReferralLink()">Copy Referral Link</button>
+    <p id="referralMessage" class="muted"></p>
+
     <button class="full" style="background:var(--red)" onclick="logout()">Logout</button>
   </div>
 </section>
@@ -243,7 +250,8 @@ function safeText(v){
   return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 function defaultUser(name,email,password){
-  return {name,email,password,balance:0,created:new Date().toISOString(),history:[],chat:[]};
+  const referralCode="BP"+Math.random().toString(36).slice(2,10).toUpperCase();
+  return {name,email,password,referralCode,balance:0,created:new Date().toISOString(),history:[],chat:[]};
 }
 function authMessage(msg){
   document.getElementById("authMessage").textContent=msg;
@@ -272,7 +280,6 @@ document.getElementById("authForm").addEventListener("submit",e=>{
 
     currentUser=defaultUser(name,email,password);
     currentUser.balance=WELCOME_BONUS;
-
     currentUser.history.push({
       id:Date.now().toString(36),
       date:new Date().toISOString(),
@@ -337,23 +344,52 @@ function renderAll(){
   document.getElementById("tradeBalance").textContent=bal;
   document.getElementById("withdrawBalance").textContent=bal;
   document.getElementById("depositCount").textContent=(currentUser.history||[]).filter(x=>x.type==="Deposit").length;
-  renderHistory();renderDepositHistory();renderProfile();renderRecent();
+  renderHistory();
+  renderDepositHistory();
+  renderProfile();
+  renderRecent();
 }
 function renderProfile(){
   if(!currentUser)return;
+  if(!currentUser.referralCode){
+    currentUser.referralCode="BP"+Math.random().toString(36).slice(2,10).toUpperCase();
+    saveCurrent();
+  }
   document.getElementById("profileName").value=currentUser.name;
   document.getElementById("profileEmail").value=currentUser.email;
   document.getElementById("profileBalance").value=money(currentUser.balance);
   document.getElementById("profileCreated").value=new Date(currentUser.created).toLocaleString();
+
+  const base=window.location.href.split("?")[0].split("#")[0];
+  document.getElementById("profileReferralLink").value=base+"?ref="+encodeURIComponent(currentUser.referralCode);
+}
+async function copyReferralLink(){
+  const field=document.getElementById("profileReferralLink");
+  const message=document.getElementById("referralMessage");
+  try{
+    await navigator.clipboard.writeText(field.value);
+    message.textContent="Referral link copied.";
+  }catch(e){
+    field.focus();
+    field.select();
+    try{
+      document.execCommand("copy");
+      message.textContent="Referral link copied.";
+    }catch(err){
+      message.textContent="Select the link and copy it.";
+    }
+  }
 }
 function renderHistory(){
   if(!currentUser)return;
   const h=currentUser.history||[];
   document.getElementById("historyRows").innerHTML=h.map(x=>`<tr>
     <td>${safeText(new Date(x.date).toLocaleString())}</td>
-    <td>${safeText(x.type)}</td><td>${money(x.amount)}</td>
+    <td>${safeText(x.type)}</td>
+    <td>${money(x.amount)}</td>
     <td><span class="badge">${safeText(x.status)}</span></td>
-    <td>${safeText(x.details)}</td></tr>`).join("");
+    <td>${safeText(x.details)}</td>
+  </tr>`).join("");
   document.getElementById("emptyHistory").classList.toggle("hidden",h.length>0);
 }
 function renderDepositHistory(){
@@ -362,7 +398,8 @@ function renderDepositHistory(){
   document.getElementById("depositHistory").innerHTML=h.length?h.map(x=>`<div class="card">
     <div class="row"><strong>${money(x.amount)} USDT</strong><span class="badge">${safeText(x.status)}</span></div>
     <p class="muted">${safeText(x.details)}</p>
-    <p class="muted">${safeText(new Date(x.date).toLocaleString())}</p></div>`).join(""):'<p class="muted">No deposit requests yet.</p>';
+    <p class="muted">${safeText(new Date(x.date).toLocaleString())}</p>
+  </div>`).join(""):'<p class="muted">No deposit requests yet.</p>';
 }
 function renderRecent(){
   const h=(currentUser.history||[]).slice(0,5);
@@ -374,11 +411,14 @@ async function copyDepositAddress(){
     document.getElementById("copyMessage").textContent="Address copied.";
   }catch(e){
     const field=document.getElementById("depositAddress");
-    field.focus();field.select();
+    field.focus();
+    field.select();
     document.getElementById("copyMessage").textContent="Select the address and choose Copy.";
   }
 }
-function depositMessage(msg){document.getElementById("depositMessage").textContent=msg}
+function depositMessage(msg){
+  document.getElementById("depositMessage").textContent=msg;
+}
 document.getElementById("depositForm").addEventListener("submit",e=>{
   e.preventDefault();
   const amount=Number(document.getElementById("depositAmount").value);
@@ -391,11 +431,17 @@ document.getElementById("depositForm").addEventListener("submit",e=>{
 
   currentUser.history=currentUser.history||[];
   currentUser.history.unshift({
-    id:Date.now().toString(36),date:new Date().toISOString(),
-    type:"Deposit",amount,status:"Pending verification",
-    details:"TXID: "+txid,txid
+    id:Date.now().toString(36),
+    date:new Date().toISOString(),
+    type:"Deposit",
+    amount,
+    status:"Pending verification",
+    details:"TXID: "+txid,
+    txid
   });
-  saveCurrent();renderAll();e.target.reset();
+  saveCurrent();
+  renderAll();
+  e.target.reset();
   depositMessage("Request submitted. Balance remains unchanged until payment is verified.");
 });
 document.getElementById("withdrawForm").addEventListener("submit",e=>{
@@ -409,18 +455,20 @@ document.getElementById("withdrawForm").addEventListener("submit",e=>{
   e.target.reset();
   withdrawMessage("Request submitted. No real transfer has been made.");
 });
-function withdrawMessage(msg){document.getElementById("withdrawMessage").textContent=msg}
-
+function withdrawMessage(msg){
+  document.getElementById("withdrawMessage").textContent=msg;
+}
 function placeTrade(side){
   const field=document.getElementById(side==="BUY"?"buyAmount":"sellAmount");
   const amount=Number(field.value);
   if(!Number.isFinite(amount)||amount<=0)return alert("Enter a valid amount.");
   if(side==="SELL")return alert("Selling is currently unavailable.");
   if(amount>Number(currentUser.balance))return alert("Insufficient balance.");
+
   currentUser.balance=Number(currentUser.balance)-amount;
-  addHistory("Trade",amount,"Completed","BTC/USDT BUY");
+  addHistory("Trade",amount,"Recorded","BTC/USDT BUY");
   field.value="";
-  alert("Your order has been recorded.");
+  alert("Your order has been recorded in this browser. No cryptocurrency transaction was made.");
 }
 function changeTimeframe(){
   const interval=document.getElementById("timeframe").value;
@@ -430,7 +478,8 @@ async function updatePrice(){
   try{
     const r=await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT");
     if(!r.ok)throw Error();
-    const d=await r.json();btcPrice=Number(d.price);
+    const d=await r.json();
+    btcPrice=Number(d.price);
     const p="$"+btcPrice.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
     document.getElementById("livePrice").textContent=p;
     document.getElementById("dashPrice").textContent=p;
@@ -448,13 +497,17 @@ function renderChat(){
 document.getElementById("chatForm").addEventListener("submit",e=>{
   e.preventDefault();
   const input=document.getElementById("chatMessage");
-  const message=input.value.trim();if(!message)return;
+  const message=input.value.trim();
+  if(!message)return;
   currentUser.chat=currentUser.chat||[];
   currentUser.chat.push({name:currentUser.name,message});
   currentUser.chat=currentUser.chat.slice(-100);
-  saveCurrent();input.value="";renderChat();
+  saveCurrent();
+  input.value="";
+  renderChat();
 });
 
+// Restore saved session
 const savedEmail=localStorage.getItem(SESSION_KEY);
 if(savedEmail){
   const savedUser=readUsers()[savedEmail];
@@ -471,6 +524,9 @@ updatePrice();
 setInterval(updatePrice,15000);
 </script>
 
-<a href="https://wa.me/855962052330" target="_blank" rel="noopener noreferrer" aria-label="Contact BitPro Customer Service on WhatsApp" style="position:fixed;right:16px;bottom:20px;z-index:99999;display:flex;align-items:center;gap:9px;padding:12px 16px;background:#25D366;color:#fff;text-decoration:none;font-family:Arial,sans-serif;font-size:14px;font-weight:700;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.35)"><span aria-hidden="true" style="font-size:21px;line-height:1">☏</span><span>Customer Service</span></a>
+<a href="https://wa.me/855962052330" target="_blank" rel="noopener noreferrer" aria-label="Contact BitPro Customer Service on WhatsApp" style="position:fixed;right:16px;bottom:20px;z-index:99999;display:flex;align-items:center;gap:9px;padding:12px 16px;background:#25D366;color:#fff;text-decoration:none;font-family:Arial,sans-serif;font-size:14px;font-weight:700;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.35)">
+<span aria-hidden="true" style="font-size:21px;line-height:1">☏</span>
+<span>Customer Service</span>
+</a>
 </body>
 </html>
