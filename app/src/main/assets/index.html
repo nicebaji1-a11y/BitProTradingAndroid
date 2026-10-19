@@ -7,142 +7,195 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f2f5fa;color:#17233b;font-family:Arial,sans-serif}
-button,input{font:inherit}
+button,input,select{font:inherit}
 button{cursor:pointer}
-.app{max-width:480px;min-height:100vh;margin:auto;background:#fff;padding-bottom:85px}
-header{padding:22px 20px 28px;background:linear-gradient(120deg,#173e88,#2865ce);color:white;border-radius:0 0 25px 25px}
-header h1{font-size:30px;margin:0 0 20px}
-.balance{padding:20px;background:white;color:#17233b;border-radius:16px}
-.muted{font-size:13px;color:#6b7789;line-height:1.6}
-.amount{font-size:34px;font-weight:bold;margin:10px 0}
-nav{display:flex;gap:7px;padding:12px;overflow-x:auto}
-nav button{flex:1;padding:12px 8px;border:0;border-radius:10px;background:#edf3ff;color:#17458f}
-main{padding:12px}
-.panel{padding:18px;margin-bottom:15px;background:white;border-radius:16px;box-shadow:0 3px 16px #12264b0c}
+.app{max-width:480px;margin:auto;min-height:100vh;background:#fff;padding-bottom:85px}
 .hidden{display:none!important}
-.primary{width:100%;padding:14px;border:0;border-radius:10px;background:#1958bd;color:white;font-weight:bold}
-.primary:disabled{opacity:.45;cursor:not-allowed}
-input{display:block;width:100%;padding:12px;margin:8px 0 14px;border:1px solid #ccd5e2;border-radius:9px}
+header{background:linear-gradient(125deg,#173e88,#2865ce);color:white;padding:24px 20px 28px;border-radius:0 0 25px 25px}
+header h1{font-size:30px;margin:0 0 15px}
+.balance{background:white;color:#17233b;border-radius:16px;padding:18px}
+.amount{font-size:34px;font-weight:bold;margin:9px 0}
+.muted{font-size:13px;color:#69778b;line-height:1.6}
+nav{display:flex;gap:7px;padding:12px;overflow-x:auto}
+nav button{flex:1;border:0;border-radius:10px;padding:12px 8px;background:#edf3ff;color:#17458f}
+main{padding:12px}
+.panel{background:white;padding:18px;border-radius:16px;margin-bottom:14px;box-shadow:0 3px 15px #12264b0b}
+h2{font-size:22px;margin-top:0}
+input,select{display:block;width:100%;padding:12px;border:1px solid #ccd5e2;border-radius:9px;margin:8px 0 15px;background:white}
+.primary{width:100%;padding:13px;border:0;border-radius:10px;background:#1958bd;color:white;font-weight:bold}
+.secondary{width:auto;padding:12px;border:0;border-radius:9px;background:#e7efff;color:#17458f;font-weight:bold}
+label{display:block;margin-top:8px}
+a{color:#1748ad}
+.page{display:block}
 .ad{margin:15px 0;border:1px solid #e0e5ed;border-radius:15px;overflow:hidden}
-.art{padding:27px 17px;color:white;background:linear-gradient(120deg,#20509e,#692bd0)}
+.art{padding:24px 16px;color:white;background:linear-gradient(120deg,#20509e,#692bd0)}
 .ad:nth-child(2) .art{background:linear-gradient(120deg,#087f8c,#159b56)}
 .ad:nth-child(3) .art{background:linear-gradient(120deg,#be1748,#f36a1b)}
-.art strong{display:block;font-size:26px;margin-bottom:8px}
+.art strong{display:block;font-size:25px;margin-bottom:8px}
 .art span{font-size:18px}
 .adbody{padding:15px}
-.adbody p{line-height:1.7}
-.entry{padding:12px 0;border-bottom:1px solid #e4e8ef;font-size:14px}
+.entry{padding:12px 0;border-bottom:1px solid #e4e8ef;font-size:14px;line-height:1.6}
+.row{display:flex;gap:8px;align-items:center}
+.row input{flex:1;min-width:0}
 footer{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:white;border-top:1px solid #e1e6ed;display:flex;padding:10px 0}
 footer button{flex:1;background:white;border:0;color:#17458f;font-weight:bold;padding:5px}
-.modal{position:fixed;inset:0;z-index:9999;background:#071329eF;display:none;align-items:center;justify-content:center;padding:16px}
-.modalbox{background:white;width:100%;max-width:420px;border-radius:16px;padding:16px}
-#videoCanvas{display:block;width:100%;border-radius:12px;background:#102b55}
-#timer{font-weight:bold;text-align:center;margin:12px}
 </style>
 </head>
 <body>
 <div class="app">
-<header>
-<h1>ABA Pay</h1>
-<div class="balance">
-<div class="muted">অ্যাকাউন্ট ব্যালেন্স</div>
-<div class="amount">৳ <span id="balance">0</span></div>
-<div class="muted">এই অ্যাপের ব্যালেন্স পরীক্ষামূলক; এটি বাস্তব বা উত্তোলনযোগ্য অর্থ নয়।</div>
-</div>
-</header>
 
-<section id="auth" class="panel" style="margin:14px">
-<h2 id="authTitle">Login</h2>
-<form id="authForm">
-<label>ইমেইল</label>
-<input id="email" type="email" required placeholder="ইমেইল লিখুন">
-<label>পাসওয়ার্ড</label>
-<input id="password" type="password" minlength="4" required placeholder="পাসওয়ার্ড লিখুন">
-<button id="authSubmit" class="primary" type="submit">Login</button>
-</form>
-<p><a id="switchAuth" href="#">নতুন অ্যাকাউন্ট তৈরি করুন</a></p>
-<p class="muted">এই নমুনা অ্যাকাউন্টের তথ্য এই ব্রাউজারেই সংরক্ষিত থাকে।</p>
+<!-- LOGIN / REGISTER -->
+<section id="auth" class="panel" style="margin:15px">
+  <h2 id="welcomeTitle">Welcome to ABA Pay</h2>
+  <p>আপনাকে ABA Pay-তে স্বাগতম! সহজে আপনার অ্যাকাউন্ট ও পেমেন্ট অপশন পরিচালনা করুন।</p>
+  <h2 id="authTitle">Login</h2>
+  <form id="authForm">
+    <label>ইমেইল</label>
+    <input id="email" type="email" required placeholder="ইমেইল লিখুন">
+    <label>পাসওয়ার্ড</label>
+    <input id="password" type="password" minlength="4" required placeholder="পাসওয়ার্ড লিখুন">
+    <button class="primary" id="authButton" type="submit">Login</button>
+  </form>
+  <p><a href="#" id="switchAuth">নতুন অ্যাকাউন্ট তৈরি করুন</a></p>
+  <p class="muted">এই সংস্করণের অ্যাকাউন্ট তথ্য শুধু এই ব্রাউজারে থাকে।</p>
 </section>
 
+<!-- APP HEADER: ONLY VISIBLE AFTER LOGIN -->
 <div id="appContent" class="hidden">
+<header>
+  <h1>ABA Pay</h1>
+  <div class="balance">
+    <div class="muted">অ্যাকাউন্ট ব্যালেন্স</div>
+    <div class="amount">৳ <span id="balance">0</span></div>
+    <div class="muted">পরীক্ষামূলক ব্যালেন্স; বাস্তব বা উত্তোলনযোগ্য অর্থ নয়।</div>
+  </div>
+</header>
+
 <nav>
-<button onclick="showPage('home')">Home</button>
-<button onclick="showPage('ads')">Ads</button>
-<button onclick="showPage('history')">History</button>
-<button onclick="showPage('profile')">Profile</button>
+  <button onclick="showPage('home')">Home</button>
+  <button onclick="showPage('ads')">Ads</button>
+  <button onclick="showPage('deposit')">Deposit</button>
+  <button onclick="showPage('withdraw')">Withdraw</button>
 </nav>
+
 <main>
 <section id="home" class="page">
-<div class="panel">
-<h2>স্বাগতম ABA Pay</h2>
-<p>সম্পন্ন: <b><span id="homeCount">0</span>/20</b></p>
-<div style="height:9px;background:#e4e9f0;border-radius:8px;overflow:hidden">
-<div id="progress" style="height:9px;width:0;background:#16a34a"></div>
-</div>
-<p class="muted">প্রতিটি সম্পন্ন অ্যানিমেশনে পরীক্ষামূলক ব্যালেন্সে ৳১০ যোগ হবে।</p>
-<button class="primary" onclick="showPage('ads')">বিজ্ঞাপন দেখুন</button>
-</div>
+  <div class="panel">
+    <h2>Welcome to ABA Pay</h2>
+    <p>আপনার ABA Pay অ্যাকাউন্টে স্বাগতম।</p>
+    <p>সম্পন্ন কার্যক্রম: <b><span id="homeCount">0</span>/20</b></p>
+    <div style="height:9px;background:#e4e9f0;border-radius:8px;overflow:hidden">
+      <div id="progress" style="height:9px;width:0;background:#16a34a"></div>
+    </div>
+    <p class="muted">প্রতিটি সম্পন্ন নমুনা ভিডিওতে পরীক্ষামূলক ব্যালেন্সে ৳১০ যোগ হবে।</p>
+    <button class="primary" onclick="showPage('ads')">বিজ্ঞাপন দেখুন</button>
+  </div>
+  <div class="panel">
+    <button class="primary" onclick="showPage('history')">লেনদেনের ইতিহাস</button>
+    <button class="primary" style="margin-top:10px" onclick="showPage('profile')">আমার প্রোফাইল</button>
+  </div>
 </section>
 
 <section id="ads" class="page hidden">
-<div class="panel">
-<h2>বিজ্ঞাপন</h2>
-<p>সম্পন্ন: <b><span id="adCount">0</span>/20</b></p>
-<div id="adList"></div>
-</div>
+  <div class="panel">
+    <h2>বিজ্ঞাপন</h2>
+    <p>সম্পন্ন: <b><span id="adCount">0</span>/20</b></p>
+    <p class="muted">এগুলো নমুনা বিজ্ঞাপন, প্রকৃত বিজ্ঞাপনদাতার বিজ্ঞাপন নয়।</p>
+    <div id="adList"></div>
+  </div>
+</section>
+
+<section id="deposit" class="page hidden">
+  <div class="panel">
+    <h2>Deposit</h2>
+    <p>পেমেন্ট নম্বর</p>
+    <div class="row">
+      <input id="paymentNumber" value="01315868019" readonly>
+      <button class="secondary" onclick="copyNumber()">Copy</button>
+    </div>
+    <p id="copyMessage" class="muted"></p>
+    <label>পেমেন্ট মাধ্যম</label>
+    <select id="depositMethod">
+      <option value="বিকাশ">বিকাশ</option>
+      <option value="নগদ">নগদ</option>
+    </select>
+    <label>টাকার পরিমাণ</label>
+    <input id="depositAmount" type="number" min="1" placeholder="টাকার পরিমাণ লিখুন">
+    <button class="primary" onclick="depositRequest()">Deposit Request</button>
+    <p id="depositMessage" class="muted"></p>
+    <p class="muted">এই ফর্ম শুধু নমুনা অনুরোধ দেখায়; টাকা গ্রহণ বা পেমেন্ট যাচাই করে না।</p>
+  </div>
+</section>
+
+<section id="withdraw" class="page hidden">
+  <div class="panel">
+    <h2>Withdraw</h2>
+    <label>পেমেন্ট মাধ্যম</label>
+    <select id="withdrawMethod">
+      <option value="বিকাশ">বিকাশ</option>
+      <option value="নগদ">নগদ</option>
+    </select>
+    <label>টাকার পরিমাণ</label>
+    <input id="withdrawAmount" type="number" min="1" placeholder="টাকার পরিমাণ লিখুন">
+    <label>বিকাশ/নগদ নম্বর</label>
+    <input id="withdrawNumber" type="tel" placeholder="পেমেন্ট নম্বর লিখুন">
+    <button class="primary" onclick="withdrawRequest()">Withdraw Request</button>
+    <p id="withdrawMessage" class="muted"></p>
+    <p class="muted">বাস্তব উত্তোলন চালু নেই। এই ফর্ম টাকা পাঠায় না।</p>
+  </div>
 </section>
 
 <section id="history" class="page hidden">
-<div class="panel">
-<h2>History</h2>
-<div id="historyList">এখনো কোনো কার্যক্রম নেই।</div>
-</div>
+  <div class="panel">
+    <h2>History</h2>
+    <div id="historyList">কোনো কার্যক্রম নেই।</div>
+  </div>
 </section>
 
 <section id="profile" class="page hidden">
-<div class="panel">
-<h2>Profile</h2>
-<p>ইমেইল: <b id="profileEmail"></b></p>
-<button class="primary" onclick="logout()">Logout</button>
-</div>
+  <div class="panel">
+    <h2>Profile</h2>
+    <p>ইমেইল: <b id="profileEmail"></b></p>
+    <button class="primary" onclick="logout()">Logout</button>
+  </div>
 </section>
 </main>
 </div>
 
 <footer id="footer" class="hidden">
-<button onclick="showPage('home')">⌂<br>Home</button>
-<button onclick="showPage('ads')">▣<br>Ads</button>
-<button onclick="showPage('history')">◷<br>History</button>
-<button onclick="showPage('profile')">♙<br>Profile</button>
+  <button onclick="showPage('home')">⌂<br>Home</button>
+  <button onclick="showPage('ads')">▣<br>Ads</button>
+  <button onclick="showPage('history')">◷<br>History</button>
+  <button onclick="showPage('profile')">♙<br>Profile</button>
 </footer>
 </div>
 
-<div id="videoModal" class="modal">
-<div class="modalbox">
-<h2 id="videoTitle">বিজ্ঞাপন</h2>
-<canvas id="videoCanvas" width="640" height="360"></canvas>
-<div id="timer">ভিডিও প্রস্তুত হচ্ছে...</div>
-<p class="muted">এটি একটি তৈরি করা অ্যানিমেশন, প্রকৃত বিজ্ঞাপন নয়।</p>
-<button id="finishButton" class="primary" disabled>ভিডিও সম্পন্ন করুন</button>
-<button class="primary" style="background:#e7ebf2;color:#17233b;margin-top:8px" onclick="closeVideo()">বন্ধ করুন</button>
-</div>
+<!-- VIDEO ANIMATION -->
+<div id="videoModal" style="display:none;position:fixed;inset:0;background:#071329ed;z-index:9999;align-items:center;justify-content:center;padding:16px">
+  <div style="background:white;width:100%;max-width:420px;border-radius:16px;padding:16px">
+    <h2 id="videoTitle">বিজ্ঞাপন</h2>
+    <canvas id="videoCanvas" width="640" height="360" style="width:100%;border-radius:10px;background:#102b55"></canvas>
+    <p id="videoTimer" style="text-align:center">ভিডিও প্রস্তুত হচ্ছে...</p>
+    <button id="finishVideo" class="primary" disabled>ভিডিও সম্পন্ন করুন</button>
+    <button class="primary" style="margin-top:8px;background:#e7ebf2;color:#17233b" onclick="closeVideo()">বন্ধ করুন</button>
+  </div>
 </div>
 
 <script>
 (function(){
 "use strict";
 
-const USERKEY="abapay_users_v4";
-const DATAKEY="abapay_data_v4";
-let users=read(USERKEY,{});
+const USERS_KEY="abapay_users_final";
+const DATA_KEY="abapay_accounts_final";
+let users=read(USERS_KEY,{});
 let account=null;
 let currentEmail="";
-let authMode="login";
-let running=false;
-let animationFrame=0;
+let mode="login";
+let playing=false;
+let finished=false;
 let startTime=0;
-let currentAd="";
-let completedThisVideo=false;
+let frameId=0;
+let adTitle="";
 
 const ads=[
  {brand:"SHOPPING",title:"Shopping Special",desc:"নতুন পণ্য ও আকর্ষণীয় ডিজাইন দেখুন।"},
@@ -154,10 +207,10 @@ function read(key,fallback){
  try{return JSON.parse(localStorage.getItem(key))||fallback}
  catch(e){return fallback}
 }
-function save(){
- const all=read(DATAKEY,{});
+function saveAccount(){
+ const all=read(DATA_KEY,{});
  all[currentEmail]=account;
- localStorage.setItem(DATAKEY,JSON.stringify(all));
+ localStorage.setItem(DATA_KEY,JSON.stringify(all));
  render();
 }
 function showPage(id){
@@ -166,34 +219,32 @@ function showPage(id){
 }
 window.showPage=showPage;
 
-function setAuthMode(mode){
- authMode=mode;
- document.getElementById("authTitle").textContent=mode==="login"?"Login":"Register";
- document.getElementById("authSubmit").textContent=mode==="login"?"Login":"Register";
- document.getElementById("switchAuth").textContent=mode==="login"?
+function setMode(value){
+ mode=value;
+ document.getElementById("authTitle").textContent=value==="login"?"Login":"Register";
+ document.getElementById("authButton").textContent=value==="login"?"Login":"Register";
+ document.getElementById("switchAuth").textContent=value==="login"?
  "নতুন অ্যাকাউন্ট তৈরি করুন":"আগে অ্যাকাউন্ট আছে? Login করুন";
 }
 document.getElementById("switchAuth").onclick=function(e){
  e.preventDefault();
- setAuthMode(authMode==="login"?"register":"login");
+ setMode(mode==="login"?"register":"login");
 };
 
 document.getElementById("authForm").addEventListener("submit",function(e){
  e.preventDefault();
  const email=document.getElementById("email").value.trim().toLowerCase();
  const password=document.getElementById("password").value;
- if(authMode==="register"){
-  if(users[email]){alert("এই ইমেইলে অ্যাকাউন্ট আছে। Login করুন।");return;}
+ if(mode==="register"){
+  if(users[email]){alert("এই ইমেইলে অ্যাকাউন্ট আছে।");return;}
   users[email]=password;
-  localStorage.setItem(USERKEY,JSON.stringify(users));
+  localStorage.setItem(USERS_KEY,JSON.stringify(users));
   alert("অ্যাকাউন্ট তৈরি হয়েছে।");
- }else{
-  if(!users[email]||users[email]!==password){
-   alert("ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।");return;
-  }
+ }else if(!users[email]||users[email]!==password){
+  alert("ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।");return;
  }
  currentEmail=email;
- const all=read(DATAKEY,{});
+ const all=read(DATA_KEY,{});
  account=all[email]||{balance:0,count:0,history:[]};
  document.getElementById("auth").classList.add("hidden");
  document.getElementById("appContent").classList.remove("hidden");
@@ -222,16 +273,15 @@ function render(){
   const title=document.createElement("span");
   title.textContent=ad.title;
   art.append(brand,title);
-
   const body=document.createElement("div");
   body.className="adbody";
   const desc=document.createElement("p");
   desc.textContent=ad.desc;
   const btn=document.createElement("button");
   btn.className="primary";
-  btn.textContent=account.count>=20?"সেশন সম্পন্ন":"বিজ্ঞাপন দেখুন";
+  btn.textContent=account.count>=20?"সেশন সম্পন্ন":"ভিডিও বিজ্ঞাপন দেখুন";
   btn.disabled=account.count>=20;
-  btn.addEventListener("click",()=>openVideo(ad.title));
+  btn.onclick=()=>openVideo(ad.title);
   body.append(desc,btn);
   card.append(art,body);
   list.append(card);
@@ -239,7 +289,7 @@ function render(){
 
  const history=document.getElementById("historyList");
  history.innerHTML="";
- if(!account.history.length)history.textContent="এখনো কোনো কার্যক্রম নেই।";
+ if(!account.history.length)history.textContent="কোনো কার্যক্রম নেই।";
  account.history.slice().reverse().forEach(item=>{
   const row=document.createElement("div");
   row.className="entry";
@@ -249,94 +299,92 @@ function render(){
 }
 
 function openVideo(title){
- if(!account||account.count>=20||running)return;
- currentAd=title;
- completedThisVideo=false;
+ if(!account||account.count>=20||playing)return;
+ adTitle=title;
+ finished=false;
  document.getElementById("videoTitle").textContent=title;
  document.getElementById("videoModal").style.display="flex";
- document.getElementById("finishButton").disabled=true;
- document.getElementById("timer").textContent="ভিডিও চলছে: ১০ সেকেন্ড";
- running=true;
+ document.getElementById("finishVideo").disabled=true;
+ playing=true;
  startTime=performance.now();
- drawVideo();
+ drawFrame();
 }
-
-function drawVideo(){
- if(!running)return;
+function drawFrame(){
+ if(!playing)return;
  const canvas=document.getElementById("videoCanvas");
  const ctx=canvas.getContext("2d");
  const elapsed=(performance.now()-startTime)/1000;
  const remaining=Math.max(0,10-elapsed);
  const w=canvas.width,h=canvas.height;
- const gradient=ctx.createLinearGradient(0,0,w,h);
- gradient.addColorStop(0,"#164e9c");
- gradient.addColorStop(1,"#7026c7");
- ctx.fillStyle=gradient;
- ctx.fillRect(0,0,w,h);
-
- const t=performance.now()/1000;
- ctx.fillStyle="#ffffff";
- ctx.textAlign="center";
- ctx.font="bold 52px Arial";
- ctx.fillText("ABA PAY",w/2,h/2-30);
- ctx.font="28px Arial";
- ctx.fillText(currentAd,w/2,h/2+20);
- ctx.font="20px Arial";
- ctx.fillText("নতুন অফার আবিষ্কার করুন",w/2,h/2+65);
-
- ctx.fillStyle="#ffffff55";
- ctx.fillRect(40,h-35,w-80,8);
- ctx.fillStyle="#32d583";
- ctx.fillRect(40,h-35,(w-80)*Math.min(1,elapsed/10),8);
-
- document.getElementById("timer").textContent=remaining>0?
- "ভিডিও চলছে: "+Math.ceil(remaining)+" সেকেন্ড":
- "ভিডিও সম্পন্ন হয়েছে।";
-
+ const grad=ctx.createLinearGradient(0,0,w,h);
+ grad.addColorStop(0,"#164e9c");
+ grad.addColorStop(1,"#7026c7");
+ ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
+ ctx.fillStyle="white";ctx.textAlign="center";
+ ctx.font="bold 52px Arial";ctx.fillText("ABA PAY",w/2,h/2-30);
+ ctx.font="28px Arial";ctx.fillText(adTitle,w/2,h/2+20);
+ ctx.font="20px Arial";ctx.fillText("নতুন অফার আবিষ্কার করুন",w/2,h/2+65);
+ ctx.fillStyle="#ffffff55";ctx.fillRect(40,h-35,w-80,8);
+ ctx.fillStyle="#32d583";ctx.fillRect(40,h-35,(w-80)*Math.min(1,elapsed/10),8);
+ document.getElementById("videoTimer").textContent=remaining>0?
+ "ভিডিও চলছে: "+Math.ceil(remaining)+" সেকেন্ড":"ভিডিও সম্পন্ন হয়েছে।";
  if(elapsed>=10){
-  running=false;
-  completedThisVideo=true;
-  document.getElementById("finishButton").disabled=false;
-  document.getElementById("timer").textContent="ভিডিও সম্পন্ন হয়েছে।";
+  playing=false;finished=true;
+  document.getElementById("finishVideo").disabled=false;
   return;
  }
- animationFrame=requestAnimationFrame(drawVideo);
+ frameId=requestAnimationFrame(drawFrame);
 }
-
-document.getElementById("finishButton").addEventListener("click",function(){
- if(!completedThisVideo||!account||account.count>=20)return;
- completedThisVideo=false;
+document.getElementById("finishVideo").onclick=function(){
+ if(!finished||!account||account.count>=20)return;
+ finished=false;
  account.count++;
  account.balance+=10;
- account.history.push({
-  title:currentAd,
-  amount:10,
-  date:new Date().toLocaleString("bn-BD")
- });
- save();
+ account.history.push({title:adTitle+" (নমুনা)",amount:10,date:new Date().toLocaleString("bn-BD")});
+ saveAccount();
  closeVideo();
- alert(account.count===20?
- "২০টি ভিডিও কার্যক্রম সম্পন্ন। পরীক্ষামূলক ব্যালেন্স: ৳২০০।":
- "কার্যক্রম সম্পন্ন। পরীক্ষামূলক ব্যালেন্সে ৳১০ যোগ হয়েছে।");
-});
-
+ alert(account.count===20?"২০টি কার্যক্রম শেষ। পরীক্ষামূলক ব্যালেন্স ৳২০০।":"পরীক্ষামূলক ব্যালেন্সে ৳১০ যোগ হয়েছে।");
+};
 window.closeVideo=function(){
- running=false;
- cancelAnimationFrame(animationFrame);
+ playing=false;cancelAnimationFrame(frameId);
  document.getElementById("videoModal").style.display="none";
+};
+
+window.copyNumber=function(){
+ const input=document.getElementById("paymentNumber");
+ input.select();input.setSelectionRange(0,99999);
+ try{
+  const ok=document.execCommand("copy");
+  document.getElementById("copyMessage").textContent=ok?"নম্বর কপি হয়েছে।":"নম্বরটি চেপে ধরে কপি করুন।";
+ }catch(e){
+  document.getElementById("copyMessage").textContent="নম্বরটি চেপে ধরে কপি করুন।";
+ }
+};
+window.depositRequest=function(){
+ const amount=Number(document.getElementById("depositAmount").value);
+ const method=document.getElementById("depositMethod").value;
+ const msg=document.getElementById("depositMessage");
+ if(!Number.isFinite(amount)||amount<=0){msg.textContent="সঠিক টাকার পরিমাণ লিখুন।";return;}
+ msg.textContent=method+"-এর ৳"+amount+" টাকার নমুনা অনুরোধ। এটি টাকা গ্রহণ বা ব্যালেন্স বাড়ায় না।";
+};
+window.withdrawRequest=function(){
+ const amount=Number(document.getElementById("withdrawAmount").value);
+ const number=document.getElementById("withdrawNumber").value.trim();
+ const method=document.getElementById("withdrawMethod").value;
+ const msg=document.getElementById("withdrawMessage");
+ if(!Number.isFinite(amount)||amount<=0||!number){msg.textContent="সঠিক পরিমাণ ও পেমেন্ট নম্বর লিখুন।";return;}
+ msg.textContent=method+"-এ ৳"+amount+" টাকার নমুনা অনুরোধ। বাস্তব পেমেন্ট চালু নেই, তাই টাকা পাঠানো হয়নি।";
 };
 window.logout=function(){
  closeVideo();
- account=null;
- currentEmail="";
+ account=null;currentEmail="";
  document.getElementById("appContent").classList.add("hidden");
  document.getElementById("footer").classList.add("hidden");
  document.getElementById("auth").classList.remove("hidden");
  document.getElementById("password").value="";
- setAuthMode("login");
+ setMode("login");
 };
-
-setAuthMode("login");
+setMode("login");
 })();
 </script>
 </body>
