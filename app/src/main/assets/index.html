@@ -1,382 +1,218 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#075e54">
-<title>ABA Pay - Ads & Rewards</title>
+<title>ABA Pay</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f1f5f9;color:#172033;font-family:Arial,"Noto Sans Bengali",sans-serif}
-header{background:#075e54;color:white;padding:22px 18px}
-header h1{margin:0;font-size:29px}
-header p{margin:7px 0 0;font-size:14px}
-main{max-width:480px;margin:auto;padding:16px}
-.card{background:white;padding:18px;border-radius:20px;margin-bottom:16px;box-shadow:0 3px 14px #00000008}
-h2{font-size:21px;margin:0 0 16px}
-input{width:100%;padding:14px;margin:7px 0 12px;border:1px solid #d6dce5;border-radius:11px;font-size:16px}
-button{border:0;border-radius:11px;padding:14px;background:#087f68;color:white;font-size:15px;font-weight:bold;cursor:pointer}
-button:disabled{opacity:.5;cursor:not-allowed}
-.full{width:100%;margin:6px 0}
-.secondary{background:#e5f3ef;color:#075e54}
-.small{font-size:13px;color:#667085;line-height:1.6}
-.notice{font-size:12px;color:#8a4b12;line-height:1.6}
-nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:15px}
-nav button{flex:1;min-width:68px;padding:12px 7px;font-size:13px}
-.hidden{display:none!important}
-.balance{background:linear-gradient(135deg,#075e54,#119b7b);color:white;padding:24px}
-.amount{font-size:35px;font-weight:bold;margin:14px 0}
-.progress{height:12px;background:#dfe7e5;border-radius:20px;overflow:hidden;margin:14px 0}
-#progressBar{height:100%;width:0;background:#12a47e;transition:width .2s}
-.item{padding:13px 0;border-bottom:1px solid #edf0f4}
-.item:last-child{border-bottom:0}
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.pill{display:inline-block;background:#e5f3ef;color:#075e54;padding:6px 10px;border-radius:20px;font-size:12px}
-#status{font-size:14px;line-height:1.6;margin-top:10px}
+body{margin:0;background:#f2f5fa;color:#17233b;font-family:Arial,sans-serif}
+header{background:#123c88;color:white;padding:20px;border-radius:0 0 22px 22px}
+header h2{margin:0 0 16px}
+.wrap{max-width:480px;margin:auto;padding-bottom:80px}
+.balance{background:white;color:#17233b;padding:20px;border-radius:16px}
+.balance small{color:#64748b}
+.amount{font-size:32px;font-weight:bold;margin:10px 0}
+nav{display:flex;gap:8px;padding:12px;overflow:auto}
+nav button{border:0;padding:11px 14px;border-radius:10px;background:white;color:#123c88;font-weight:bold}
+main{padding:12px}
+.panel{background:white;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 3px 12px #17233b0b}
+h3{margin-top:0}
+.ad{border:1px solid #e2e8f0;border-radius:13px;overflow:hidden;margin:14px 0}
+.ad-art{padding:24px 15px;color:white;background:linear-gradient(120deg,#164e9c,#6d28d9)}
+.ad:nth-child(2) .ad-art{background:linear-gradient(120deg,#087f8c,#16a34a)}
+.ad:nth-child(3) .ad-art{background:linear-gradient(120deg,#be123c,#f97316)}
+.ad-art strong{font-size:22px;display:block;margin-bottom:8px}
+.ad-body{padding:14px}
+button.primary{background:#1557c0;color:white;border:0;border-radius:10px;padding:12px;width:100%;font-size:15px;font-weight:bold}
+button:disabled{opacity:.5}
+.muted{color:#64748b;font-size:13px;line-height:1.5}
+input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:9px;margin:7px 0 12px}
+.hidden{display:none}
+.item{padding:12px 0;border-bottom:1px solid #e2e8f0}
+footer{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:center;gap:24px;padding:14px;border-top:1px solid #e2e8f0}
+footer button{border:0;background:none;color:#123c88;font-weight:bold}
 </style>
 </head>
 <body>
+<div class="wrap">
 <header>
-  <h1>ABA Pay</h1>
-  <p>Ads & Rewards · পরীক্ষামূলক সংস্করণ</p>
+  <h2>ABA Pay</h2>
+  <div class="balance">
+    <small>আপনার অ্যাকাউন্ট ব্যালেন্স</small>
+    <div class="amount">৳ <span id="balance">0</span></div>
+    <small>এই ব্যালেন্সটি কেবল পরীক্ষার জন্য; এটি বাস্তব বা উত্তোলনযোগ্য টাকা নয়।</small>
+  </div>
 </header>
 
+<nav>
+  <button onclick="showPage('home')">Home</button>
+  <button onclick="showPage('ads')">Ads</button>
+  <button onclick="showPage('history')">History</button>
+  <button onclick="showPage('profile')">Profile</button>
+</nav>
+
 <main>
-  <section id="auth">
-    <div class="card" id="registerPanel">
-      <h2>নতুন অ্যাকাউন্ট</h2>
-      <input id="regName" placeholder="আপনার নাম" autocomplete="name">
-      <input id="regPhone" type="tel" placeholder="মোবাইল নম্বর" autocomplete="tel">
-      <input id="regPass" type="password" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)">
-      <button class="full" onclick="registerUser()">Register</button>
-      <p class="small">আগে অ্যাকাউন্ট করেছেন?</p>
-      <button class="full secondary" onclick="showLogin()">Login</button>
+<section id="home" class="page">
+  <div class="panel">
+    <h3>স্বাগতম ABA Pay-তে</h3>
+    <p>বিজ্ঞাপন-সদৃশ কার্ডগুলো খুলে পরীক্ষামূলক কার্যক্রম সম্পন্ন করুন।</p>
+    <p>সম্পন্ন হয়েছে: <b><span id="countHome">0</span>/20</b></p>
+    <button class="primary" onclick="showPage('ads')">বিজ্ঞাপন দেখুন</button>
+  </div>
+  <div class="panel">
+    <h3>কার্যক্রমের অগ্রগতি</h3>
+    <div style="height:10px;background:#e2e8f0;border-radius:8px;overflow:hidden">
+      <div id="progress" style="height:10px;width:0;background:#16a34a"></div>
     </div>
+    <p class="muted">২০টি পরীক্ষামূলক কার্যক্রম সম্পন্ন হলে এই সেশন শেষ হবে।</p>
+  </div>
+</section>
 
-    <div class="card hidden" id="loginPanel">
-      <h2>Login</h2>
-      <input id="loginPhone" type="tel" placeholder="মোবাইল নম্বর">
-      <input id="loginPass" type="password" placeholder="পাসওয়ার্ড">
-      <button class="full" onclick="loginUser()">Login</button>
-      <button class="full secondary" onclick="showRegister()">নতুন অ্যাকাউন্ট তৈরি</button>
-    </div>
+<section id="ads" class="page hidden">
+  <div class="panel">
+    <h3>বিজ্ঞাপন</h3>
+    <p>সম্পন্ন: <b><span id="countAds">0</span>/20</b></p>
+    <p class="muted">এগুলো নমুনা বিজ্ঞাপন-কার্ড, কোনো প্রকৃত বিজ্ঞাপনদাতার বিজ্ঞাপন নয়।</p>
+    <div id="adList"></div>
+  </div>
+</section>
 
-    <p class="notice">এটি পরীক্ষামূলক অ্যাপ। আসল বিজ্ঞাপন, বাস্তব আয় বা টাকা উত্তোলন নেই।</p>
-  </section>
+<section id="history" class="page hidden">
+  <div class="panel">
+    <h3>লেনদেনের ইতিহাস</h3>
+    <div id="historyList">এখনো কোনো কার্যক্রম নেই।</div>
+  </div>
+</section>
 
-  <section id="app" class="hidden">
-    <nav>
-      <button onclick="showPage('home')">Home</button>
-      <button onclick="showPage('ads')">Ads</button>
-      <button onclick="showPage('history')">History</button>
-      <button onclick="showPage('profile')">Profile</button>
-      <button onclick="logout()">Logout</button>
-    </nav>
-
-    <div id="homePage">
-      <div class="card balance">
-        <div>আপনার পয়েন্ট</div>
-        <div class="amount"><span id="points">0</span> Points</div>
-        <div>২০টি পরীক্ষামূলক সেশন সম্পন্ন হলে ১০ পয়েন্ট</div>
-      </div>
-
-      <div class="card">
-        <h2>Reward Progress</h2>
-        <div class="row">
-          <span>পরবর্তী পুরস্কার</span>
-          <b id="progressText">0 / 20</b>
-        </div>
-        <div class="progress"><div id="progressBar"></div></div>
-        <p class="small">প্রতি ২০টি পরীক্ষামূলক সেশনের পর একবার ১০ পয়েন্ট যোগ হবে। পয়েন্ট নগদে রূপান্তরযোগ্য নয়।</p>
-        <button class="full" onclick="showPage('ads')">Ads পেজে যান</button>
-      </div>
-
-      <div class="card">
-        <h2>সাম্প্রতিক কার্যক্রম</h2>
-        <div id="recentActivity" class="small">এখনো কোনো কার্যক্রম নেই।</div>
-        <button class="full secondary" onclick="showPage('history')">সম্পূর্ণ History</button>
-      </div>
-    </div>
-
-    <div id="adsPage" class="hidden">
-      <div class="card">
-        <h2>Ads & Rewards</h2>
-        <span class="pill">TEST MODE</span>
-        <p class="small">এখানে কোনো বাস্তব বিজ্ঞাপন লোড হচ্ছে না। এই বাটন শুধু পরীক্ষামূলক সেশন গণনা করে।</p>
-
-        <div class="row">
-          <span>সম্পন্ন সেশন</span>
-          <b id="adsCount">0 / 20</b>
-        </div>
-        <div class="progress"><div id="adsProgressBar"></div></div>
-
-        <button id="completeBtn" class="full" onclick="completeTestSession()">
-          পরীক্ষামূলক সেশন সম্পন্ন করুন
-        </button>
-        <p id="status" role="status"></p>
-      </div>
-    </div>
-
-    <div id="historyPage" class="hidden">
-      <div class="card">
-        <h2>Transaction History</h2>
-        <div id="historyList" class="small">এখনো কোনো কার্যক্রম নেই।</div>
-      </div>
-    </div>
-
-    <div id="profilePage" class="hidden">
-      <div class="card">
-        <h2>My Profile</h2>
-        <div class="item row"><span>নাম</span><b id="profileName"></b></div>
-        <div class="item row"><span>মোবাইল</span><b id="profilePhone"></b></div>
-        <div class="item row"><span>অ্যাকাউন্ট</span><b>পরীক্ষামূলক</b></div>
-        <div class="item row"><span>পয়েন্ট</span><b id="profilePoints">0</b></div>
-        <p class="notice">এই প্রোফাইলের তথ্য এই ব্রাউজারের স্টোরেজে থাকে। বাস্তব অ্যাকাউন্ট নয়।</p>
-      </div>
-    </div>
-  </section>
+<section id="profile" class="page hidden">
+  <div class="panel">
+    <h3>প্রোফাইল</h3>
+    <label>আপনার নাম</label>
+    <input id="username" placeholder="নাম লিখুন">
+    <label>ইমেইল</label>
+    <input id="email" type="email" placeholder="ইমেইল লিখুন">
+    <button class="primary" onclick="saveProfile()">প্রোফাইল সংরক্ষণ</button>
+    <p id="profileMsg" class="muted"></p>
+  </div>
+</section>
 </main>
 
+<footer>
+  <button onclick="showPage('home')">⌂ Home</button>
+  <button onclick="showPage('ads')">▣ Ads</button>
+  <button onclick="showPage('history')">◷ History</button>
+  <button onclick="showPage('profile')">♙ Profile</button>
+</footer>
+</div>
+
 <script>
-const $ = id => document.getElementById(id);
+const KEY = "aba_pay_sample_v1";
+let state = JSON.parse(localStorage.getItem(KEY) || "null") || {
+  balance: 0, count: 0, history: [], name: "", email: ""
+};
 
-function readUsers(){
-  try {
-    return JSON.parse(localStorage.getItem("aba_reward_users") || "{}");
-  } catch(e) {
-    return {};
+const ads = [
+  {title:"Shopping Special",desc:"নতুন পণ্য ও আকর্ষণীয় ডিজাইন দেখুন।",brand:"SHOPPING"},
+  {title:"Mobile Collection",desc:"স্মার্টফোনের নতুন স্টাইল আবিষ্কার করুন।",brand:"MOBILE"},
+  {title:"Game Center",desc:"বিনোদনের নতুন অভিজ্ঞতা সম্পর্কে জানুন।",brand:"GAMES"}
+];
+
+function save(){
+  localStorage.setItem(KEY, JSON.stringify(state));
+  render();
+}
+
+function showPage(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+  if(id==="profile"){
+    username.value=state.name;
+    email.value=state.email;
   }
 }
 
-function currentPhone(){
-  return localStorage.getItem("aba_reward_current");
-}
+function render(){
+  document.getElementById("balance").textContent=state.balance;
+  document.getElementById("countHome").textContent=state.count;
+  document.getElementById("countAds").textContent=state.count;
+  document.getElementById("progress").style.width=(state.count/20*100)+"%";
 
-function saveUsers(users){
-  localStorage.setItem("aba_reward_users", JSON.stringify(users));
-}
+  const list=document.getElementById("adList");
+  list.innerHTML="";
+  ads.forEach((ad,i)=>{
+    const done=state.count>=20;
+    const card=document.createElement("div");
+    card.className="ad";
 
-function getUser(){
-  const phone = currentPhone();
-  return phone ? readUsers()[phone] : null;
-}
+    const art=document.createElement("div");
+    art.className="ad-art";
+    const strong=document.createElement("strong");
+    strong.textContent=ad.brand;
+    const title=document.createElement("div");
+    title.textContent=ad.title;
+    art.append(strong,title);
 
-function showRegister(){
-  $("registerPanel").classList.remove("hidden");
-  $("loginPanel").classList.add("hidden");
-}
-
-function showLogin(){
-  $("registerPanel").classList.add("hidden");
-  $("loginPanel").classList.remove("hidden");
-}
-
-function registerUser(){
-  const name = $("regName").value.trim();
-  const phone = $("regPhone").value.trim();
-  const pass = $("regPass").value;
-
-  if(!name || !phone || !pass){
-    alert("নাম, মোবাইল নম্বর ও পাসওয়ার্ড পূরণ করুন।");
-    return;
-  }
-
-  if(pass.length < 6){
-    alert("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");
-    return;
-  }
-
-  const users = readUsers();
-
-  if(users[phone]){
-    alert("এই নম্বরে অ্যাকাউন্ট আছে। Login করুন।");
-    showLogin();
-    $("loginPhone").value = phone;
-    return;
-  }
-
-  users[phone] = {
-    name,
-    phone,
-    pass,
-    points: 0,
-    sessionCount: 0,
-    history: []
-  };
-
-  saveUsers(users);
-  localStorage.setItem("aba_reward_current", phone);
-  openApp();
-}
-
-function loginUser(){
-  const phone = $("loginPhone").value.trim();
-  const pass = $("loginPass").value;
-  const user = readUsers()[phone];
-
-  if(!user || user.pass !== pass){
-    alert("মোবাইল নম্বর বা পাসওয়ার্ড সঠিক নয়।");
-    return;
-  }
-
-  localStorage.setItem("aba_reward_current", phone);
-  openApp();
-}
-
-function recordActivity(user, type, description, points){
-  user.history = user.history || [];
-  user.history.push({
-    type,
-    description,
-    points,
-    date: new Date().toLocaleString("bn-BD")
+    const body=document.createElement("div");
+    body.className="ad-body";
+    const desc=document.createElement("p");
+    desc.textContent=ad.desc;
+    const btn=document.createElement("button");
+    btn.className="primary";
+    btn.textContent=done?"সেশন সম্পন্ন": "নমুনা বিজ্ঞাপন দেখুন";
+    btn.disabled=done;
+    btn.onclick=()=>startAd(ad.title);
+    body.append(desc,btn);
+    card.append(art,body);
+    list.append(card);
   });
 
-  // History বড় হওয়া সীমিত রাখুন
-  if(user.history.length > 300){
-    user.history = user.history.slice(-300);
+  const hist=document.getElementById("historyList");
+  hist.innerHTML="";
+  if(!state.history.length){
+    hist.textContent="এখনো কোনো কার্যক্রম নেই।";
+  }else{
+    state.history.slice().reverse().forEach(h=>{
+      const div=document.createElement("div");
+      div.className="item";
+      div.textContent=h.title+" — ৳"+h.amount+" — "+h.date;
+      hist.append(div);
+    });
   }
 }
 
-function completeTestSession(){
-  const phone = currentPhone();
-  const users = readUsers();
-  const user = users[phone];
-
-  if(!user){
-    alert("আবার Login করুন।");
+function startAd(title){
+  if(state.count>=20){
+    alert("২০টি কার্যক্রম সম্পন্ন হয়েছে।");
     return;
   }
+  alert(title+" — এটি একটি নমুনা বিজ্ঞাপন, প্রকৃত বিজ্ঞাপন নয়।");
+  if(!confirm("এই নমুনা কার্যক্রমটি সম্পন্ন হিসেবে চিহ্নিত করবেন?"))return;
 
-  user.sessionCount = Number(user.sessionCount || 0);
-  user.points = Number(user.points || 0);
-  user.history = user.history || [];
+  state.count++;
+  state.balance+=10;
+  state.history.push({
+    title:title+" (নমুনা)",
+    amount:10,
+    date:new Date().toLocaleString("bn-BD")
+  });
+  save();
 
-  // এটি শুধু একটি test button; বিজ্ঞাপন যাচাই করে না।
-  user.sessionCount += 1;
-
-  recordActivity(
-    user,
-    "TEST SESSION",
-    "পরীক্ষামূলক সেশন " + user.sessionCount + " সম্পন্ন",
-    0
-  );
-
-  let message = "পরীক্ষামূলক সেশন গণনা হয়েছে।";
-
-  if(user.sessionCount >= 20){
-    user.sessionCount = 0;
-    user.points += 10;
-
-    recordActivity(
-      user,
-      "TEST REWARD",
-      "২০টি পরীক্ষামূলক সেশনের পুরস্কার",
-      10
-    );
-
-    message = "পরীক্ষামূলক পুরস্কার: ১০ পয়েন্ট যোগ হয়েছে!";
-  }
-
-  users[phone] = user;
-  saveUsers(users);
-
-  openApp();
-  showPage("ads");
-  $("status").textContent = message +
-    " এটি বাস্তব বিজ্ঞাপন বা নগদ আয় নয়.";
-}
-
-function renderHistory(history){
-  if(!history.length){
-    return "এখনো কোনো কার্যক্রম নেই।";
-  }
-
-  return history.slice().reverse().map(item => {
-    const wrap = document.createElement("div");
-    wrap.className = "item";
-
-    const row = document.createElement("div");
-    row.className = "row";
-
-    const title = document.createElement("b");
-    title.textContent = item.type;
-
-    const value = document.createElement("span");
-    value.textContent = "+" + Number(item.points || 0) + " Points";
-
-    const desc = document.createElement("div");
-    desc.className = "small";
-    desc.textContent = item.description;
-
-    const date = document.createElement("div");
-    date.className = "small";
-    date.textContent = item.date;
-
-    row.append(title, value);
-    wrap.append(row, desc, date);
-    return wrap.outerHTML;
-  }).join("");
-}
-
-function openApp(){
-  const user = getUser();
-  if(!user) return;
-
-  user.history = user.history || [];
-  user.points = Number(user.points || 0);
-  user.sessionCount = Number(user.sessionCount || 0);
-
-  $("auth").classList.add("hidden");
-  $("app").classList.remove("hidden");
-
-  $("points").textContent = user.points;
-  $("profilePoints").textContent = user.points;
-  $("profileName").textContent = user.name;
-  $("profilePhone").textContent = user.phone;
-
-  const progress = Math.min(user.sessionCount, 20);
-  const percent = progress / 20 * 100;
-
-  $("progressText").textContent = progress + " / 20";
-  $("adsCount").textContent = progress + " / 20";
-  $("progressBar").style.width = percent + "%";
-  $("adsProgressBar").style.width = percent + "%";
-
-  $("historyList").innerHTML = renderHistory(user.history);
-  $("recentActivity").innerHTML = renderHistory(user.history.slice(-3));
-
-  return user;
-}
-
-function showPage(page){
-  const pages = {
-    home: "homePage",
-    ads: "adsPage",
-    history: "historyPage",
-    profile: "profilePage"
-  };
-
-  Object.values(pages).forEach(id => $(id).classList.add("hidden"));
-  $(pages[page]).classList.remove("hidden");
-
-  if(page === "ads"){
-    $("status").textContent =
-      "TEST MODE: এখানে বাস্তব বিজ্ঞাপন নেই।";
+  if(state.count===20){
+    alert("২০টি কার্যক্রম সম্পন্ন। প্রদর্শিত পরীক্ষামূলক ব্যালেন্স: ৳২০০।");
+  }else{
+    alert("কার্যক্রম সম্পন্ন। পরীক্ষামূলক ব্যালেন্সে ৳১০ যোগ হয়েছে।");
   }
 }
 
-function logout(){
-  localStorage.removeItem("aba_reward_current");
-  $("app").classList.add("hidden");
-  $("auth").classList.remove("hidden");
-  showLogin();
+function saveProfile(){
+  state.name=username.value.trim();
+  state.email=email.value.trim();
+  save();
+  profileMsg.textContent="প্রোফাইল এই ব্রাউজারে সংরক্ষণ করা হয়েছে।";
 }
 
-if(getUser()){
-  openApp();
-}
+render();
 </script>
 </body>
 </html>
