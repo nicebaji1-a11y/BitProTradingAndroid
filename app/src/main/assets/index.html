@@ -1,18 +1,304 @@
 
-<!-- ABA Pay Add Money -->
-<div class="card" id="addMoneyCard">
-  <h2>টাকা যোগ করুন</h2>
-  <p class="small">পরীক্ষামূলক লেনদেন — আসল টাকা নয়</p>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ABA Pay Wallet</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f1f5f9;color:#172033;font-family:Arial,"Noto Sans Bengali",sans-serif}
+header{background:#075e54;color:white;padding:22px 18px}
+header h1{margin:0;font-size:30px}
+header p{margin:8px 0 0;font-size:17px}
+main{max-width:480px;margin:auto;padding:16px}
+.card{background:white;padding:18px;border-radius:24px;margin-bottom:16px;box-shadow:0 3px 14px #00000008}
+h2{font-size:23px;margin:0 0 17px}
+input,select{width:100%;padding:15px;margin:7px 0 12px;border:1px solid #d6dce5;border-radius:12px;font-size:16px;background:white;color:#172033}
+button{border:0;border-radius:12px;padding:15px;background:#087f68;color:white;font-size:16px;font-weight:bold;cursor:pointer}
+button:active{opacity:.8}
+.full{width:100%;margin:7px 0}
+.secondary{background:#e5f3ef;color:#075e54}
+.small{font-size:14px;color:#667085;line-height:1.6}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+nav button{flex:1;min-width:70px;padding:13px 8px;font-size:14px}
+.balance{background:linear-gradient(135deg,#075e54,#119b7b);color:white;padding:26px 22px}
+.amount{font-size:38px;font-weight:bold;margin:18px 0}
+.item{padding:14px 0;border-bottom:1px solid #edf0f4}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.hidden{display:none!important}
+.notice{font-size:13px;color:#9a4b13;line-height:1.6}
+#message{font-size:14px;line-height:1.5}
+</style>
+</head>
+<body>
+<header>
+  <h1>ABA Pay</h1>
+  <p>আপনার ডিজিটাল ওয়ালেট</p>
+</header>
 
-  <label for="paymentMethod">পেমেন্ট পদ্ধতি</label>
-  <select id="paymentMethod" style="width:100%;padding:13px;margin:8px 0;border:1px solid #d6dce5;border-radius:9px">
-    <option value="bKash">bKash</option>
-    <option value="Nagad">Nagad</option>
-  </select>
+<main>
+  <section id="auth">
+    <div class="card" id="register">
+      <h2>নতুন অ্যাকাউন্ট তৈরি</h2>
+      <input id="regName" placeholder="আপনার পূর্ণ নাম" autocomplete="name">
+      <input id="regPhone" type="tel" placeholder="মোবাইল নম্বর" autocomplete="tel">
+      <input id="regEmail" type="email" placeholder="ইমেইল (ঐচ্ছিক)">
+      <input id="regPass" type="password" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)">
+      <button class="full" onclick="signup()">Register</button>
+      <p class="small">আগে অ্যাকাউন্ট করেছেন?</p>
+      <button class="full secondary" onclick="showLogin()">Login</button>
+    </div>
 
-  <label for="addAmount">টাকার পরিমাণ (৳)</label>
-  <input id="addAmount" type="number" min="10" max="10000" placeholder="যেমন: 100">
+    <div class="card hidden" id="login">
+      <h2>Login</h2>
+      <input id="loginPhone" type="tel" placeholder="মোবাইল নম্বর">
+      <input id="loginPass" type="password" placeholder="পাসওয়ার্ড">
+      <button class="full" onclick="signin()">Login</button>
+      <button class="full secondary" onclick="showRegister()">নতুন অ্যাকাউন্ট তৈরি</button>
+    </div>
 
-  <button class="full" onclick="addTestMoney()">Add Money</button>
-  <p id="paymentMessage" role="status"></p>
-</div>
+    <p class="notice">পরীক্ষামূলক অ্যাপ। এখানে আসল টাকা বা নিরাপদ সার্ভারভিত্তিক অ্যাকাউন্ট নেই।</p>
+  </section>
+
+  <section id="app" class="hidden">
+    <nav>
+      <button onclick="page('home')">Home</button>
+      <button onclick="page('profile')">Profile</button>
+      <button onclick="page('history')">History</button>
+      <button onclick="logout()">Logout</button>
+    </nav>
+
+    <div id="home">
+      <div class="card balance">
+        <div>আপনার পরীক্ষামূলক ব্যালেন্স</div>
+        <div class="amount" id="balance">৳ 0.00</div>
+        <div>এটি আসল টাকা নয়</div>
+      </div>
+
+      <div class="card" id="addMoneyCard">
+        <h2>টাকা যোগ করুন</h2>
+        <p class="small">পরীক্ষামূলক Add Money</p>
+        <label for="paymentMethod">পেমেন্ট পদ্ধতি</label>
+        <select id="paymentMethod">
+          <option value="bKash">bKash</option>
+          <option value="Nagad">Nagad</option>
+        </select>
+        <label for="addAmount">টাকার পরিমাণ (৳)</label>
+        <input id="addAmount" type="number" min="10" max="10000" placeholder="যেমন: 100">
+        <button class="full" onclick="addTestMoney()">Add Money</button>
+        <p id="message" role="status"></p>
+      </div>
+
+      <div class="card">
+        <h2>Account Overview</h2>
+        <div class="item row"><span>Account Name</span><b id="homeName"></b></div>
+        <div class="item row"><span>মোবাইল</span><b id="homePhone"></b></div>
+        <button class="full secondary" onclick="page('profile')">View Profile</button>
+      </div>
+
+      <div class="card">
+        <h2>সাম্প্রতিক লেনদেন</h2>
+        <div id="recent" class="small">এখনো কোনো লেনদেন নেই।</div>
+        <button class="full secondary" onclick="page('history')">সব লেনদেন দেখুন</button>
+      </div>
+    </div>
+
+    <div id="profile" class="hidden">
+      <div class="card">
+        <h2>My Profile</h2>
+        <div class="item row"><span>নাম</span><b id="profileName"></b></div>
+        <div class="item row"><span>মোবাইল</span><b id="profilePhone"></b></div>
+        <div class="item row"><span>ইমেইল</span><b id="profileEmail"></b></div>
+        <div class="item row"><span>অ্যাকাউন্ট</span><b>পরীক্ষামূলক</b></div>
+      </div>
+    </div>
+
+    <div id="history" class="hidden">
+      <div class="card">
+        <h2>Transaction History</h2>
+        <div id="allHistory" class="small">এখনো কোনো লেনদেন নেই।</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const getUsers = () => {
+  try { return JSON.parse(localStorage.getItem("aba_users") || "{}"); }
+  catch(e) { return {}; }
+};
+const getCurrent = () => localStorage.getItem("aba_current");
+
+function showRegister(){
+  $("register").classList.remove("hidden");
+  $("login").classList.add("hidden");
+}
+function showLogin(){
+  $("register").classList.add("hidden");
+  $("login").classList.remove("hidden");
+}
+
+function signup(){
+  const name = $("regName").value.trim();
+  const phone = $("regPhone").value.trim();
+  const email = $("regEmail").value.trim();
+  const pass = $("regPass").value;
+
+  if(!name || !phone || !pass){
+    alert("নাম, মোবাইল নম্বর ও পাসওয়ার্ড দিন।");
+    return;
+  }
+  if(pass.length < 6){
+    alert("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");
+    return;
+  }
+
+  const users = getUsers();
+  if(users[phone]){
+    alert("এই নম্বরে অ্যাকাউন্ট আছে। Login করুন।");
+    showLogin();
+    $("loginPhone").value = phone;
+    return;
+  }
+
+  users[phone] = {
+    name:name,
+    phone:phone,
+    email:email,
+    pass:pass,
+    balance:0,
+    history:[]
+  };
+
+  localStorage.setItem("aba_users", JSON.stringify(users));
+  localStorage.setItem("aba_current", phone);
+  openApp();
+}
+
+function signin(){
+  const phone = $("loginPhone").value.trim();
+  const pass = $("loginPass").value;
+  const user = getUsers()[phone];
+
+  if(!user || user.pass !== pass){
+    alert("মোবাইল নম্বর বা পাসওয়ার্ড সঠিক নয়।");
+    return;
+  }
+
+  localStorage.setItem("aba_current", phone);
+  openApp();
+}
+
+function addTestMoney(){
+  const phone = getCurrent();
+  const users = getUsers();
+  const user = users[phone];
+
+  if(!user){
+    alert("আগে Login করুন।");
+    return;
+  }
+
+  const amount = Number($("addAmount").value);
+  const method = $("paymentMethod").value;
+
+  if(!Number.isFinite(amount) || amount < 10 || amount > 10000){
+    alert("১০ থেকে ১০,০০০ টাকার মধ্যে পরিমাণ লিখুন।");
+    return;
+  }
+
+  if(!confirm(method + " দিয়ে ৳" + amount +
+      " পরীক্ষামূলকভাবে যোগ করবেন? এটি আসল টাকা নয়।")){
+    return;
+  }
+
+  user.balance = Number(user.balance || 0) + amount;
+  user.history = user.history || [];
+  user.history.push({
+    type:"TEST - " + method,
+    amount:amount,
+    date:new Date().toLocaleString("bn-BD")
+  });
+
+  users[phone] = user;
+  localStorage.setItem("aba_users", JSON.stringify(users));
+  $("addAmount").value = "";
+  $("message").textContent =
+    "পরীক্ষামূলক ব্যালেন্স আপডেট হয়েছে। কোনো আসল পেমেন্ট হয়নি।";
+
+  openApp();
+  $("message").textContent =
+    "পরীক্ষামূলক ব্যালেন্স আপডেট হয়েছে। কোনো আসল পেমেন্ট হয়নি।";
+}
+
+function entryHTML(t){
+  const wrap = document.createElement("div");
+  wrap.className = "item";
+
+  const row = document.createElement("div");
+  row.className = "row";
+
+  const type = document.createElement("span");
+  type.textContent = t.type;
+
+  const amount = document.createElement("b");
+  amount.textContent = "৳ " + Number(t.amount).toFixed(2);
+
+  const date = document.createElement("div");
+  date.className = "small";
+  date.textContent = t.date;
+
+  row.append(type, amount);
+  wrap.append(row, date);
+  return wrap.outerHTML;
+}
+
+function openApp(){
+  const users = getUsers();
+  const user = users[getCurrent()];
+  if(!user) return;
+
+  $("auth").classList.add("hidden");
+  $("app").classList.remove("hidden");
+
+  $("homeName").textContent = user.name;
+  $("homePhone").textContent = user.phone;
+  $("profileName").textContent = user.name;
+  $("profilePhone").textContent = user.phone;
+  $("profileEmail").textContent = user.email || "দেওয়া হয়নি";
+  $("balance").textContent = "৳ " + Number(user.balance || 0).toFixed(2);
+
+  const history = user.history || [];
+  $("recent").innerHTML = history.length
+    ? history.slice(-3).reverse().map(entryHTML).join("")
+    : "এখনো কোনো লেনদেন নেই।";
+
+  $("allHistory").innerHTML = history.length
+    ? history.slice().reverse().map(entryHTML).join("")
+    : "এখনো কোনো লেনদেন নেই।";
+
+  page("home");
+}
+
+function page(name){
+  ["home","profile","history"].forEach(id =>
+    $(id).classList.toggle("hidden", id !== name)
+  );
+}
+
+function logout(){
+  localStorage.removeItem("aba_current");
+  $("app").classList.add("hidden");
+  $("auth").classList.remove("hidden");
+  $("message").textContent = "";
+  showLogin();
+}
+
+if(getCurrent() && getUsers()[getCurrent()]){
+  openApp();
+}
+</script>
+</body>
+</html>
