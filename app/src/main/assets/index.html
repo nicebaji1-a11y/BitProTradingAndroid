@@ -9,10 +9,10 @@
 body{margin:0;background:#f2f5fa;color:#17233b;font-family:Arial,sans-serif}
 button,input,select{font:inherit}
 button{cursor:pointer}
-.app{max-width:480px;margin:auto;min-height:100vh;background:white;padding-bottom:80px}
+.app{max-width:480px;min-height:100vh;margin:auto;background:#fff;padding-bottom:85px}
 .hidden{display:none!important}
 header{background:linear-gradient(125deg,#173e88,#2865ce);color:white;padding:22px 20px 27px;border-radius:0 0 25px 25px}
-header h1{margin:0 0 15px;font-size:30px}
+header h1{font-size:30px;margin:0 0 15px}
 .balance{background:white;color:#17233b;border-radius:16px;padding:18px}
 .amount{font-size:34px;font-weight:bold;margin:9px 0}
 .muted{font-size:13px;color:#69778b;line-height:1.6}
@@ -42,49 +42,39 @@ footer button{flex:1;background:white;border:0;color:#17458f;font-weight:bold;pa
 <body>
 <div class="app">
 
-<!-- REGISTER / LOGIN -->
 <section id="auth" class="panel">
-<h2 id="welcomeTitle">Welcome to ABA Pay</h2>
-<p>আপনাকে ABA Pay-তে স্বাগতম! আপনার অ্যাকাউন্ট সহজে পরিচালনা করুন।</p>
+<h2>Welcome to ABA Pay</h2>
+<p>আপনাকে ABA Pay-তে স্বাগতম! সহজে আপনার অ্যাকাউন্ট পরিচালনা করুন।</p>
 <h2 id="authTitle">Login</h2>
 
 <form id="authForm">
 <div id="nameField" class="hidden">
 <label>Name</label>
-<input id="regName" type="text" placeholder="আপনার নাম লিখুন">
+<input id="regName" type="text" placeholder="আপনার নাম">
 </div>
-
 <label>Gmail</label>
-<input id="authEmail" type="email" required placeholder="আপনার Gmail লিখুন">
-
+<input id="authEmail" type="email" required placeholder="আপনার Gmail">
 <label>Password</label>
-<input id="authPassword" type="password" minlength="8" required placeholder="পাসওয়ার্ড লিখুন">
-
+<input id="authPassword" type="password" minlength="8" required placeholder="পাসওয়ার্ড">
 <div id="confirmField" class="hidden">
 <label>Confirm Password</label>
 <input id="confirmPassword" type="password" minlength="8" placeholder="পাসওয়ার্ড আবার লিখুন">
 </div>
-
 <button id="authButton" class="primary" type="submit">Login</button>
 </form>
 
 <p><a href="#" id="switchAuth">নতুন অ্যাকাউন্ট তৈরি করুন</a></p>
-<div style="text-align:center;margin-top:18px">
-<p class="muted">অথবা Gmail দিয়ে প্রবেশ করুন</p>
 <button class="primary" type="button" onclick="googleLogin()">Continue with Google</button>
-</div>
 <p id="authMessage" class="muted"></p>
-<p class="muted">নিরাপদ লগইনের জন্য Firebase Authentication কনফিগার করতে হবে।</p>
 </section>
 
-<!-- MAIN APP -->
 <div id="appContent" class="hidden">
 <header>
 <h1>ABA Pay</h1>
 <div class="balance">
 <div class="muted">অ্যাকাউন্ট ব্যালেন্স</div>
 <div class="amount">৳ <span id="balance">0</span></div>
-<div class="muted">পরীক্ষামূলক ব্যালেন্স; বাস্তব বা উত্তোলনযোগ্য অর্থ নয়।</div>
+<div class="muted">এটি পরীক্ষামূলক ব্যালেন্স; বাস্তব বা উত্তোলনযোগ্য অর্থ নয়।</div>
 </div>
 </header>
 
@@ -127,15 +117,18 @@ footer button{flex:1;background:white;border:0;color:#17458f;font-weight:bold;pa
 <button class="secondary" onclick="copyNumber()">Copy</button>
 </div>
 <p id="copyMessage" class="muted"></p>
+
 <label>পেমেন্ট মাধ্যম</label>
 <select id="depositMethod">
-<option>বিকাশ</option><option>নগদ</option>
+<option>বিকাশ</option>
+<option>নগদ</option>
 </select>
+
 <label>টাকার পরিমাণ</label>
 <input id="depositAmount" type="number" min="1" placeholder="টাকার পরিমাণ">
 <button class="primary" onclick="depositRequest()">Deposit Request</button>
 <p id="depositMessage" class="muted"></p>
-<p class="muted">এই ফর্ম পেমেন্ট গ্রহণ বা ব্যালেন্স বাড়ায় না।</p>
+<p class="muted">এই ফর্ম টাকা গ্রহণ বা ব্যালেন্স বাড়ায় না।</p>
 </div>
 </section>
 
@@ -143,13 +136,17 @@ footer button{flex:1;background:white;border:0;color:#17458f;font-weight:bold;pa
 <div class="panel">
 <h2>Withdraw</h2>
 <label>পেমেন্ট মাধ্যম</label>
-<select id="withdrawMethod"><option>বিকাশ</option><option>নগদ</option></select>
+<select id="withdrawMethod">
+<option>বিকাশ</option>
+<option>নগদ</option>
+</select>
 <label>টাকার পরিমাণ</label>
-<input id="withdrawAmount" type="number" min="1" placeholder="টাকার পরিমাণ">
+<input id="withdrawAmount" type="number" min="500" placeholder="সর্বনিম্ন ৫০০ টাকা">
 <label>বিকাশ/নগদ নম্বর</label>
 <input id="withdrawNumber" type="tel" placeholder="পেমেন্ট নম্বর">
 <button class="primary" onclick="withdrawRequest()">Withdraw Request</button>
 <p id="withdrawMessage" class="muted"></p>
+<p class="muted">বাস্তব উত্তোলন চালু নেই।</p>
 </div>
 </section>
 
@@ -179,7 +176,6 @@ footer button{flex:1;background:white;border:0;color:#17458f;font-weight:bold;pa
 </footer>
 </div>
 
-<!-- Video animation -->
 <div id="videoModal" class="hidden" style="position:fixed;inset:0;background:#071329ed;z-index:9999;align-items:center;justify-content:center;padding:16px">
 <div style="background:white;width:100%;max-width:420px;border-radius:16px;padding:16px">
 <h2 id="videoTitle">বিজ্ঞাপন</h2>
@@ -193,10 +189,8 @@ footer button{flex:1;background:white;border:0;color:#17458f;font-weight:bold;pa
 <script>
 (function(){
 "use strict";
-const USERS_KEY="abapay_users_v5";
-const DATA_KEY="abapay_accounts_v5";
-let users=read(USERS_KEY,{});
-let account=null,currentEmail="",mode="login";
+const UKEY="abapay_users_final2",DKEY="abapay_data_final2";
+let users=read(UKEY,{}),account=null,currentEmail="",mode="login";
 let playing=false,finished=false,startTime=0,frameId=0,adTitle="";
 const ads=[
  {brand:"SHOPPING",title:"Shopping Special",desc:"নতুন পণ্য ও আকর্ষণীয় ডিজাইন দেখুন।"},
@@ -204,10 +198,11 @@ const ads=[
  {brand:"GAMES",title:"Game Center",desc:"বিনোদনের নতুন অভিজ্ঞতা আবিষ্কার করুন।"}
 ];
 function read(k,f){try{return JSON.parse(localStorage.getItem(k))||f}catch(e){return f}}
-function saveAccount(){const all=read(DATA_KEY,{});all[currentEmail]=account;localStorage.setItem(DATA_KEY,JSON.stringify(all));render()}
-function showPage(id){document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden")}
-window.showPage=showPage;
-
+function saveAccount(){let all=read(DKEY,{});all[currentEmail]=account;localStorage.setItem(DKEY,JSON.stringify(all));render()}
+window.showPage=function(id){
+ document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+};
 function setMode(v){
  mode=v;
  authTitle.textContent=v==="login"?"Login":"Register";
@@ -222,62 +217,47 @@ switchAuth.onclick=function(e){e.preventDefault();setMode(mode==="login"?"regist
 
 authForm.addEventListener("submit",function(e){
  e.preventDefault();
- const email=authEmail.value.trim().toLowerCase();
- const password=authPassword.value;
+ const email=authEmail.value.trim().toLowerCase(),password=authPassword.value;
  if(mode==="register"){
   if(password!==confirmPassword.value){authMessage.textContent="পাসওয়ার্ড দুটি মেলেনি।";return}
-  if(users[email]){authMessage.textContent="এই ইমেইলে অ্যাকাউন্ট আছে। Login করুন।";return}
-  users[email]={password:password,name:regName.value.trim()};
-  localStorage.setItem(USERS_KEY,JSON.stringify(users));
-  authMessage.textContent="অ্যাকাউন্ট তৈরি হয়েছে।";
- }else{
-  if(!users[email]||users[email].password!==password){authMessage.textContent="ইমেইল বা পাসওয়ার্ড সঠিক নয়।";return}
+  if(users[email]){authMessage.textContent="এই ইমেইলে অ্যাকাউন্ট আছে।";return}
+  users[email]={password,name:regName.value.trim()};
+  localStorage.setItem(UKEY,JSON.stringify(users));
+ }else if(!users[email]||users[email].password!==password){
+  authMessage.textContent="ইমেইল বা পাসওয়ার্ড সঠিক নয়।";return
  }
- login(email);
-});
-
-function login(email){
  currentEmail=email;
- const all=read(DATA_KEY,{});
+ let all=read(DKEY,{});
  account=all[email]||{balance:0,count:0,history:[]};
- auth.classList.add("hidden");
- appContent.classList.remove("hidden");
- footer.classList.remove("hidden");
- profileEmail.textContent=email;
- profileName.textContent=users[email].name||"";
+ auth.classList.add("hidden");appContent.classList.remove("hidden");footer.classList.remove("hidden");
+ profileEmail.textContent=email;profileName.textContent=users[email].name||"";
  render();showPage("home");
-}
-
+});
 window.googleLogin=function(){
- authMessage.textContent="Google Login চালু করতে Firebase Authentication কনফিগারেশন প্রয়োজন। শুধু এই বাটন দিয়ে আসল Google Login হবে না।";
+ authMessage.textContent="Google Login চালু করতে Firebase Authentication সেটআপ করতে হবে।";
 };
-
 function render(){
  if(!account)return;
- balance.textContent=account.balance;
- homeCount.textContent=account.count;
- adCount.textContent=account.count;
+ balance.textContent=account.balance;homeCount.textContent=account.count;adCount.textContent=account.count;
  progress.style.width=(account.count/20*100)+"%";
  adList.innerHTML="";
  ads.forEach(ad=>{
-  const card=document.createElement("div");card.className="ad";
-  const art=document.createElement("div");art.className="art";
-  const b=document.createElement("strong");b.textContent=ad.brand;
-  const s=document.createElement("span");s.textContent=ad.title;
-  art.append(b,s);
-  const body=document.createElement("div");body.className="adbody";
-  const p=document.createElement("p");p.textContent=ad.desc;
-  const btn=document.createElement("button");btn.className="primary";
+  let card=document.createElement("div");card.className="ad";
+  let art=document.createElement("div");art.className="art";
+  let b=document.createElement("strong");b.textContent=ad.brand;
+  let t=document.createElement("span");t.textContent=ad.title;art.append(b,t);
+  let body=document.createElement("div");body.className="adbody";
+  let p=document.createElement("p");p.textContent=ad.desc;
+  let btn=document.createElement("button");btn.className="primary";
   btn.textContent=account.count>=20?"সেশন সম্পন্ন":"ভিডিও দেখুন";
   btn.disabled=account.count>=20;btn.onclick=()=>openVideo(ad.title);
   body.append(p,btn);card.append(art,body);adList.append(card);
  });
  historyList.innerHTML="";
  if(!account.history.length)historyList.textContent="কোনো কার্যক্রম নেই।";
- account.history.slice().reverse().forEach(item=>{
-  const row=document.createElement("div");row.className="entry";
-  row.textContent=item.title+" — ৳"+item.amount+" — "+item.date;
-  historyList.append(row);
+ account.history.slice().reverse().forEach(x=>{
+  let row=document.createElement("div");row.className="entry";
+  row.textContent=x.title+" — ৳"+x.amount+" — "+x.date;historyList.append(row);
  });
 }
 function openVideo(title){
@@ -288,9 +268,9 @@ function openVideo(title){
 }
 function drawFrame(){
  if(!playing)return;
- const canvas=videoCanvas,ctx=canvas.getContext("2d");
- const elapsed=(performance.now()-startTime)/1000,remaining=Math.max(0,10-elapsed);
- const g=ctx.createLinearGradient(0,0,640,360);g.addColorStop(0,"#164e9c");g.addColorStop(1,"#7026c7");
+ let ctx=videoCanvas.getContext("2d"),elapsed=(performance.now()-startTime)/1000;
+ let remaining=Math.max(0,10-elapsed),g=ctx.createLinearGradient(0,0,640,360);
+ g.addColorStop(0,"#164e9c");g.addColorStop(1,"#7026c7");
  ctx.fillStyle=g;ctx.fillRect(0,0,640,360);ctx.fillStyle="white";ctx.textAlign="center";
  ctx.font="bold 52px Arial";ctx.fillText("ABA PAY",320,145);
  ctx.font="28px Arial";ctx.fillText(adTitle,320,195);
@@ -306,24 +286,24 @@ finishVideo.onclick=function(){
  finished=false;account.count++;account.balance+=10;
  account.history.push({title:adTitle,amount:10,date:new Date().toLocaleString("bn-BD")});
  saveAccount();closeVideo();
- alert(account.count===20?"২০টি কার্যক্রম শেষ। পরীক্ষামূলক ব্যালেন্স ৳২০০।":"পরীক্ষামূলক ব্যালেন্সে ৳১০ যোগ হয়েছে।");
+ alert(account.count===20?"২০টি কার্যক্রম সম্পন্ন। পরীক্ষামূলক ব্যালেন্স ৳২০০।":"পরীক্ষামূলক ব্যালেন্সে ৳১০ যোগ হয়েছে।");
 };
 window.closeVideo=function(){playing=false;cancelAnimationFrame(frameId);videoModal.classList.add("hidden");videoModal.style.display="none"};
-
 window.copyNumber=function(){
- const input=paymentNumber;input.select();input.setSelectionRange(0,99999);
- try{const ok=document.execCommand("copy");copyMessage.textContent=ok?"নম্বর কপি হয়েছে।":"নম্বরটি চেপে ধরে কপি করুন।"}
+ paymentNumber.select();paymentNumber.setSelectionRange(0,99999);
+ try{copyMessage.textContent=document.execCommand("copy")?"নম্বর কপি হয়েছে।":"নম্বরটি চেপে ধরে কপি করুন।"}
  catch(e){copyMessage.textContent="নম্বরটি চেপে ধরে কপি করুন।"}
 };
 window.depositRequest=function(){
- const amount=Number(depositAmount.value);
- if(!Number.isFinite(amount)||amount<=0){depositMessage.textContent="সঠিক টাকার পরিমাণ লিখুন।";return}
- depositMessage.textContent=depositMethod.value+"-এ ৳"+amount+" টাকার নমুনা অনুরোধ। টাকা গ্রহণ বা ব্যালেন্স বাড়ানো হয়নি।";
+ let a=Number(depositAmount.value);
+ depositMessage.textContent=(!Number.isFinite(a)||a<=0)?"সঠিক টাকার পরিমাণ লিখুন.":depositMethod.value+"-এ ৳"+a+" টাকার নমুনা অনুরোধ। টাকা গ্রহণ করা হয়নি।";
 };
 window.withdrawRequest=function(){
- const amount=Number(withdrawAmount.value),number=withdrawNumber.value.trim();
- if(!Number.isFinite(amount)||amount<=0||!number){withdrawMessage.textContent="সঠিক পরিমাণ ও নম্বর লিখুন।";return}
- withdrawMessage.textContent=withdrawMethod.value+"-এ ৳"+amount+" টাকার নমুনা অনুরোধ। বাস্তব টাকা পাঠানো হয়নি।";
+ let a=Number(withdrawAmount.value),n=withdrawNumber.value.trim();
+ if(!Number.isFinite(a)||a<500||!n){withdrawMessage.textContent="কমপক্ষে ৫০০ টাকা এবং সঠিক নম্বর লিখুন।";return}
+ depositAmount.value="100";
+ depositMessage.textContent="Withdraw-এর পরবর্তী ধাপ হিসেবে ১০০ টাকার Deposit অপশন দেখানো হচ্ছে। এটি স্বয়ংক্রিয় পেমেন্ট নয়।";
+ showPage("deposit");
 };
 window.logout=function(){
  closeVideo();account=null;currentEmail="";
