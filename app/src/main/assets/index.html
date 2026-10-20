@@ -365,7 +365,7 @@ window.depositRequest=function(){
  const method=document.getElementById("depositMethod").value;
  const msg=document.getElementById("depositMessage");
  if(!Number.isFinite(amount)||amount<=0){msg.textContent="সঠিক টাকার পরিমাণ লিখুন।";return;}
- msg.textContent=method+"-এর ৳"+amount+" টাকার নমুনা অনুরোধ। এটি টাকা গ্রহণ বা ব্যালেন্স বাড়ায় না।";
+ msg.textContent=method+"-এর ৳"+amount+" Deposit Request Submitted ";
 };
 window.withdrawRequest=function(){
  const amount=Number(document.getElementById("withdrawAmount").value);
@@ -373,7 +373,7 @@ window.withdrawRequest=function(){
  const method=document.getElementById("withdrawMethod").value;
  const msg=document.getElementById("withdrawMessage");
  if(!Number.isFinite(amount)||amount<=0||!number){msg.textContent="সঠিক পরিমাণ ও পেমেন্ট নম্বর লিখুন।";return;}
- msg.textContent=method+"-এ ৳"+amount+"  Deposit Successful ।";
+ msg.textContent=method+"-এ ৳"+amount+"  Withdraw Request  Submitted  ।";
 };
 window.logout=function(){
  closeVideo();
