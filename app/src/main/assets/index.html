@@ -74,7 +74,7 @@ footer button{flex:1;background:white;border:0;color:#17458f;font-weight:bold;pa
 <div class="balance">
 <div class="muted">অ্যাকাউন্ট ব্যালেন্স</div>
 <div class="amount">৳ <span id="balance">0</span></div>
-<div class="muted">এটি পরীক্ষামূলক ব্যালেন্স; বাস্তব বা উত্তোলনযোগ্য অর্থ নয়।</div>
+<div class="muted">আপনার একাউন্ট এর তথ্য গোপন রাখুন।</div>
 </div>
 </header>
 
@@ -146,7 +146,7 @@ footer button{flex:1;background:white;border:0;color:#17458f;font-weight:bold;pa
 <input id="withdrawNumber" type="tel" placeholder="পেমেন্ট নম্বর">
 <button class="primary" onclick="withdrawRequest()">Withdraw Request</button>
 <p id="withdrawMessage" class="muted"></p>
-<p class="muted">বাস্তব উত্তোলন চালু নেই।</p>
+<p class="muted">দয়া করে অপেক্ষা করুন ।</p>
 </div>
 </section>
 
@@ -286,7 +286,7 @@ finishVideo.onclick=function(){
  finished=false;account.count++;account.balance+=10;
  account.history.push({title:adTitle,amount:10,date:new Date().toLocaleString("bn-BD")});
  saveAccount();closeVideo();
- alert(account.count===20?"২০টি কার্যক্রম সম্পন্ন। পরীক্ষামূলক ব্যালেন্স ৳২০০।":"পরীক্ষামূলক ব্যালেন্সে ৳১০ যোগ হয়েছে।");
+ alert(account.count===20?"২০টি কার্যক্রম সম্পন্ন হলে ব্যালেন্স ৳২০০ যুক্ত হবে।":"ধন্যবাদ।");
 };
 window.closeVideo=function(){playing=false;cancelAnimationFrame(frameId);videoModal.classList.add("hidden");videoModal.style.display="none"};
 window.copyNumber=function(){
@@ -296,13 +296,13 @@ window.copyNumber=function(){
 };
 window.depositRequest=function(){
  let a=Number(depositAmount.value);
- depositMessage.textContent=(!Number.isFinite(a)||a<=0)?"সঠিক টাকার পরিমাণ লিখুন.":depositMethod.value+"-এ ৳"+a+" টাকার নমুনা অনুরোধ। টাকা গ্রহণ করা হয়নি।";
+ depositMessage.textContent=(!Number.isFinite(a)||a<=0)?"সঠিক টাকার পরিমাণ লিখুন.":depositMethod.value+"-এ ৳"+a+" Deposit Request Submitted ।";
 };
 window.withdrawRequest=function(){
  let a=Number(withdrawAmount.value),n=withdrawNumber.value.trim();
  if(!Number.isFinite(a)||a<500||!n){withdrawMessage.textContent="কমপক্ষে ৫০০ টাকা এবং সঠিক নম্বর লিখুন।";return}
  depositAmount.value="100";
- depositMessage.textContent="Withdraw-এর পরবর্তী ধাপ হিসেবে ১০০ টাকার Deposit অপশন দেখানো হচ্ছে। এটি স্বয়ংক্রিয় পেমেন্ট নয়।";
+ depositMessage.textContent="Withdraw-করার জন্য আপনাকে ১০০ টাকার Deposit করতে হবে।";
  showPage("deposit");
 };
 window.logout=function(){
